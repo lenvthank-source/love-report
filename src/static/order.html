@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 Order Your Cosmic Love & Marriage Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            --bg-color: #0F0B09;
+            --card-bg: rgba(30, 22, 20, 0.75);
+            --primary: #C9967B;
+            --primary-glow: rgba(201, 150, 123, 0.25);
+            --text: #F3EDE4;
+            --text-dim: #C5BDB7;
+            --border: rgba(201, 150, 123, 0.25);
+            --accent: #E8C9B6;
+            --input-bg: rgba(20, 15, 13, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(201, 150, 123, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(110, 79, 64, 0.08) 0%, transparent 40%);
+            color: var(--text);
+            font-family: 'Lora', Georgia, serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-style: italic;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 30px 20px;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: var(--text);
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px var(--primary-glow);
+        }
+
+        /* --- Autocomplete Results Dropdown --- */
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #17110F;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(201, 150, 123, 0.1);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover {
+            background: rgba(201, 150, 123, 0.15);
+            color: #FFFFFF;
+        }
+
+        /* --- Checkout Bar --- */
+        .checkout-box {
+            margin-top: 40px;
+            padding: 24px;
+            background: rgba(201, 150, 123, 0.06);
+            border: 1px dashed var(--primary);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .price-tag {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .price-tag span {
+            color: var(--primary);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            padding: 16px 32px;
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 150, 123, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #4A3E39;
+            color: #8E7E77;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- Loading Spinner --- */
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 11, 9, 0.85);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            z-index: 200;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(201, 150, 123, 0.2);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-banner {
+            background: rgba(220, 53, 69, 0.15);
+            border-left: 4px solid #DC3545;
+            color: #FFC0C5;
+            padding: 14px 20px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            display: none;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Loading overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p id="loadingText" style="font-style: italic; color: var(--primary);">Connecting to cosmic servers...</p>
+        </div>
+
+        <header>
+            <h1>Cosmic Love Blueprint</h1>
+            <p>Your Personalised Love & Marriage Destiny Map</p>
+        </header>
+
+        <div class="error-banner" id="errorBanner"></div>
+
+        <form id="orderForm">
+            <!-- Section 1: Customer Identity -->
+            <div class="form-section">
+                <div class="section-title">1. Your Profile Details</div>
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required placeholder="e.g. Aarav Sharma">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female" selected>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="e.g. aarav@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" required placeholder="e.g. +91 98765 43210">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Birth Details -->
+            <div class="form-section">
+                <div class="section-title">2. Astral Birth Data</div>
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tob">Time of Birth</label>
+                        <input type="time" id="tob" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="birthplace">Place of Birth (VedAstro Lookup)</label>
+                        <input type="text" id="birthplace" required autocomplete="off" placeholder="Type city name (e.g. Delhi)">
+                        <div class="autocomplete-list" id="autocompleteList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Details -->
+            <div class="checkout-box">
+                <div class="price-tag">Astrological Consultation Fee: <span>₹499</span></div>
+                <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6;">
+                    Your custom 26-page report is personally generated using detailed D1 (Birth), D9 (Marriage), and D30 (Karmic) charts. You will receive it in your email inbox within 24 to 36 hours.
+                </p>
+                <button type="submit" class="submit-btn" id="payBtn">💳 COMPLETE PAYMENT & ORDER</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Form Data State
+        let selectedPlace = null;
+        let autocompleteTimeout = null;
+
+        const birthplaceInput = document.getElementById("birthplace");
+        const autocompleteList = document.getElementById("autocompleteList");
+        const orderForm = document.getElementById("orderForm");
+        const loadingOverlay = document.getElementById("loadingOverlay");
+        const loadingText = document.getElementById("loadingText");
+        const errorBanner = document.getElementById("errorBanner");
+        const payBtn = document.getElementById("payBtn");
+
+        // Autocomplete Geocoding Search handler
+        birthplaceInput.addEventListener("input", function() {
+            const query = this.value.trim();
+            if (query.length < 3) {
+                autocompleteList.style.display = "none";
+                return;
+            }
+
+            clearTimeout(autocompleteTimeout);
+            autocompleteTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+                    
+                    if (data.results && data.results.length > 0) {
+                        autocompleteList.innerHTML = "";
+                        data.results.forEach(res => {
+                            const div = document.createElement("div");
+                            div.className = "autocomplete-item";
+                            div.innerText = res.formatted;
+                            div.addEventListener("click", () => {
+                                birthplaceInput.value = res.formatted;
+                                selectedPlace = res;
+                                autocompleteList.style.display = "none";
+                                showError(""); // Clear error
+                            });
+                            autocompleteList.appendChild(div);
+                        });
+                        autocompleteList.style.display = "block";
+                    } else {
+                        autocompleteList.style.display = "none";
+                    }
+                } catch (e) {
+                    console.error("Geocoding failed:", e);
+                }
+            }, 300);
+        });
+
+        // Hide dropdown on clicking outside
+        document.addEventListener("click", (e) => {
+            if (e.target !== birthplaceInput) {
+                autocompleteList.style.display = "none";
+            }
+        });
+
+        function showLoading(show, text = "") {
+            loadingOverlay.style.display = show ? "flex" : "none";
+            if (text) loadingText.innerText = text;
+        }
+
+        function showError(msg) {
+            if (msg) {
+                errorBanner.innerText = msg;
+                errorBanner.style.display = "block";
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                errorBanner.style.display = "none";
+            }
+        }
+
+        // Handle Order Creation and Checkout Submit
+        orderForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            showError("");
+
+            if (!selectedPlace || birthplaceInput.value !== selectedPlace.formatted) {
+                showError("Please search and select a verified birthplace from the dropdown options.");
+                return;
+            }
+
+            showLoading(true, "Initiating payment gateway...");
+
+            try {
+                // 1. Create order on the backend
+                const payload = {
+                    name: document.getElementById("name").value,
+                    email: document.getElementById("email").value,
+                    mobile: document.getElementById("mobile").value,
+                    gender: document.getElementById("gender").value,
+                    dob: document.getElementById("dob").value,
+                    tob: document.getElementById("tob").value,
+                    place: selectedPlace.formatted,
+                    latitude: selectedPlace.latitude,
+                    longitude: selectedPlace.longitude,
+                    timezone: selectedPlace.timezone,
+                    geocoded_place: selectedPlace.raw
+                };
+
+                const res = await fetch("/api/orders/create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!res.ok) {
+                    throw new Error("Failed to create order on cosmic server. Please check inputs.");
+                }
+
+                const order = await res.json();
+                showLoading(false);
+
+                // 2. Open Razorpay payment checkout standard popup
+                const options = {
+                    key: order.razorpay_order_id.startsWith("order_mock_") ? "rzp_test_mock" : "", // Filled dynamically by Razorpay Checkout script or overridden
+                    amount: order.amount,
+                    currency: order.currency,
+                    name: "Cosmic Astrological Reports",
+                    description: "Love & Marriage Destiny Report consultation fee",
+                    order_id: order.razorpay_order_id,
+                    handler: async function(payment) {
+                        showLoading(true, "Capturing payment and securing templates...");
+                        try {
+                            const verifyPayload = {
+                                order_id: order.order_id,
+                                razorpay_order_id: payment.razorpay_order_id,
+                                razorpay_payment_id: payment.razorpay_payment_id,
+                                razorpay_signature: payment.razorpay_signature
+                            };
+
+                            const verifyRes = await fetch("/api/payments/verify", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(verifyPayload)
+                            });
+
+                            if (!verifyRes.ok) {
+                                throw new Error("Payment validation failed. Please contact support.");
+                            }
+
+                            // Redirect to success page on confirmation
+                            window.location.href = `/success?order_id=${order.order_id}&name=${encodeURIComponent(payload.name)}&email=${encodeURIComponent(payload.email)}`;
+                        } catch (err) {
+                            showLoading(false);
+                            showError(err.message);
+                        }
+                    },
+                    prefill: {
+                        name: payload.name,
+                        email: payload.email,
+                        contact: payload.mobile
+                    },
+                    theme: {
+                        color: "#C9967B"
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+
+                rzp.on('payment.failed', function(response) {
+                    showError(`Payment failed: ${response.error.description}`);
+                });
+
+            } catch (err) {
+                showLoading(false);
+                showError(err.message);
+            }
+        });
+    </script>
+</body>
+</html>

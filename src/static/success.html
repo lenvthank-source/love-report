@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Order Confirmed — Cosmic Blueprint</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0F0B09;
+            --card-bg: rgba(30, 22, 20, 0.75);
+            --primary: #C9967B;
+            --primary-glow: rgba(201, 150, 123, 0.25);
+            --text: #F3EDE4;
+            --text-dim: #C5BDB7;
+            --border: rgba(201, 150, 123, 0.25);
+            --accent: #E8C9B6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(201, 150, 123, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(110, 79, 64, 0.08) 0%, transparent 40%);
+            color: var(--text);
+            font-family: 'Lora', Georgia, serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            display: inline-block;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .receipt-box {
+            background: rgba(201, 150, 123, 0.06);
+            border: 1px dashed var(--primary);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .receipt-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .label {
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .val {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 6px;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 150, 123, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <span class="success-icon">✨</span>
+        <h1>Payment Successful!</h1>
+        <p>Your order has been captured. We have successfully registered your birth details, and our calculation engines are initializing.</p>
+        
+        <div class="receipt-box">
+            <div class="receipt-row">
+                <span class="label">Client Name</span>
+                <span class="val" id="clientName">-</span>
+            </div>
+            <div class="receipt-row">
+                <span class="label">Order ID</span>
+                <span class="val" id="orderId" style="font-family: monospace;">-</span>
+            </div>
+            <div class="receipt-row">
+                <span class="label">Amount Paid</span>
+                <span class="val">₹499.00</span>
+            </div>
+            <div class="receipt-row">
+                <span class="label">Delivery Window</span>
+                <span class="val" style="color: var(--primary); font-weight: bold;">24 – 36 Hours</span>
+            </div>
+        </div>
+
+        <p style="font-size: 0.95rem; color: var(--accent); font-style: italic;">
+            We have sent a transaction confirmation to your registered email address. Acharya Savvy Singh will now begin mapping your alignments.
+        </p>
+
+        <a href="/order" class="btn">📖 PLACE ANOTHER ORDER</a>
+    </div>
+
+    <script>
+        // Parse Query Params to fill confirmation details
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById("clientName").innerText = params.get("name") || "Valued Client";
+        document.getElementById("orderId").innerText = params.get("order_id") || "N/A";
+    </script>
+</body>
+</html>

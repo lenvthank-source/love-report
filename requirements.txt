@@ -1,0 +1,14 @@
+vedastro
+google-genai
+pydantic
+requests
+opencage
+python-dotenv
+yaspin
+colorama
+supabase
+razorpay
+python-jose[cryptography]
+fastapi
+uvicorn
+sse-starlette

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "src/server.py", "use": "@vercel/python" },
+    { "src": "src/static/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "src/server.py" },
+    { "src": "/order", "dest": "src/static/order.html" },
+    { "src": "/success", "dest": "src/static/success.html" },
+    { "src": "/admin/login", "dest": "src/static/admin_login.html" },
+    { "src": "/admin", "dest": "src/static/admin.html" },
+    { "src": "/(.*)", "dest": "src/static/$1" }
+  ]
+}
