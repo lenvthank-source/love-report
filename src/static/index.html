@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔮 Astrological Report Compiler — Testbed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0c0807;
-            --card-bg: rgba(26, 18, 17, 0.7);
-            --primary: #c5a28c;
-            --primary-glow: rgba(197, 162, 140, 0.2);
-            --text: #eae6e3;
-            --text-dim: #a69e9a;
-            --accent: #d48a6a;
-            --border: rgba(142, 110, 94, 0.3);
-            --terminal-bg: #110d0c;
+            --bg-color: #FAF4EE; /* Soft warm light cream background */
+            --card-bg: #FFFFFF; /* Pure white card */
+            --primary: #C9967B; /* Warm rose gold */
+            --primary-dark: #8E5A40;
+            --accent: #A93B52; /* Delicate rose berry */
+            --text-dark: #3C332D; /* Rich chocolate brown */
+            --text-muted: #96867F; /* Warm taupe */
+            --border-color: rgba(201, 150, 123, 0.28);
+            --shadow: 0 30px 60px rgba(142, 110, 94, 0.08);
+            --transition-fluid: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --terminal-bg: #FAF6F2;
         }
 
         * {
@@ -27,51 +29,101 @@
         body {
             background-color: var(--bg-color);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(142, 110, 94, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(212, 138, 106, 0.05) 0%, transparent 40%);
-            color: var(--text);
-            font-family: 'Outfit', sans-serif;
+                radial-gradient(circle at 10% 20%, rgba(201, 150, 123, 0.05) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(169, 59, 82, 0.04) 0%, transparent 45%);
+            color: var(--text-dark);
+            font-family: 'Lora', Georgia, serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 50px 20px;
+            overflow-x: hidden;
         }
 
+        /* --- Floating Stardust Particles --- */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star-particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: drift-float 22s linear infinite;
+        }
+
+        @keyframes drift-float {
+            0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+            10% { opacity: 0.35; }
+            90% { opacity: 0.35; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Card Frame --- */
         .container {
             width: 100%;
             max-width: 900px;
             background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 50px 45px;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 10;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid rgba(201, 150, 123, 0.08);
+            border-radius: 2px;
+            pointer-events: none;
         }
 
         header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 40px;
         }
 
         header h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--primary);
-            text-shadow: 0 0 15px var(--primary-glow);
-            margin-bottom: 10px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.3rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 8px;
         }
 
         header p {
-            font-size: 1rem;
-            color: var(--text-dim);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--primary-dark);
+        }
+
+        .divider {
+            width: 70px;
+            height: 1.5px;
+            background: var(--primary);
+            margin: 15px auto 0;
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 30px;
             margin-bottom: 30px;
         }
 
@@ -85,46 +137,73 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            position: relative;
         }
 
-        .form-group label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--primary);
+        label {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            transition: var(--transition-fluid);
         }
 
-        .form-group input, .form-group select {
-            background: rgba(25, 18, 17, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            color: var(--text);
-            font-family: 'Outfit', sans-serif;
+        /* Underline fields */
+        input, select {
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid var(--border-color);
+            border-radius: 0;
+            padding: 10px 0;
+            color: var(--text-dark);
+            font-family: 'Lora', serif;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            outline: none;
+            transition: var(--transition-fluid);
         }
 
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px var(--primary-glow);
+        input:focus, select:focus {
+            border-bottom-color: var(--primary-dark);
+        }
+
+        /* Expanding gold focus line */
+        .form-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%; width: 0; height: 1.5px;
+            background: var(--accent);
+            transition: var(--transition-fluid);
+        }
+
+        .form-group:focus-within::after {
+            left: 0;
+            width: 100%;
+        }
+
+        .form-group:focus-within label {
+            color: var(--accent);
         }
 
         .submit-btn {
             grid-column: span 2;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            color: #FFFFFF;
             border: none;
-            border-radius: 8px;
-            padding: 15px;
-            color: var(--bg-color);
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: 1px;
+            border-radius: 30px; /* Pill */
+            padding: 16px 45px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-fluid);
+            box-shadow: 0 4px 18px rgba(201, 150, 123, 0.25);
+            margin: 10px auto 0;
+            width: 100%;
+            max-width: 380px;
         }
 
         @media (max-width: 768px) {
@@ -134,46 +213,44 @@
         }
 
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(197, 162, 140, 0.4);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(201, 150, 123, 0.35);
         }
 
         .submit-btn:disabled {
-            background: #4A3E3D;
-            color: var(--text-dim);
+            background: #D8CEC6;
+            color: #9E928A;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        /* Terminal Window styling */
+        /* Terminal styling matching the soft theme */
         .terminal-container {
-            margin-top: 30px;
+            margin-top: 40px;
             background: var(--terminal-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            box-shadow: inset 0 0 10px rgba(142, 110, 94, 0.05);
         }
 
         .terminal-header {
-            background: rgba(44, 31, 29, 0.5);
-            padding: 10px 15px;
+            background: rgba(201, 150, 123, 0.08);
+            padding: 12px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .terminal-title {
-            font-family: 'Space Mono', monospace;
+            font-family: 'Jost', sans-serif;
             font-size: 0.8rem;
-            color: var(--primary);
+            font-weight: 600;
+            color: var(--primary-dark);
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .terminal-buttons {
@@ -182,22 +259,20 @@
         }
 
         .terminal-btn {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: #ff5f56;
+            background: rgba(142, 110, 94, 0.2);
         }
-        .terminal-btn.yellow { background: #ffbd2e; }
-        .terminal-btn.green { background: #27c93f; }
 
         .terminal-body {
             height: 250px;
             overflow-y: auto;
-            padding: 15px;
-            font-family: 'Space Mono', monospace;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            color: #d4c5bd;
+            padding: 18px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-dark);
         }
 
         .log-entry {
@@ -205,215 +280,232 @@
             white-space: pre-wrap;
         }
 
-        .log-info { color: #8e8077; }
-        .log-success { color: #a4c2a8; }
-        .log-warning { color: #d4a373; }
-        .log-error { color: #e07a5f; }
+        .log-info { color: var(--text-muted); }
+        .log-success { color: #278A3E; font-weight: bold; }
+        .log-warning { color: #B38600; }
+        .log-error { color: #BD2130; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>🔮 COSMIC REPORT COMPILER</h1>
-        <p>Internal testbed for multi-model PDF report generation</p>
-    </header>
+    <!-- Floating stardust particles -->
+    <div class="stars-container" id="starsContainer"></div>
 
-    <form id="generateForm" onsubmit="startGeneration(event)" class="grid">
-        <div class="form-group">
-            <label for="name">Client Name</label>
-            <input type="text" id="name" required placeholder="e.g. Dev" value="Dev">
-        </div>
+    <div class="container">
+        <header>
+            <h1>Cosmic Compiler</h1>
+            <p>Internal testbed for multi-model PDF report generation</p>
+            <div class="divider"></div>
+        </header>
 
-        <div class="form-group">
-            <label for="gender">Gender</label>
-            <select id="gender" required>
-                <option value="Male" selected>Male</option>
-                <option value="Female">Female</option>
-            </select>
-        </div>
+        <form id="generateForm" onsubmit="startGeneration(event)" class="grid">
+            <div class="form-group">
+                <label for="name">Client Name</label>
+                <input type="text" id="name" required placeholder="e.g. Dev" value="Dev">
+            </div>
 
-        <div class="form-group">
-            <label for="dob">Birth Date</label>
-            <input type="date" id="dob" required value="1999-10-15">
-        </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="Male" selected>Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="tob">Birth Time</label>
-            <input type="time" id="tob" required value="18:52">
-        </div>
+            <div class="form-group">
+                <label for="dob">Birth Date</label>
+                <input type="date" id="dob" required value="1999-10-15">
+            </div>
 
-        <div class="form-group">
-            <label for="place">Birth Place</label>
-            <input type="text" id="place" required placeholder="e.g. Delhi, India" value="Delhi, India">
-        </div>
+            <div class="form-group">
+                <label for="tob">Birth Time</label>
+                <input type="time" id="tob" required value="18:52">
+            </div>
 
-        <div class="form-group">
-            <label for="provider">AI Provider</label>
-            <select id="provider" required>
-                <option value="gemini" selected>Gemini (gemini-3.1-flash-lite)</option>
-                <option value="groq">Groq (openai/gpt-oss-120b)</option>
-                <option value="openrouter">OpenRouter (google/gemma-4-31b-it:free)</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="place">Birth Place</label>
+                <input type="text" id="place" required placeholder="e.g. Delhi, India" value="Delhi, India">
+            </div>
 
-        <div class="form-group">
-            <label for="model">Model Name / Identifier</label>
-            <input type="text" id="model" list="modelList" required placeholder="e.g. gemini-3.1-flash-lite" value="gemini-3.1-flash-lite">
-            <datalist id="modelList">
-                <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
-                <option value="gemini-3.1-flash">Gemini 3.1 Flash</option>
-                <option value="gemini-3.5-pro">Gemini 3.5 Pro</option>
-            </datalist>
-        </div>
+            <div class="form-group">
+                <label for="provider">AI Provider</label>
+                <select id="provider" required>
+                    <option value="gemini" selected>Gemini (gemini-3.1-flash-lite)</option>
+                    <option value="groq">Groq (openai/gpt-oss-120b)</option>
+                    <option value="openrouter">OpenRouter (google/gemma-4-31b-it:free)</option>
+                </select>
+            </div>
 
-        <button type="submit" id="submitBtn" class="submit-btn">COMPILE & DOWNLOAD REPORT</button>
-    </form>
+            <div class="form-group">
+                <label for="model">Model Identifier</label>
+                <input type="text" id="model" list="modelList" required placeholder="e.g. gemini-3.1-flash-lite" value="gemini-3.1-flash-lite">
+                <datalist id="modelList">
+                    <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
+                    <option value="gemini-3.1-flash">Gemini 3.1 Flash</option>
+                    <option value="gemini-3.5-pro">Gemini 3.5 Pro</option>
+                </datalist>
+            </div>
 
-    <div class="terminal-container">
-        <div class="terminal-header">
-            <div class="terminal-title">Compilation Log Stream</div>
-            <div class="terminal-buttons">
-                <div class="terminal-btn"></div>
-                <div class="terminal-btn yellow"></div>
-                <div class="terminal-btn green"></div>
+            <button type="submit" id="submitBtn" class="submit-btn">COMPILE & DOWNLOAD REPORT</button>
+        </form>
+
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="terminal-title">Compilation Log Stream</div>
+                <div class="terminal-buttons">
+                    <div class="terminal-btn"></div>
+                    <div class="terminal-btn"></div>
+                    <div class="terminal-btn"></div>
+                </div>
+            </div>
+            <div class="terminal-body" id="terminal">
+                <div class="log-entry log-info">[System] Ready. Enter parameters and click compile.</div>
             </div>
         </div>
-        <div class="terminal-body" id="terminal">
-            <div class="log-entry log-info">[System] Ready. Enter birth parameters and click generate.</div>
-        </div>
     </div>
-</div>
 
-<script>
-    const modelsMap = {
-        gemini: [
-            { value: "gemini-3.1-flash-lite", label: "Gemini 3.1 Flash Lite" },
-            { value: "gemini-3.1-flash", label: "Gemini 3.1 Flash" },
-            { value: "gemini-3.5-pro", label: "Gemini 3.5 Pro" }
-        ],
-        groq: [
-            { value: "openai/gpt-oss-120b", label: "GPT-OSS 120B" },
-            { value: "qwen/qwen3-32b", label: "Qwen3 32B" },
-            { value: "qwen/qwen3.6-27b", label: "Qwen3.6 27B" }
-        ],
-        openrouter: [
-            { value: "google/gemma-4-31b-it:free", label: "Gemma 4 31B IT" },
-            { value: "qwen/qwen3-32b", label: "Qwen3 32B" },
-            { value: "qwen/qwen3.6-27b", label: "Qwen3.6 27B" }
-        ]
-    };
-
-    function updateModelOptions(provider) {
-        const modelInput = document.getElementById("model");
-        const datalist = document.getElementById("modelList");
-        datalist.innerHTML = "";
-        
-        const options = modelsMap[provider] || [];
-        options.forEach(opt => {
-            const option = document.createElement("option");
-            option.value = opt.value;
-            option.textContent = opt.label;
-            datalist.appendChild(option);
-        });
-        
-        if (options.length > 0) {
-            modelInput.value = options[0].value;
+    <script>
+        // Generate floating stardust particles dynamically
+        const starsContainer = document.getElementById("starsContainer");
+        for (let i = 0; i < 10; i++) {
+            const star = document.createElement("div");
+            star.className = "star-particle";
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.width = `${Math.random() * 3 + 2}px`;
+            star.style.height = star.style.width;
+            star.style.animationDelay = `${Math.random() * 12}s`;
+            star.style.animationDuration = `${Math.random() * 12 + 15}s`;
+            starsContainer.appendChild(star);
         }
-    }
 
-    document.getElementById("provider").addEventListener("change", function(e) {
-        updateModelOptions(e.target.value);
-    });
-
-    let logEventSource = null;
-
-    function addLog(text, type = "info") {
-        const terminal = document.getElementById("terminal");
-        const entry = document.createElement("div");
-        entry.className = `log-entry log-${type}`;
-        entry.innerText = text;
-        terminal.appendChild(entry);
-        terminal.scrollTop = terminal.scrollHeight;
-    }
-
-    async function startGeneration(event) {
-        event.preventDefault();
-        
-        const submitBtn = document.getElementById("submitBtn");
-        submitBtn.disabled = true;
-        
-        const name = document.getElementById("name").value;
-        const gender = document.getElementById("gender").value;
-        const dob = document.getElementById("dob").value;
-        const tob = document.getElementById("tob").value;
-        const place = document.getElementById("place").value;
-        const provider = document.getElementById("provider").value;
-        const model = document.getElementById("model").value;
-
-        // Clear terminal
-        const terminal = document.getElementById("terminal");
-        terminal.innerHTML = "";
-        
-        // Generate a random session ID to isolate logs
-        const sessionId = Math.random().toString(36).substring(2, 15);
-        
-        addLog(`[System] Initializing session ${sessionId}...`, "info");
-        addLog(`[System] Selected Model Provider: ${provider.toUpperCase()}`, "info");
-
-        // 1. Establish SSE Connection for logs
-        if (logEventSource) {
-            logEventSource.close();
-        }
-        
-        logEventSource = new EventSource(`/api/logs?session_id=${sessionId}`);
-        logEventSource.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            addLog(data.message, data.level);
-        };
-        logEventSource.onerror = function() {
-            addLog("[System] Log stream disconnected.", "info");
-            logEventSource.close();
+        const modelsMap = {
+            gemini: [
+                { value: "gemini-3.1-flash-lite", label: "Gemini 3.1 Flash Lite" },
+                { value: "gemini-3.1-flash", label: "Gemini 3.1 Flash" },
+                { value: "gemini-3.5-pro", label: "Gemini 3.5 Pro" }
+            ],
+            groq: [
+                { value: "openai/gpt-oss-120b", label: "GPT-OSS 120B" },
+                { value: "qwen/qwen3-32b", label: "Qwen3 32B" },
+                { value: "qwen/qwen3.6-27b", label: "Qwen3.6 27B" }
+            ],
+            openrouter: [
+                { value: "google/gemma-4-31b-it:free", label: "Gemma 4 31B IT" },
+                { value: "qwen/qwen3-32b", label: "Qwen3 32B" },
+                { value: "qwen/qwen3.6-27b", label: "Qwen3.6 27B" }
+            ]
         };
 
-        // 2. Trigger Post Request
-        try {
-            addLog("[System] Dispatching compilation request...", "info");
-            const response = await fetch(`/api/generate?session_id=${sessionId}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, gender, dob, tob, place, provider, model })
-            });
-
-            if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.detail || "Generation failed.");
-            }
-
-            // Download Blob
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${name.toLowerCase()}_individual_love_report.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+        function updateModelOptions(provider) {
+            const modelInput = document.getElementById("model");
+            const datalist = document.getElementById("modelList");
+            datalist.innerHTML = "";
             
-            addLog("[System] Report compiled and downloaded successfully!", "success");
-        } catch (err) {
-            addLog(`[Error] ${err.message}`, "error");
-        } finally {
-            submitBtn.disabled = false;
-            if (logEventSource) {
-                // Keep the log connection open briefly to catch closing logs
-                setTimeout(() => {
-                    logEventSource.close();
-                }, 2000);
+            const options = modelsMap[provider] || [];
+            options.forEach(opt => {
+                const option = document.createElement("option");
+                option.value = opt.value;
+                option.textContent = opt.label;
+                datalist.appendChild(option);
+            });
+            
+            if (options.length > 0) {
+                modelInput.value = options[0].value;
             }
         }
-    }
-</script>
+
+        document.getElementById("provider").addEventListener("change", function(e) {
+            updateModelOptions(e.target.value);
+        });
+
+        let logEventSource = null;
+
+        function addLog(text, type = "info") {
+            const terminal = document.getElementById("terminal");
+            const entry = document.createElement("div");
+            entry.className = `log-entry log-${type}`;
+            entry.innerText = text;
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        async function startGeneration(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById("submitBtn");
+            submitBtn.disabled = true;
+            
+            const name = document.getElementById("name").value;
+            const gender = document.getElementById("gender").value;
+            const dob = document.getElementById("dob").value;
+            const tob = document.getElementById("tob").value;
+            const place = document.getElementById("place").value;
+            const provider = document.getElementById("provider").value;
+            const model = document.getElementById("model").value;
+
+            // Clear terminal
+            const terminal = document.getElementById("terminal");
+            terminal.innerHTML = "";
+            
+            // Generate a random session ID to isolate logs
+            const sessionId = Math.random().toString(36).substring(2, 15);
+            
+            addLog(`[System] Initializing session ${sessionId}...`, "info");
+            addLog(`[System] Selected Model Provider: ${provider.toUpperCase()}`, "info");
+
+            // 1. Establish SSE Connection for logs
+            if (logEventSource) {
+                logEventSource.close();
+            }
+            
+            logEventSource = new EventSource(`/api/logs?session_id=${sessionId}`);
+            logEventSource.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                addLog(data.message, data.level);
+            };
+            logEventSource.onerror = function() {
+                addLog("[System] Log stream disconnected.", "info");
+                logEventSource.close();
+            };
+
+            // 2. Trigger Post Request
+            try {
+                addLog("[System] Dispatching compilation request...", "info");
+                const response = await fetch(`/api/generate?session_id=${sessionId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, gender, dob, tob, place, provider, model })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.detail || "Generation failed.");
+                }
+
+                // Download Blob
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `${name.toLowerCase()}_individual_love_report.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                addLog("[System] Report compiled and downloaded successfully!", "success");
+            } catch (err) {
+                addLog(`[Error] ${err.message}`, "error");
+            } finally {
+                submitBtn.disabled = false;
+                if (logEventSource) {
+                    // Keep the log connection open briefly to catch closing logs
+                    setTimeout(() => {
+                        logEventSource.close();
+                    }, 2000);
+                }
+            }
+        }
+    </script>
 </body>
 </html>

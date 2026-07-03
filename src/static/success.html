@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨ Order Confirmed — Cosmic Blueprint</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0c0807;
-            --card-bg: rgba(20, 15, 13, 0.85);
-            --primary: #C9967B;
-            --primary-light: #E8C9B6;
-            --primary-glow: rgba(201, 150, 123, 0.15);
-            --text-light: #F8F5F2;
-            --text-muted: #BCB3AE;
-            --border-color: rgba(201, 150, 123, 0.22);
-            --accent: #E8C9B6;
+            --bg-color: #FAF4EE; /* Soft warm light cream background */
+            --card-bg: #FFFFFF; /* Pure white card */
+            --primary: #C9967B; /* Warm rose gold */
+            --primary-dark: #8E5A40;
+            --accent: #A93B52; /* Delicate rose berry */
+            --text-dark: #3C332D; /* Rich chocolate brown */
+            --text-muted: #96867F; /* Warm taupe */
+            --border-color: rgba(201, 150, 123, 0.28);
+            --shadow: 0 30px 60px rgba(142, 110, 94, 0.08);
+            --transition-fluid: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
@@ -27,29 +28,59 @@
         body {
             background-color: var(--bg-color);
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(201, 150, 123, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 85% 85%, rgba(110, 79, 64, 0.06) 0%, transparent 50%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='1' fill='%23C9967B' opacity='0.15'/%3E%3C/svg%3E");
-            color: var(--text-light);
+                radial-gradient(circle at 10% 20%, rgba(201, 150, 123, 0.05) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(169, 59, 82, 0.04) 0%, transparent 45%);
+            color: var(--text-dark);
             font-family: 'Lora', Georgia, serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
+            overflow-x: hidden;
         }
 
+        /* --- Floating Stardust Particles --- */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star-particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: drift-float 22s linear infinite;
+        }
+
+        @keyframes drift-float {
+            0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+            10% { opacity: 0.35; }
+            90% { opacity: 0.35; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Card Frame --- */
         .container {
             width: 100%;
-            max-width: 620px;
+            max-width: 600px;
             background: var(--card-bg);
-            backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: 4px;
-            padding: 60px 40px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(201, 150, 123, 0.03);
+            padding: 55px 45px;
+            box-shadow: var(--shadow);
             text-align: center;
             position: relative;
+            z-index: 10;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .container::after {
@@ -63,10 +94,9 @@
 
         .success-icon {
             font-size: 3.5rem;
-            color: var(--primary);
+            color: var(--primary-dark);
             margin-bottom: 25px;
             display: inline-block;
-            text-shadow: 0 0 15px var(--primary-glow);
         }
 
         h1 {
@@ -74,15 +104,15 @@
             font-size: 2.4rem;
             font-weight: 300;
             letter-spacing: 3px;
-            color: var(--text-light);
+            color: var(--text-dark);
             text-transform: uppercase;
             margin-bottom: 15px;
         }
 
         .divider {
-            width: 80px;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            width: 70px;
+            height: 1.5px;
+            background: var(--primary);
             margin: 15px auto 25px;
         }
 
@@ -94,8 +124,8 @@
         }
 
         .receipt-box {
-            background: rgba(201, 150, 123, 0.03);
-            border: 1px dashed rgba(201, 150, 123, 0.3);
+            background: rgba(201, 150, 123, 0.02);
+            border: 1px dashed var(--primary);
             border-radius: 4px;
             padding: 24px;
             margin: 30px 0;
@@ -115,15 +145,15 @@
 
         .label {
             font-family: 'Jost', sans-serif;
-            color: var(--accent);
-            font-weight: 500;
+            color: var(--primary-dark);
+            font-weight: 600;
             text-transform: uppercase;
             font-size: 0.8rem;
             letter-spacing: 1px;
         }
 
         .val {
-            color: var(--text-light);
+            color: var(--text-dark);
             font-weight: 500;
         }
 
@@ -132,31 +162,34 @@
             background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
             color: #FFFFFF;
             text-decoration: none;
-            border-radius: 2px;
-            padding: 16px 36px;
+            border-radius: 30px; /* Pill */
+            padding: 16px 45px;
             font-family: 'Jost', sans-serif;
             font-size: 0.95rem;
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-top: 20px;
-            transition: all 0.3s ease;
+            transition: var(--transition-fluid);
             box-shadow: 0 4px 18px rgba(201, 150, 123, 0.25);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(201, 150, 123, 0.35);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(201, 150, 123, 0.35);
         }
     </style>
 </head>
 <body>
 
+    <!-- Floating stardust particles -->
+    <div class="stars-container" id="starsContainer"></div>
+
     <div class="container">
         <span class="success-icon">✨</span>
         <h1>Order Confirmed</h1>
         <div class="divider"></div>
-        <p>Your details have been registered under our cosmic matrices. Acharya Savvy Singh will begin preparing your personalized report.</p>
+        <p>Your birth details have been registered. Acharya Savvy Singh will begin preparing your personalized report.</p>
         
         <div class="receipt-box">
             <div class="receipt-row">
@@ -172,19 +205,32 @@
                 <span class="val">₹499.00</span>
             </div>
             <div class="receipt-row">
-                <span class="label">Delivery Timeline</span>
-                <span class="val" style="color: var(--primary); font-weight: 600; letter-spacing: 0.5px;">24 – 36 Hours</span>
+                <span class="label">Timeline</span>
+                <span class="val" style="color: var(--primary-dark); font-weight: 600; letter-spacing: 0.5px;">24 – 36 Hours</span>
             </div>
         </div>
 
         <p style="font-size: 0.95rem; color: var(--accent); font-style: italic;">
-            A confirmation receipt has been dispatched to your email address. 
+            A confirmation receipt has been dispatched to your email.
         </p>
 
         <a href="/order" class="btn">Place Another Order</a>
     </div>
 
     <script>
+        // Generate floating stardust particles dynamically
+        const starsContainer = document.getElementById("starsContainer");
+        for (let i = 0; i < 10; i++) {
+            const star = document.createElement("div");
+            star.className = "star-particle";
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.width = `${Math.random() * 3 + 2}px`;
+            star.style.height = star.style.width;
+            star.style.animationDelay = `${Math.random() * 12}s`;
+            star.style.animationDuration = `${Math.random() * 12 + 15}s`;
+            starsContainer.appendChild(star);
+        }
+
         const params = new URLSearchParams(window.location.search);
         document.getElementById("clientName").innerText = params.get("name") || "Valued Client";
         document.getElementById("orderId").innerText = params.get("order_id") || "N/A";

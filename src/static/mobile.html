@@ -2,44 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 Cosmic Love & Marriage Report — Astro Savvy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔮 Cosmic Love Report — Astro Savvy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         :root {
-            --bg-color: #FAF4EE; /* Romantic warm soft ivory cream */
+            --bg: #FAF4EE; /* Soft warm light cream background */
+            --card-bg: #FFFFFF; /* Pure white card */
             --primary: #C9967B; /* Warm rose gold */
             --primary-dark: #8E5A40;
-            --accent: #A93B52; /* Delicate rose berry */
-            --text-dark: #3C332D; /* Rich chocolate brown */
-            --text-muted: #96867F; /* Warm taupe */
+            --accent: #A93B52; /* Deep rose berry */
+            --text-dark: #3C332D; /* Soft dark brown text */
+            --text-muted: #96867F; /* Muted warm grey */
             --border-color: rgba(201, 150, 123, 0.28);
-            --transition-fluid: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fluid: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 5% 5%, rgba(201, 150, 123, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 95% 95%, rgba(169, 59, 82, 0.05) 0%, transparent 40%);
+            background-color: var(--bg);
             color: var(--text-dark);
-            font-family: 'Lora', Georgia, serif;
+            font-family: 'Lora', serif;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            padding: 60px 20px;
+            padding: 30px 20px;
             overflow-x: hidden;
         }
 
-        /* --- Floating Stardust Particles --- */
+        /* --- Floating particles --- */
         .stars-container {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -62,181 +61,81 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- Split Desktop Workspace (Seamless, No clunky box) --- */
-        .workspace {
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            gap: 80px;
+        /* --- Header: Cover Page Display --- */
+        .mobile-header {
             width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 440px;
+            text-align: center;
+            margin-bottom: 30px;
             position: relative;
             z-index: 10;
-            align-items: center;
+            animation: fadeInHeader 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @media (max-width: 992px) {
-            .workspace {
-                grid-template-columns: 1fr;
-                gap: 50px;
-            }
-        }
-
-        /* --- Left Side: Organic Arch Showcase --- */
-        .showcase-pane {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-            animation: fadeInShowcase 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes fadeInShowcase {
-            0% { opacity: 0; transform: translateY(30px); }
+        @keyframes fadeInHeader {
+            0% { opacity: 0; transform: translateY(-15px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Arched Gold Frame for the Cover (NO BOXES) */
-        .arch-frame {
-            position: relative;
-            width: 100%;
-            max-width: 340px;
+        /* Arched Badge Preview */
+        .cover-badge {
+            width: 120px;
             aspect-ratio: 1 / 1.45;
-            border-radius: 170px 170px 12px 12px; /* Archway shape */
-            border: 2px solid var(--primary);
-            padding: 10px;
-            box-shadow: 0 30px 65px rgba(142, 110, 94, 0.15);
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(5px);
-            margin-bottom: 35px;
-            transition: var(--transition-fluid);
-        }
-
-        .arch-frame:hover {
-            transform: scale(1.03) translateY(-5px);
-            box-shadow: 0 35px 75px rgba(142, 110, 94, 0.22);
-        }
-
-        /* Thin gold inner line details */
-        .arch-frame::after {
-            content: '';
-            position: absolute;
-            top: 5px; left: 5px; right: 5px; bottom: 5px;
-            border: 1px solid rgba(201, 150, 123, 0.3);
-            border-radius: 165px 165px 8px 8px;
-            pointer-events: none;
-        }
-
-        .cover-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 160px 160px 6px 6px;
+            border-radius: 60px 60px 6px 6px;
+            box-shadow: 0 15px 35px rgba(142, 110, 94, 0.15);
+            border: 1.5px solid var(--primary);
+            margin: 0 auto 15px;
             background-image: url("/Coverpage.png");
             background-size: cover;
             background-position: center;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
 
-        .showcase-title {
+        h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.4rem;
-            font-weight: 300;
-            letter-spacing: 4px;
+            font-size: 1.8rem;
+            font-weight: 400;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            margin-bottom: 6px;
             color: var(--text-dark);
-            margin-bottom: 12px;
         }
 
-        .showcase-desc {
-            font-size: 1.05rem;
-            color: var(--text-muted);
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--primary-dark);
             font-style: italic;
-            line-height: 1.6;
-            max-width: 380px;
         }
 
-        /* --- Right Side: Seamless Organic Inputs Form (NO BOX WRAPPERS) --- */
-        .form-pane {
+        /* --- Seamless Form (NO CLUNKY BOXES) --- */
+        .mobile-form-container {
+            width: 100%;
+            max-width: 440px;
             position: relative;
-            padding: 20px;
-            animation: fadeInForm 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+            animation: fadeInCard 1s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0 10px;
         }
 
-        @keyframes fadeInForm {
-            0% { opacity: 0; transform: translateY(40px); }
+        @keyframes fadeInCard {
+            0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Botanical floral flourishes in headers */
-        .header-decorations {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 45px;
-        }
-
-        header h1 {
+        .step-panel h3 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.6rem;
-            font-weight: 300;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            font-style: italic;
+            font-size: 1.3rem;
             color: var(--primary-dark);
-        }
-
-        .form-section {
-            margin-bottom: 40px;
-        }
-
-        /* Elegant gold-leaf title styling */
-        .section-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: var(--primary-dark);
+            margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(201, 150, 123, 0.2);
+            padding-bottom: 6px;
+        }
+
+        .form-fields {
             display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, rgba(201, 150, 123, 0.4), transparent);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 35px 30px;
-        }
-
-        @media (max-width: 600px) {
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 28px;
-            }
+            flex-direction: column;
+            gap: 25px;
         }
 
         .form-group {
@@ -246,27 +145,17 @@
             position: relative;
         }
 
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        @media (max-width: 600px) {
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-        }
-
         label {
             font-family: 'Jost', sans-serif;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             transition: var(--transition-fluid);
         }
 
-        /* Floating underline fields (NO BOX OUTLINES) */
+        /* Underline touch fields */
         input, select {
             background: transparent;
             border: none;
@@ -275,18 +164,17 @@
             padding: 10px 0;
             color: var(--text-dark);
             font-family: 'Lora', serif;
-            font-size: 1.05rem;
+            font-size: 1rem;
             outline: none;
+            width: 100%;
             transition: var(--transition-fluid);
         }
 
         input:focus, select:focus {
             border-bottom-color: var(--primary-dark);
-            padding-left: 5px;
-            box-shadow: none;
         }
 
-        /* Expanding gold focus line */
+        /* Expanding focus line */
         .form-group::after {
             content: '';
             position: absolute;
@@ -302,22 +190,19 @@
 
         .form-group:focus-within label {
             color: var(--accent);
-            letter-spacing: 2.2px;
         }
 
-        /* --- Autocomplete dropdown (Floating seamlessly) --- */
+        /* Autocomplete results dropdown */
         .autocomplete-list {
             position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
+            top: 100%; left: 0; right: 0;
             background: #FFFFFF;
             border: 1px solid var(--primary);
             border-radius: 4px;
-            max-height: 180px;
+            max-height: 160px;
             overflow-y: auto;
             z-index: 100;
-            box-shadow: 0 15px 35px rgba(142, 110, 94, 0.12);
+            box-shadow: 0 10px 25px rgba(142, 110, 94, 0.12);
             display: none;
             opacity: 0;
             transform: translateY(5px);
@@ -331,82 +216,72 @@
         }
 
         .autocomplete-item {
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(201, 150, 123, 0.06);
+            padding: 12px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(201, 150, 123, 0.08);
             color: var(--text-dark);
-            transition: var(--transition-fluid);
         }
 
         .autocomplete-item:hover {
             background: rgba(201, 150, 123, 0.08);
-            padding-left: 22px;
         }
 
-        /* --- Seamless Pricing Section --- */
-        .checkout-area {
-            margin-top: 50px;
-            padding: 30px 0;
+        /* Price summary */
+        .price-summary {
+            background: rgba(201,150,123,0.02);
             border-top: 1px solid rgba(201, 150, 123, 0.2);
+            border-bottom: 1px solid rgba(201, 150, 123, 0.2);
+            padding: 24px 0;
             text-align: center;
+            margin-top: 40px;
+            margin-bottom: 30px;
         }
 
-        .price-text {
+        .price-summary h4 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.1rem;
-            font-weight: 300;
+            font-size: 1.7rem;
             color: var(--text-dark);
-            margin-bottom: 15px;
         }
 
-        .price-text span {
+        .price-summary h4 span {
             color: var(--primary-dark);
-            font-weight: 600;
+            font-weight: bold;
         }
 
-        /* Pill shaped buttons */
-        .submit-btn {
+        /* Pill touch button */
+        .action-btn {
+            padding: 16px 20px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition-fluid);
             background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
             color: #FFFFFF;
-            border: none;
-            border-radius: 30px; /* Pill */
-            padding: 16px 45px;
-            font-family: 'Jost', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
-            cursor: pointer;
-            transition: var(--transition-fluid);
-            box-shadow: 0 6px 20px rgba(201, 150, 123, 0.25);
-            display: inline-block;
-            width: 100%;
-            max-width: 340px;
+            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.2);
         }
 
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(201, 150, 123, 0.4);
+        .action-btn:active {
+            transform: scale(0.98);
         }
 
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        /* --- Loading Blur Overlay --- */
+        /* Blur Loading Overlay */
         .loading-overlay {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(250, 244, 238, 0.9);
-            backdrop-filter: blur(6px);
+            background: rgba(250, 244, 238, 0.92);
+            backdrop-filter: blur(5px);
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 200;
-            gap: 20px;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
 
         .spinner {
@@ -424,125 +299,100 @@
         }
 
         .error-banner {
-            background: rgba(220, 53, 69, 0.06);
+            background: rgba(220, 53, 69, 0.08);
             border-left: 3px solid #DC3545;
             color: #C0392B;
-            padding: 12px 18px;
-            border-radius: 4px;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            border-radius: 2px;
+            margin-bottom: 20px;
             display: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Floating Stardust Particles -->
+    <!-- Floating stardust particles -->
     <div class="stars-container" id="starsContainer"></div>
 
-    <div class="workspace">
-        <!-- Showcase side: Archway layout -->
-        <div class="showcase-pane">
-            <div class="arch-frame">
-                <div class="cover-image"></div>
-            </div>
-            <h2 class="showcase-title">Love &amp; Marriage Destiny</h2>
-            <p class="showcase-desc">A journey of hearts, mapped and written with love through stellar alignments.</p>
+    <!-- Header containing Book Badge -->
+    <div class="mobile-header">
+        <div class="cover-badge"></div>
+        <h1>Order Your Report</h1>
+        <div class="subtitle">Prepared by Acharya Savvy Singh</div>
+    </div>
+
+    <!-- Mobile Form Container -->
+    <div class="mobile-form-container">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: var(--primary-dark); font-style: italic;">Aligning birth charts...</p>
         </div>
 
-        <!-- Form side: Seamless underline inputs -->
-        <div class="form-pane">
-            <!-- Loading overlay -->
-            <div class="loading-overlay" id="loadingOverlay">
-                <div class="spinner"></div>
-                <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-style: italic; color: var(--primary-dark);">Casting coordinates...</p>
-            </div>
+        <div class="error-banner" id="errorBanner"></div>
 
-            <header>
-                <div class="header-decorations">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                        <circle cx="12" cy="12" r="9" />
-                        <line x1="12" y1="3" x2="12" y2="21" />
-                        <line x1="3" y1="12" x2="21" y2="12" />
-                    </svg>
-                </div>
-                <h1>Personal Particulars</h1>
-                <p>Consultation by Acharya Savvy Singh</p>
-                <div class="divider"></div>
-            </header>
-
-            <div class="error-banner" id="errorBanner"></div>
-
-            <form id="orderForm">
-                <!-- Section 1 -->
-                <div class="form-section">
-                    <div class="section-title">1. Identity</div>
-                    <div class="grid">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" required placeholder="e.g. Meera Patel">
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Gender</label>
-                            <select id="gender" required>
-                                <option value="Female" selected>Female</option>
-                                <option value="Male">Male</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" required placeholder="e.g. meera@domain.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="mobile">Mobile Number</label>
-                            <input type="tel" id="mobile" required placeholder="e.g. +91 98765 43210">
-                        </div>
+        <form id="orderForm">
+            <div class="step-panel active">
+                <h3>Birth Details &amp; Contact</h3>
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required placeholder="e.g. Meera Patel">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="e.g. meera@domain.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" required placeholder="e.g. +91 98765 43210">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" required>
+                            <option value="Female" selected>Female</option>
+                            <option value="Male">Male</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tob">Time of Birth</label>
+                        <input type="time" id="tob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthplace">Place of Birth (Search)</label>
+                        <input type="text" id="birthplace" required autocomplete="off" placeholder="Search city...">
+                        <div class="autocomplete-list" id="autocompleteList"></div>
                     </div>
                 </div>
 
-                <!-- Section 2 -->
-                <div class="form-section">
-                    <div class="section-title">2. Birth Matrix</div>
-                    <div class="grid">
-                        <div class="form-group">
-                            <label for="dob">Date of Birth</label>
-                            <input type="date" id="dob" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tob">Time of Birth</label>
-                            <input type="time" id="tob" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="birthplace">Place of Birth (Search Lookup)</label>
-                            <input type="text" id="birthplace" required autocomplete="off" placeholder="Search birthplace...">
-                            <div class="autocomplete-list" id="autocompleteList"></div>
-                        </div>
+                <div>
+                    <div class="price-summary">
+                        <h4>Creation Fee: <span>₹499</span></h4>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
+                            Delivered to your email within 24 to 36 hours.
+                        </p>
                     </div>
+                    <button type="submit" class="action-btn" id="payBtn">💳 Proceed to Payment</button>
                 </div>
-
-                <!-- Checkout Area -->
-                <div class="checkout-area">
-                    <div class="price-text">Creation Fee: <span>₹499</span></div>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.8; text-align: justify;">
-                        Your detailed 26-page destiny analysis by Acharya Savvy Singh is created using custom charts and delivered to your email within 24 to 36 hours.
-                    </p>
-                    <button type="submit" class="submit-btn" id="payBtn">💳 Proceed to Payment</button>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 
     <script>
-        // Generate floating stardust particles
+        // Generate floating stardust particles dynamically for mobile
         const starsContainer = document.getElementById("starsContainer");
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 8; i++) {
             const star = document.createElement("div");
             star.className = "star-particle";
             star.style.left = `${Math.random() * 100}vw`;
             star.style.width = `${Math.random() * 3 + 2}px`;
             star.style.height = star.style.width;
-            star.style.animationDelay = `${Math.random() * 15}s`;
-            star.style.animationDuration = `${Math.random() * 12 + 18}s`;
+            star.style.animationDelay = `${Math.random() * 10}s`;
+            star.style.animationDuration = `${Math.random() * 10 + 15}s`;
             starsContainer.appendChild(star);
         }
 
@@ -610,7 +460,7 @@
                 setTimeout(() => { loadingOverlay.style.opacity = "1"; }, 50);
             } else {
                 loadingOverlay.style.opacity = "0";
-                setTimeout(() => { loadingOverlay.style.display = "none"; }, 400);
+                setTimeout(() => { loadingOverlay.style.display = "none"; }, 300);
             }
         }
 
@@ -626,6 +476,12 @@
         orderForm.addEventListener("submit", async function(e) {
             e.preventDefault();
             showError("");
+
+            if (!selectedPlace || birthplaceInput.value !== selectedPlace.formatted) {
+                showError("Please search and select a verified birthplace.");
+                return;
+            }
+
             showLoading(true);
 
             try {

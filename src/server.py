@@ -53,9 +53,12 @@ def get_index():
         return FileResponse(index_path, headers={"Cache-Control": "no-store, no-cache"})
     return JSONResponse(status_code=404, content={"detail": "index.html not found"})
 
-# Re-mount index for custom public flow pages if requested directly
 @app.get("/order")
-def get_order_page():
+def get_order_page(request: Request):
+    user_agent = request.headers.get("user-agent", "").lower()
+    is_mobile = any(x in user_agent for x in ["iphone", "android", "blackberry", "opera mini", "mobile"])
+    if is_mobile:
+        return FileResponse(os.path.join(static_dir, "mobile.html"))
     return FileResponse(os.path.join(static_dir, "order.html"))
 
 @app.get("/success")
