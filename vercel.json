@@ -6,10 +6,13 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "src/server.py" },
-    { "src": "/order", "dest": "src/static/order.html" },
-    { "src": "/success", "dest": "src/static/success.html" },
-    { "src": "/admin/login", "dest": "src/static/admin_login.html" },
-    { "src": "/admin", "dest": "src/static/admin.html" },
+    { "src": "/order", "dest": "src/server.py" },
+    { "src": "/success", "dest": "src/server.py" },
+    { "src": "/testbed", "dest": "src/server.py" },
+    { "src": "/admin/login", "dest": "src/server.py" },
+    { "src": "/admin", "dest": "src/server.py" },
+    { "src": "/Coverpage.png", "dest": "src/server.py" },
+    { "src": "/", "dest": "src/server.py" },
     { "src": "/(.*)", "dest": "src/static/$1" }
   ]
 }

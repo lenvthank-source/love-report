@@ -47,11 +47,12 @@ static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 os.makedirs(static_dir, exist_ok=True)
 
 @app.get("/")
-def get_index():
-    index_path = os.path.join(static_dir, "index.html")
-    if os.path.exists(index_path):
-        return FileResponse(index_path, headers={"Cache-Control": "no-store, no-cache"})
-    return JSONResponse(status_code=404, content={"detail": "index.html not found"})
+def get_root_page(request: Request):
+    user_agent = request.headers.get("user-agent", "").lower()
+    is_mobile = any(x in user_agent for x in ["iphone", "android", "blackberry", "opera mini", "mobile"])
+    if is_mobile:
+        return FileResponse(os.path.join(static_dir, "mobile.html"))
+    return FileResponse(os.path.join(static_dir, "order.html"))
 
 @app.get("/order")
 def get_order_page(request: Request):
@@ -60,6 +61,13 @@ def get_order_page(request: Request):
     if is_mobile:
         return FileResponse(os.path.join(static_dir, "mobile.html"))
     return FileResponse(os.path.join(static_dir, "order.html"))
+
+@app.get("/testbed")
+def get_testbed_page():
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path, headers={"Cache-Control": "no-store, no-cache"})
+    return JSONResponse(status_code=404, content={"detail": "index.html not found"})
 
 @app.get("/success")
 def get_success_page():
