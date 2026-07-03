@@ -62,6 +62,10 @@ def get_order_page():
 def get_success_page():
     return FileResponse(os.path.join(static_dir, "success.html"))
 
+@app.get("/Coverpage.png")
+def get_cover_png():
+    return FileResponse(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Coverpage.png"))
+
 @app.get("/admin")
 def get_admin_page():
     return FileResponse(os.path.join(static_dir, "admin.html"))

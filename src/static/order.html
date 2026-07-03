@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🔮 Order Your Cosmic Love & Marriage Report</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         :root {
-            --bg-color: #0F0B09;
-            --card-bg: rgba(30, 22, 20, 0.75);
-            --primary: #C9967B;
-            --primary-glow: rgba(201, 150, 123, 0.25);
-            --text: #F3EDE4;
-            --text-dim: #C5BDB7;
-            --border: rgba(201, 150, 123, 0.25);
-            --accent: #E8C9B6;
-            --input-bg: rgba(20, 15, 13, 0.6);
+            --bg-color: #FFF9F7; /* Delicate ivory rose */
+            --primary: #C9967B; /* Classical rose gold */
+            --primary-dark: #8E5A40;
+            --accent: #E25B70; /* Soft berry pink */
+            --text-dark: #3B2E2B; /* Dark chocolate text */
+            --text-muted: #8E7E7B; /* Muted taupe */
+            --input-bg: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(201, 150, 123, 0.3);
+            --shadow-soft: 0 15px 40px rgba(142, 110, 94, 0.08);
         }
 
         * {
@@ -27,86 +27,190 @@
 
         body {
             background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(201, 150, 123, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(110, 79, 64, 0.08) 0%, transparent 40%);
-            color: var(--text);
+            color: var(--text-dark);
             font-family: 'Lora', Georgia, serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            overflow-x: hidden;
         }
 
-        .container {
+        /* --- Full Screen Grid Split --- */
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @media (max-width: 992px) {
+            .wrapper {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: visible;
+            }
+        }
+
+        /* --- Left Side: Fluid Cover Showcase --- */
+        .showcase-side {
+            background: linear-gradient(145deg, #FFF0EC 0%, #FCE4DD 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 40px;
+            overflow: hidden;
+            border-right: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 992px) {
+            .showcase-side {
+                height: 480px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+
+        .showcase-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 150, 123, 0.25) 0%, transparent 70%);
+            filter: blur(40px);
+            animation: pulse-glow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(0.9) translate(-10px, -10px); }
+            100% { transform: scale(1.1) translate(10px, 10px); }
+        }
+
+        /* Hover floating report cover preview */
+        .report-preview-container {
             width: 100%;
-            max-width: 750px;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 50px 40px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            max-width: 360px;
+            aspect-ratio: 1 / 1.414; /* A4 Ratio */
+            position: relative;
+            z-index: 10;
+            perspective: 1000px;
+        }
+
+        .report-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 25px 55px rgba(142, 110, 94, 0.25);
+            border: 1px solid rgba(255,255,255,0.6);
+            transform: rotateY(-6deg) rotateX(4deg);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s;
+            animation: hover-float 5s ease-in-out infinite;
+        }
+
+        .report-preview-container:hover .report-cover-img {
+            transform: rotateY(0deg) rotateX(0deg) scale(1.03);
+            box-shadow: 0 35px 75px rgba(142, 110, 94, 0.35);
+        }
+
+        @keyframes hover-float {
+            0% { transform: translateY(0px) rotateY(-6deg) rotateX(4deg); }
+            50% { transform: translateY(-12px) rotateY(-4deg) rotateX(2deg); }
+            100% { transform: translateY(0px) rotateY(-6deg) rotateX(4deg); }
+        }
+
+        /* --- Right Side: Modern Intake Form --- */
+        .form-side {
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 80px;
+            overflow-y: auto;
             position: relative;
         }
 
+        @media (max-width: 992px) {
+            .form-side {
+                padding: 40px 24px;
+            }
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
         header {
-            text-align: center;
             margin-bottom: 40px;
         }
 
         header h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--text);
-            margin-bottom: 12px;
+            font-size: 2.6rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--text-dark);
             text-transform: uppercase;
+            margin-bottom: 8px;
         }
 
         header p {
-            font-size: 1.1rem;
-            color: var(--primary);
+            font-size: 1.05rem;
             font-style: italic;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: var(--primary);
+            margin-top: 15px;
         }
 
         .form-section {
             margin-bottom: 30px;
+            animation: fade-in-section 1s ease-out;
         }
 
         .section-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--primary);
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--primary-dark);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1.2px solid var(--border-color);
             padding-bottom: 6px;
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            gap: 20px;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 576px) {
             .grid {
                 grid-template-columns: 1fr;
-            }
-            .container {
-                padding: 30px 20px;
             }
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             position: relative;
         }
 
@@ -114,35 +218,37 @@
             grid-column: span 2;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 576px) {
             .form-group.full-width {
                 grid-column: span 1;
             }
         }
 
         label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--accent);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         input, select {
             background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
             padding: 12px 16px;
-            color: var(--text);
+            color: var(--text-dark);
             font-family: 'Lora', serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         input:focus, select:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 8px var(--primary-glow);
+            box-shadow: 0 0 12px rgba(201, 150, 123, 0.15);
+            background: #FFFFFF;
         }
 
         /* --- Autocomplete Results Dropdown --- */
@@ -151,21 +257,23 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: #17110F;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            max-height: 220px;
+            background: #FFFFFF;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            max-height: 180px;
             overflow-y: auto;
             z-index: 100;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 30px rgba(142,110,94,0.12);
             display: none;
         }
 
         .autocomplete-item {
-            padding: 12px 16px;
-            font-size: 0.95rem;
+            padding: 10px 16px;
+            font-size: 0.9rem;
             cursor: pointer;
-            border-bottom: 1px solid rgba(201, 150, 123, 0.1);
+            border-bottom: 1px solid rgba(201, 150, 123, 0.08);
+            color: var(--text-dark);
+            transition: all 0.2s;
         }
 
         .autocomplete-item:last-child {
@@ -173,85 +281,79 @@
         }
 
         .autocomplete-item:hover {
-            background: rgba(201, 150, 123, 0.15);
-            color: #FFFFFF;
+            background: rgba(201, 150, 123, 0.08);
+            padding-left: 20px;
         }
 
-        /* --- Checkout Bar --- */
+        /* --- Checkout Info --- */
         .checkout-box {
-            margin-top: 40px;
+            margin-top: 35px;
             padding: 24px;
-            background: rgba(201, 150, 123, 0.06);
-            border: 1px dashed var(--primary);
-            border-radius: 8px;
+            background: rgba(201, 150, 123, 0.04);
+            border: 1.2px dashed var(--primary);
+            border-radius: 4px;
             text-align: center;
         }
 
         .price-tag {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 12px;
+            font-weight: 300;
+            color: var(--text-dark);
+            margin-bottom: 10px;
         }
 
         .price-tag span {
-            color: var(--primary);
+            color: var(--primary-dark);
+            font-weight: 600;
         }
 
         .submit-btn {
             background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
             color: #FFFFFF;
             border: none;
-            border-radius: 6px;
-            padding: 16px 32px;
-            font-family: 'Lora', serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+            border-radius: 4px;
+            padding: 15px 36px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
             width: 100%;
             max-width: 320px;
-            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.3);
+            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.2);
         }
 
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(201, 150, 123, 0.4);
+            box-shadow: 0 8px 24px rgba(201, 150, 123, 0.35);
         }
 
         .submit-btn:active {
             transform: translateY(0);
         }
 
-        .submit-btn:disabled {
-            background: #4A3E39;
-            color: #8E7E77;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* --- Loading Spinner --- */
+        /* --- Blur Loading Overlay --- */
         .loading-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 11, 9, 0.85);
+            background: rgba(255, 249, 247, 0.85);
+            backdrop-filter: blur(8px);
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 16px;
             z-index: 200;
             gap: 20px;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(201, 150, 123, 0.2);
-            border-top: 3px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(201, 150, 123, 0.2);
+            border-top: 2px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -262,13 +364,13 @@
         }
 
         .error-banner {
-            background: rgba(220, 53, 69, 0.15);
-            border-left: 4px solid #DC3545;
-            color: #FFC0C5;
-            padding: 14px 20px;
-            border-radius: 0 6px 6px 0;
+            background: rgba(220, 53, 69, 0.08);
+            border-left: 3px solid #DC3545;
+            color: #C0392B;
+            padding: 12px 18px;
+            border-radius: 2px;
             margin-bottom: 25px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: none;
             line-height: 1.5;
         }
@@ -276,80 +378,93 @@
 </head>
 <body>
 
-    <div class="container">
-        <!-- Loading overlay -->
-        <div class="loading-overlay" id="loadingOverlay">
-            <div class="spinner"></div>
-            <p id="loadingText" style="font-style: italic; color: var(--primary);">Connecting to cosmic servers...</p>
+    <div class="wrapper">
+        <!-- Showcase cover page side -->
+        <div class="showcase-side">
+            <div class="showcase-glow"></div>
+            <div class="report-preview-container">
+                <img src="/Coverpage.png" class="report-cover-img" alt="Love Report Cover Page Preview">
+            </div>
         </div>
 
-        <header>
-            <h1>Cosmic Love Blueprint</h1>
-            <p>Your Personalised Love & Marriage Destiny Map</p>
-        </header>
-
-        <div class="error-banner" id="errorBanner"></div>
-
-        <form id="orderForm">
-            <!-- Section 1: Customer Identity -->
-            <div class="form-section">
-                <div class="section-title">1. Your Profile Details</div>
-                <div class="grid">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" required placeholder="e.g. Aarav Sharma">
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" required>
-                            <option value="Male">Male</option>
-                            <option value="Female" selected>Female</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" required placeholder="e.g. aarav@gmail.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="mobile">Mobile Number</label>
-                        <input type="tel" id="mobile" required placeholder="e.g. +91 98765 43210">
-                    </div>
-                </div>
+        <!-- Form side -->
+        <div class="form-side">
+            <!-- Loading overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p id="loadingText" style="font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: var(--primary-dark); letter-spacing: 0.5px;">Casting celestial alignments...</p>
             </div>
 
-            <!-- Section 2: Birth Details -->
-            <div class="form-section">
-                <div class="section-title">2. Astral Birth Data</div>
-                <div class="grid">
-                    <div class="form-group">
-                        <label for="dob">Date of Birth</label>
-                        <input type="date" id="dob" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="tob">Time of Birth</label>
-                        <input type="time" id="tob" required>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="birthplace">Place of Birth (VedAstro Lookup)</label>
-                        <input type="text" id="birthplace" required autocomplete="off" placeholder="Type city name (e.g. Delhi)">
-                        <div class="autocomplete-list" id="autocompleteList"></div>
-                    </div>
-                </div>
-            </div>
+            <div class="form-container">
+                <header>
+                    <h1>Cosmic Love Blueprint</h1>
+                    <p>Prepared by Astrologer Acharya Savvy Singh</p>
+                    <div class="divider"></div>
+                </header>
 
-            <!-- Checkout Details -->
-            <div class="checkout-box">
-                <div class="price-tag">Astrological Consultation Fee: <span>₹499</span></div>
-                <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6;">
-                    Your custom 26-page report is personally generated using detailed D1 (Birth), D9 (Marriage), and D30 (Karmic) charts. You will receive it in your email inbox within 24 to 36 hours.
-                </p>
-                <button type="submit" class="submit-btn" id="payBtn">💳 COMPLETE PAYMENT & ORDER</button>
+                <div class="error-banner" id="errorBanner"></div>
+
+                <form id="orderForm">
+                    <!-- Section 1 -->
+                    <div class="form-section">
+                        <div class="section-title">1. Personal Details</div>
+                        <div class="grid">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" required placeholder="e.g. Meera Patel">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" required>
+                                    <option value="Female" selected>Female</option>
+                                    <option value="Male">Male</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" required placeholder="e.g. meera@domain.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="mobile">Mobile Number</label>
+                                <input type="tel" id="mobile" required placeholder="e.g. +91 98765 43210">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2 -->
+                    <div class="form-section">
+                        <div class="section-title">2. Astral Birth Data</div>
+                        <div class="grid">
+                            <div class="form-group">
+                                <label for="dob">Date of Birth</label>
+                                <input type="date" id="dob" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="tob">Time of Birth</label>
+                                <input type="time" id="tob" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="birthplace">Place of Birth (VedAstro Geolocation Search)</label>
+                                <input type="text" id="birthplace" required autocomplete="off" placeholder="Search city... (e.g. Mumbai)">
+                                <div class="autocomplete-list" id="autocompleteList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Box -->
+                    <div class="checkout-box">
+                        <div class="price-tag">Creation Fee: <span>₹499</span></div>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.7; text-align: justify;">
+                            Your custom 26-page report is personally generated using detailed D1, D9, and D30 charts. You will receive it in your email inbox within 24 to 36 hours.
+                        </p>
+                        <button type="submit" class="submit-btn" id="payBtn">💳 Proceed to Payment</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
     <script>
-        // Form Data State
         let selectedPlace = null;
         let autocompleteTimeout = null;
 
@@ -399,7 +514,6 @@
             }, 300);
         });
 
-        // Hide dropdown on clicking outside
         document.addEventListener("click", (e) => {
             if (e.target !== birthplaceInput) {
                 autocompleteList.style.display = "none";
@@ -421,7 +535,6 @@
             }
         }
 
-        // Handle Order Creation and Checkout Submit
         orderForm.addEventListener("submit", async function(e) {
             e.preventDefault();
             showError("");
@@ -431,10 +544,9 @@
                 return;
             }
 
-            showLoading(true, "Initiating payment gateway...");
+            showLoading(true, "Connecting to payment gateway...");
 
             try {
-                // 1. Create order on the backend
                 const payload = {
                     name: document.getElementById("name").value,
                     email: document.getElementById("email").value,
@@ -456,19 +568,18 @@
                 });
                 
                 if (!res.ok) {
-                    throw new Error("Failed to create order on cosmic server. Please check inputs.");
+                    throw new Error("Failed to create order on server. Please try again.");
                 }
 
                 const order = await res.json();
                 showLoading(false);
 
-                // 2. Open Razorpay payment checkout standard popup
                 const options = {
-                    key: order.razorpay_order_id.startsWith("order_mock_") ? "rzp_test_mock" : "", // Filled dynamically by Razorpay Checkout script or overridden
+                    key: order.razorpay_order_id.startsWith("order_mock_") ? "rzp_test_mock" : "",
                     amount: order.amount,
                     currency: order.currency,
-                    name: "Cosmic Astrological Reports",
-                    description: "Love & Marriage Destiny Report consultation fee",
+                    name: "Acharya Savvy Singh",
+                    description: "Love & Marriage Destiny Report Consultation Fee",
                     order_id: order.razorpay_order_id,
                     handler: async function(payment) {
                         showLoading(true, "Capturing payment and securing templates...");
@@ -490,7 +601,6 @@
                                 throw new Error("Payment validation failed. Please contact support.");
                             }
 
-                            // Redirect to success page on confirmation
                             window.location.href = `/success?order_id=${order.order_id}&name=${encodeURIComponent(payload.name)}&email=${encodeURIComponent(payload.email)}`;
                         } catch (err) {
                             showLoading(false);
