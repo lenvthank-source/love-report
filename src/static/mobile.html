@@ -24,6 +24,7 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -34,8 +35,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px 20px;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         /* --- Floating particles --- */
@@ -61,27 +62,19 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- Header: Cover Page Display --- */
+        /* --- Mobile Header --- */
         .mobile-header {
             width: 100%;
-            max-width: 440px;
             text-align: center;
-            margin-bottom: 30px;
+            padding: 30px 20px;
             position: relative;
             z-index: 10;
-            animation: fadeInHeader 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes fadeInHeader {
-            0% { opacity: 0; transform: translateY(-15px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Arched Badge Preview */
         .cover-badge {
-            width: 120px;
+            width: 110px;
             aspect-ratio: 1 / 1.45;
-            border-radius: 60px 60px 6px 6px;
+            border-radius: 55px 55px 6px 6px;
             box-shadow: 0 15px 35px rgba(142, 110, 94, 0.15);
             border: 1.5px solid var(--primary);
             margin: 0 auto 15px;
@@ -106,36 +99,141 @@
             font-style: italic;
         }
 
-        /* --- Seamless Form (NO CLUNKY BOXES) --- */
-        .mobile-form-container {
-            width: 100%;
-            max-width: 440px;
-            position: relative;
-            z-index: 10;
-            animation: fadeInCard 1s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 0 10px;
-        }
-
-        @keyframes fadeInCard {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .step-panel h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            color: var(--primary-dark);
-            margin-bottom: 25px;
+        .action-btn {
+            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 30px;
+            padding: 14px 28px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-bottom: 1px solid rgba(201, 150, 123, 0.2);
-            padding-bottom: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.2);
+            margin-top: 15px;
+        }
+
+        /* --- Section Common Mobile --- */
+        .mobile-section {
+            width: 100%;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .mobile-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .mobile-section h2 span {
+            color: var(--accent);
+        }
+
+        .mobile-section p.sec-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .checklist li {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--primary-dark);
+        }
+
+        /* Inside Report Cards */
+        .info-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 24px 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .info-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+        }
+
+        .info-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Packages Choice Mobile */
+        .pkg-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .pkg-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .pkg-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 15px 0;
+        }
+
+        .pkg-price span {
+            text-decoration: line-through;
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-right: 6px;
+        }
+
+        /* --- Mobile Form Wrapper --- */
+        .form-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 30px 20px;
+            box-shadow: var(--shadow-soft);
         }
 
         .form-fields {
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 22px;
         }
 
         .form-group {
@@ -151,11 +249,9 @@
             font-weight: 500;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: var(--transition-fluid);
+            letter-spacing: 0.5px;
         }
 
-        /* Underline touch fields */
         input, select {
             background: transparent;
             border: none;
@@ -167,14 +263,12 @@
             font-size: 1rem;
             outline: none;
             width: 100%;
-            transition: var(--transition-fluid);
         }
 
         input:focus, select:focus {
             border-bottom-color: var(--primary-dark);
         }
 
-        /* Expanding focus line */
         .form-group::after {
             content: '';
             position: absolute;
@@ -188,11 +282,7 @@
             width: 100%;
         }
 
-        .form-group:focus-within label {
-            color: var(--accent);
-        }
-
-        /* Autocomplete results dropdown */
+        /* Autocomplete list */
         .autocomplete-list {
             position: absolute;
             top: 100%; left: 0; right: 0;
@@ -202,7 +292,6 @@
             max-height: 160px;
             overflow-y: auto;
             z-index: 100;
-            box-shadow: 0 10px 25px rgba(142, 110, 94, 0.12);
             display: none;
             opacity: 0;
             transform: translateY(5px);
@@ -226,51 +315,35 @@
             background: rgba(201, 150, 123, 0.08);
         }
 
-        /* Price summary */
-        .price-summary {
-            background: rgba(201,150,123,0.02);
-            border-top: 1px solid rgba(201, 150, 123, 0.2);
-            border-bottom: 1px solid rgba(201, 150, 123, 0.2);
-            padding: 24px 0;
-            text-align: center;
-            margin-top: 40px;
-            margin-bottom: 30px;
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 0;
         }
 
-        .price-summary h4 {
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.7rem;
-            color: var(--text-dark);
+            font-size: 1.15rem;
+            font-weight: 600;
         }
 
-        .price-summary h4 span {
-            color: var(--primary-dark);
-            font-weight: bold;
-        }
-
-        /* Pill touch button */
-        .action-btn {
-            padding: 16px 20px;
-            font-family: 'Jost', sans-serif;
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.4s ease;
+            color: var(--text-muted);
             font-size: 0.9rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            transition: var(--transition-fluid);
-            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
-            color: #FFFFFF;
-            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.2);
         }
 
-        .action-btn:active {
-            transform: scale(0.98);
+        .faq-item.active .faq-answer {
+            max-height: 140px;
+            margin-top: 10px;
         }
 
-        /* Blur Loading Overlay */
+        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -281,7 +354,6 @@
             justify-content: center;
             align-items: center;
             z-index: 200;
-            transition: opacity 0.3s ease;
         }
 
         .spinner {
@@ -308,6 +380,16 @@
             margin-bottom: 20px;
             display: none;
         }
+
+        footer {
+            width: 100%;
+            background: #FFFDFB;
+            border-top: 1px solid var(--border-color);
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body>
@@ -315,25 +397,84 @@
     <!-- Floating stardust particles -->
     <div class="stars-container" id="starsContainer"></div>
 
-    <!-- Header containing Book Badge -->
+    <!-- Header -->
     <div class="mobile-header">
         <div class="cover-badge"></div>
-        <h1>Order Your Report</h1>
+        <h1>Cosmic Love Report</h1>
         <div class="subtitle">Prepared by Acharya Savvy Singh</div>
+        <a href="#mobile-order-form" class="action-btn">🔮 Order Report</a>
     </div>
 
-    <!-- Mobile Form Container -->
-    <div class="mobile-form-container">
-        <div class="loading-overlay" id="loadingOverlay">
-            <div class="spinner"></div>
-            <p style="margin-top: 15px; font-size: 0.9rem; color: var(--primary-dark); font-style: italic;">Aligning birth charts...</p>
+    <!-- What is report -->
+    <div class="mobile-section">
+        <h2>What is <span>Love Report?</span></h2>
+        <p>A personalized astrological destiny guide analyzing Venus placements, 7th house configurations, and compatibility timings for romance and marriage.</p>
+        <ul class="checklist">
+            <li>Reveals emotional needs and love patterns.</li>
+            <li>Explains Venus &amp; 7th house influences.</li>
+            <li>Decodes relationship mindsets.</li>
+            <li>Provides Vedic remedies &amp; rituals.</li>
+        </ul>
+    </div>
+
+    <!-- Inside Report -->
+    <div class="mobile-section" style="background: rgba(201, 150, 123, 0.02);">
+        <h2>What's <span>Inside?</span></h2>
+        <p class="sec-desc">A complete 26-page destiny roadmap</p>
+        
+        <div class="info-card">
+            <h3>Love Personality Analysis</h3>
+            <p>Venus &amp; Moon configurations decodes your emotional needs and traits.</p>
         </div>
+        <div class="info-card">
+            <h3>Marriage &amp; Partner Predictions</h3>
+            <p>7th house analysis to map compatibility, timings, and partner characteristics.</p>
+        </div>
+        <div class="info-card">
+            <h3>Vedic Remedies &amp; Rituals</h3>
+            <p>Custom crystals, gems, and mantras to help resolve relationship transits.</p>
+        </div>
+    </div>
 
-        <div class="error-banner" id="errorBanner"></div>
+    <!-- Packages -->
+    <div class="mobile-section">
+        <h2>Select <span>Your Package</span></h2>
+        <p class="sec-desc">Choose your level of astrological guidance</p>
 
-        <form id="orderForm">
-            <div class="step-panel active">
-                <h3>Birth Details &amp; Contact</h3>
+        <div class="pkg-card">
+            <h3>Love Report</h3>
+            <p>Full 26-page PDF astrology report.</p>
+            <div class="pkg-price"><span>₹1,500</span> ₹499</div>
+            <a href="#mobile-order-form" class="action-btn" onclick="selectPackage('Standard', 499)">BUY NOW</a>
+        </div>
+        <div class="pkg-card">
+            <h3>Report + Ask Astrologer</h3>
+            <p>26-page report plus email response to one query.</p>
+            <div class="pkg-price"><span>₹1,999</span> ₹999</div>
+            <a href="#mobile-order-form" class="action-btn" onclick="selectPackage('Astrologer', 999)">BUY NOW</a>
+        </div>
+        <div class="pkg-card">
+            <h3>Report + Consultation</h3>
+            <p>Report plus personal 30-minute Zoom call.</p>
+            <div class="pkg-price"><span>₹5,500</span> ₹1,299</div>
+            <a href="#mobile-order-form" class="action-btn" onclick="selectPackage('Consultation', 1299)">BUY NOW</a>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="mobile-section" id="mobile-order-form">
+        <h2>Enter <span>Birth Data</span></h2>
+        <p class="sec-desc">Submit your details to compile report</p>
+
+        <div class="form-card">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: var(--primary-dark); font-style: italic;">Aligning birth charts...</p>
+            </div>
+
+            <div class="error-banner" id="errorBanner"></div>
+
+            <form id="orderForm">
                 <div class="form-fields">
                     <div class="form-group">
                         <label for="name">Full Name</label>
@@ -364,23 +505,48 @@
                     </div>
                     <div class="form-group">
                         <label for="birthplace">Place of Birth (Search)</label>
-                        <input type="text" id="birthplace" required autocomplete="off" placeholder="Search city...">
+                        <input type="text" id="birthplace" required autocomplete="off" placeholder="Search birthplace...">
                         <div class="autocomplete-list" id="autocompleteList"></div>
                     </div>
                 </div>
 
-                <div>
-                    <div class="price-summary">
-                        <h4>Creation Fee: <span>₹499</span></h4>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
-                            Delivered to your email within 24 to 36 hours.
-                        </p>
+                <div style="margin-top: 30px; text-align: center;">
+                    <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 15px;">
+                        Price: <span id="priceLabel">₹499</span>
                     </div>
-                    <button type="submit" class="action-btn" id="payBtn">💳 Proceed to Payment</button>
+                    <button type="submit" class="action-btn" id="payBtn" style="width: 100%;">💳 Proceed to Payment</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
+
+    <!-- FAQ -->
+    <div class="mobile-section">
+        <h2>Frequently <span>Asked</span></h2>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>How is it created?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Calculated using D1, D9 Navamsa, and D30 charts from birth time coordinates, processed via Astro Savvy's astrology engine.
+            </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>How long does it take?</span>
+                <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                Generated and dispatched directly to your inbox within 24 to 36 hours.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Astro Savvy Singh. All Rights Reserved.</p>
+    </footer>
 
     <script>
         // Generate floating stardust particles dynamically for mobile
@@ -398,12 +564,23 @@
 
         let selectedPlace = null;
         let autocompleteTimeout = null;
+        let selectedTierPrice = 499;
 
         const birthplaceInput = document.getElementById("birthplace");
         const autocompleteList = document.getElementById("autocompleteList");
         const orderForm = document.getElementById("orderForm");
         const loadingOverlay = document.getElementById("loadingOverlay");
         const errorBanner = document.getElementById("errorBanner");
+        const priceLabel = document.getElementById("priceLabel");
+
+        function selectPackage(tier, price) {
+            selectedTierPrice = price;
+            priceLabel.innerText = `₹${price}`;
+        }
+
+        function toggleFaq(el) {
+            el.classList.toggle("active");
+        }
 
         // Autocomplete Search logic
         birthplaceInput.addEventListener("input", function() {
@@ -512,7 +689,7 @@
 
                 const options = {
                     key: order.razorpay_order_id.startsWith("order_mock_") ? "rzp_test_mock" : "",
-                    amount: order.amount,
+                    amount: selectedTierPrice * 100, // Dynamic amount based on chosen tier
                     currency: order.currency,
                     name: "Acharya Savvy Singh",
                     description: "Love & Marriage Destiny Report Fee",
