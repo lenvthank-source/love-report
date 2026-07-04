@@ -73,6 +73,11 @@ def get_testbed_page():
 def get_success_page():
     return FileResponse(os.path.join(static_dir, "success.html"))
 
+@app.get("/love-calculator")
+def get_love_calculator():
+    return FileResponse(os.path.join(static_dir, "love_calculator.html"))
+
+
 @app.get("/Coverpage.png")
 def get_cover_png():
     return FileResponse(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Coverpage.png"))

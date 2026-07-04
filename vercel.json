@@ -8,6 +8,7 @@
     { "src": "/api/(.*)", "dest": "src/server.py" },
     { "src": "/order", "dest": "src/server.py" },
     { "src": "/success", "dest": "src/server.py" },
+    { "src": "/love-calculator", "dest": "src/server.py" },
     { "src": "/testbed", "dest": "src/server.py" },
     { "src": "/admin/login", "dest": "src/server.py" },
     { "src": "/admin", "dest": "src/server.py" },
