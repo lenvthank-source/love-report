@@ -13,6 +13,8 @@
     { "src": "/admin", "dest": "src/server.py" },
     { "src": "/Coverpage.png", "dest": "src/server.py" },
     { "src": "/savvy_singh.jpg", "dest": "src/server.py" },
+    { "src": "/favicon.png", "dest": "src/server.py" },
+    { "src": "/favicon.ico", "dest": "src/server.py" },
     { "src": "/", "dest": "src/server.py" },
     { "src": "/(.*)", "dest": "src/static/$1" }
   ]
