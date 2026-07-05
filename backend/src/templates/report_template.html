@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Cosmic Individual Love &amp; Marriage Report</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', 'Georgia', 'Times New Roman', serif;
+      font-weight: 400;
+      background: #FAF8F5 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color: #110E0D;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      position: relative;
+      page-break-after: always;
+      overflow: hidden;
+      background-color: #FAF8F5 !important;
+    }
+
+    .page-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 210mm;
+      height: 297mm;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .content-page {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Content zone ── */
+    .content-zone {
+      margin: 80mm 24mm 22mm 24mm;
+      background: #FAF8F5;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    /* ── Body text styles ── */
+    p {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 2.0;
+      color: #110E0D;
+      margin-bottom: 22px;
+      text-align: justify;
+    }
+    h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: #1E120F;
+      margin-top: 22px;
+      margin-bottom: 16px;
+    }
+    ul { margin: 0 0 22px 0; padding-left: 24px; }
+    li {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 2.0;
+      color: #110E0D;
+      margin-bottom: 8px;
+    }
+    blockquote {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-style: italic;
+      color: #1E120F;
+      border-left: 3.5px solid #2C1A11;
+      margin: 16px 0 22px 0;
+      padding: 10px 18px;
+      background: rgba(212,166,140,0.07);
+      border-radius: 0 5px 5px 0;
+      line-height: 2.0;
+    }
+    strong { font-weight: 600; }
+
+    /* ── Customer profile page (page 2) ── */
+    .profile-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      background: #FAF8F5;
+      border: 2px solid #2C1A11;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    }
+    .profile-table td {
+      padding: 14px 18px;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      color: #110E0D;
+      border-bottom: 1px solid #E6DEC9;
+    }
+    .profile-table tr:last-child td {
+      border-bottom: none;
+    }
+    .profile-table td:first-child {
+      width: 35%;
+      font-weight: 700;
+      color: #2C1A11;
+      background: rgba(44, 26, 17, 0.04);
+      border-right: 1px solid #E6DEC9;
+    }
+    .profile-intro {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.8;
+      color: #110E0D;
+      border-left: 3.5px solid #2C1A11;
+      padding-left: 18px;
+      margin-top: 24px;
+      background: #FAF8F5;
+    }
+
+
+
+    /* ── Chart containers ── */
+    .chart-single { width: 270px; height: 270px; margin: 14px auto 10px; }
+    .chart-double { display: flex; justify-content: center; gap: 28px; margin: 14px 0 10px; }
+    .chart-box    { width: 220px; height: 220px; }
+    .chart-label  {
+      text-align: center;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      font-style: italic;
+      color: #1E120F;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    #page-6 .chart-single {
+      position: absolute;
+      top: 105mm;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100.5mm;
+      height: 100.5mm;
+      z-index: 10;
+      background: #FDFAF6;
+      border: 1.5px solid #2C1A11;
+      border-radius: 6px;
+    }
+
+    #page-6 .chart-label {
+      position: absolute;
+      top: 212mm;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      text-align: center;
+      background: #FAF8F5;
+      padding: 4px 0;
+      z-index: 11;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      font-style: italic;
+      color: #1E120F;
+    }
+
+    #page-11 .chart-double {
+      position: absolute;
+      top: 105mm;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 176mm;
+      display: flex;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    #page-11 .chart-box {
+      width: 82mm;
+      height: 82mm;
+      background: #FDFAF6;
+      border: 1.5px solid #2C1A11;
+      border-radius: 6px;
+      padding: 1mm;
+      z-index: 10;
+    }
+
+    #page-11 .chart-label {
+      background: #FAF8F5;
+      padding: 4px 0;
+      margin-top: 8px;
+      z-index: 11;
+      text-align: center;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      font-style: italic;
+      color: #1E120F;
+    }
+
+
+    /* ── Data tables ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 22px;
+      border: 1.5px solid #2C1A11 !important;
+      background: #FAF8F5 !important;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #A28475 !important;
+      background: #FAF8F5 !important;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: middle;
+      line-height: 1.5;
+    }
+    .data-table th {
+      visibility: visible !important;
+      height: 10mm !important;
+      background: #E8E2D9 !important;
+      color: #1E120F !important;
+      font-weight: 600;
+    }
+    .data-table td { font-family: 'Lora', serif; color: #110E0D !important; }
+    .data-table tr:nth-child(even) td { background: #F5EFEB !important; }
+
+    #page-20 .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid #2C1A11 !important;
+      background: #FAF8F5 !important;
+      margin-bottom: 20px;
+    }
+    #page-20 .data-table th {
+      visibility: visible !important;
+      height: 11mm !important;
+      padding: 2mm 3mm !important;
+      border: 1px solid #A28475 !important;
+      background: #E8E2D9 !important;
+      color: #1E120F !important;
+      font-weight: 600;
+    }
+    #page-20 .data-table td {
+      border: 1px solid #A28475 !important;
+      background: #FAF8F5 !important;
+      padding: 3mm 4mm !important;
+      font-size: 14px;
+      line-height: 1.4;
+      font-family: 'Lora', serif;
+      color: #110E0D !important;
+      vertical-align: middle !important;
+    }
+    #page-20 .data-table td:nth-child(1) { width: 40.5% !important; }
+    #page-20 .data-table td:nth-child(2) { width: 26.2% !important; }
+    #page-20 .data-table td:nth-child(3) { width: 33.3% !important; }
+
+    #page-22 .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid #2C1A11 !important;
+      background: #FAF8F5 !important;
+      margin-bottom: 20px;
+    }
+    #page-22 .data-table th {
+      visibility: visible !important;
+      height: 11mm !important;
+      padding: 2mm 3mm !important;
+      border: 1px solid #A28475 !important;
+      background: #E8E2D9 !important;
+      color: #1E120F !important;
+      font-weight: 600;
+    }
+    #page-22 .data-table td {
+      border: 1px solid #A28475 !important;
+      background: #FAF8F5 !important;
+      padding: 3mm 4mm !important;
+      font-size: 14px;
+      line-height: 1.4;
+      font-family: 'Lora', serif;
+      color: #110E0D !important;
+      vertical-align: middle !important;
+    }
+    #page-22 .data-table td:nth-child(1) { width: 28.8% !important; }
+    #page-22 .data-table td:nth-child(2) { width: 16.2% !important; }
+    #page-22 .data-table td:nth-child(3) { width: 55.0% !important; }
+
+    #page-2 .content-zone,
+    #page-5 .content-zone,
+    #page-20 .content-zone,
+    #page-22 .content-zone {
+      margin: 66mm 24mm 22mm 24mm !important;
+      min-height: 209mm;
+      box-sizing: border-box;
+    }
+
+    /* ── Custom Index Cards (Page 5) ── */
+    .index-grid {
+      display: grid;
+      grid-template-columns: 78mm 78mm;
+      grid-template-rows: repeat(3, 40mm);
+      gap: 12mm 6mm;
+      margin-top: 15px;
+      z-index: 10;
+    }
+    .custom-index-card {
+      background: #F5ECE5 !important;
+      border: 1px solid #E3D4C7 !important;
+      border-radius: 12px;
+      padding: 16px 20px;
+      position: relative;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .custom-index-number {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 300;
+      color: #C2A391;
+      line-height: 1;
+    }
+    .custom-index-title {
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #1E120F !important;
+      line-height: 1.35;
+      max-width: 120px;
+      text-align: left;
+    }
+    .custom-index-pages {
+      font-family: 'Lora', serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #8D563E !important;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: COVER -->
+  <div class="page cover-page" id="page-1">
+    <img class="page-bg" src="{{ASSETS_DIR}}/1.svg" alt="" /></div>
+
+  <!-- PAGE 2: CUSTOMER PROFILE -->
+  <div class="page content-page" id="page-2">
+    <img class="page-bg" src="{{ASSETS_DIR}}/2.svg" alt="" />
+    <div class="content-zone">
+      <table class="profile-table">
+        <tr><td><strong>Full Name</strong></td><td>{{CLIENT_FULL_NAME}}</td></tr>
+        <tr><td><strong>Date of Birth</strong></td><td>{{CLIENT_DOB}}</td></tr>
+        <tr><td><strong>Time of Birth</strong></td><td>{{CLIENT_TOB}}</td></tr>
+        <tr><td><strong>Place of Birth</strong></td><td>{{CLIENT_POB}}</td></tr>
+      </table>
+      <p class="profile-intro">{{CLIENT_INTRO}}</p>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="page content-page" id="page-3">
+    <img class="page-bg" src="{{ASSETS_DIR}}/3.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_2}}
+    </div>
+  </div>
+
+  <!-- PAGE 4: MESSAGE FROM THE AUTHOR (static vector background) -->
+  <div class="page content-page" id="page-4">
+    <img class="page-bg" src="{{ASSETS_DIR}}/4.svg" alt="" />
+    <div class="content-zone">
+    </div>
+  </div>
+
+  <!-- PAGE 5: MASTER INDEX -->
+  <div class="page content-page" id="page-5">
+    <img class="page-bg" src="{{ASSETS_DIR}}/5.svg" alt="" />
+    <div class="content-zone">
+      <div class="index-grid">
+        <!-- Card 01 -->
+        <div class="custom-index-card">
+          <span class="custom-index-number">01</span>
+          <span class="custom-index-title">Customer Profile &amp; Introduction</span>
+          <span class="custom-index-pages">Pages 2 &ndash; 4</span>
+        </div>
+        <!-- Card 02 -->
+        <div class="custom-index-card">
+          <span class="custom-index-number">02</span>
+          <span class="custom-index-title">Core Cosmic Personality &amp; Soul Mirror</span>
+          <span class="custom-index-pages">Pages 5 &ndash; 10</span>
+        </div>
+        <!-- Card 03 -->
+        <div class="custom-index-card">
+          <span class="custom-index-number">03</span>
+          <span class="custom-index-title">Marriage Gateway</span>
+          <span class="custom-index-pages">Pages 11 &ndash; 16</span>
+        </div>
+        <!-- Card 04 -->
+        <div class="custom-index-card">
+          <span class="custom-index-number">04</span>
+          <span class="custom-index-title">Karmic Loops &amp; Cosmic Red Flags</span>
+          <span class="custom-index-pages">Pages 17 &ndash; 20</span>
+        </div>
+        <!-- Card 05 -->
+        <div class="custom-index-card">
+          <span class="custom-index-number">05</span>
+          <span class="custom-index-title">Sacred Timeline</span>
+          <span class="custom-index-pages">Pages 21 &ndash; 23</span>
+        </div>
+        <!-- Card 06 -->
+        <div class="custom-index-card">
+          <span class="custom-index-number">06</span>
+          <span class="custom-index-title">Practical Remedies &amp; Final Synthesis</span>
+          <span class="custom-index-pages">Pages 24 &ndash; 26</span>
+        </div>
+    </div>
+  </div>
+
+  <!-- PAGE 6: D1 BIRTH CHART -->
+  <div class="page content-page" id="page-6">
+    <img class="page-bg" src="{{ASSETS_DIR}}/6.svg" alt="" />
+    <div class="chart-single">{{D1_CHART_SVG}}</div>
+    <div class="chart-label">D1 Birth Chart &mdash; Lagna (Ascendant): <strong>{{LAGNA_SIGN}}</strong></div>
+    <div class="content-zone" id="page-6-text-zone" style="padding-top: 220mm !important;">
+      <p>Your D1 Birth Chart (Lagna) is the foundational map of your life, capturing the exact cosmic snapshot of the heavens at the moment of your birth. With <strong>{{LAGNA_SIGN}}</strong> as your rising sign, it reveals your core personality, physical body, and the prime trajectory of your destiny.</p>
+    </div>
+  </div>
+
+  <!-- PAGE 7 -->
+  <div class="page content-page" id="page-7">
+    <img class="page-bg" src="{{ASSETS_DIR}}/7.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_6}}
+    </div>
+  </div>
+
+  <!-- PAGE 8 -->
+  <div class="page content-page" id="page-8">
+    <img class="page-bg" src="{{ASSETS_DIR}}/8.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_7}}
+    </div>
+  </div>
+
+  <!-- PAGE 9 -->
+  <div class="page content-page" id="page-9">
+    <img class="page-bg" src="{{ASSETS_DIR}}/9.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_8}}
+    </div>
+  </div>
+
+  <!-- PAGE 10 -->
+  <div class="page content-page" id="page-10">
+    <img class="page-bg" src="{{ASSETS_DIR}}/10.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_9}}
+    </div>
+  </div>
+
+  <!-- PAGE 11: D9 & D30 CHARTS -->
+  <div class="page content-page" id="page-11">
+    <img class="page-bg" src="{{ASSETS_DIR}}/11.svg" alt="" />
+    <div class="chart-double">
+      <div>
+        <div class="chart-box">{{D9_CHART_SVG}}</div>
+        <div class="chart-label">D9 Navamsa &mdash; <strong>{{NAVAMSA_SIGN}}</strong></div>
+      </div>
+      <div>
+        <div class="chart-box">{{D30_CHART_SVG}}</div>
+        <div class="chart-label">D30 Trimsamsha &mdash; <strong>{{TRIMSAMSHA_SIGN}}</strong></div>
+      </div>
+    </div>
+    <div class="content-zone" id="page-11-text-zone" style="padding-top: 198mm !important;">
+      <p>Your D9 Navamsa Chart is the cosmic blueprint of your marriage and the second half of your life, revealing the inner spiritual fruit of your natal potential. Your D30 Trimsamsha Chart highlights loyalty, subconscious blockages, and psychological resilience, serving as a roadmap for emotional evolution.</p>
+    </div>
+  </div>
+
+  <!-- PAGE 12 -->
+  <div class="page content-page" id="page-12">
+    <img class="page-bg" src="{{ASSETS_DIR}}/12.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_11}}
+    </div>
+  </div>
+
+  <!-- PAGE 13 -->
+  <div class="page content-page" id="page-13">
+    <img class="page-bg" src="{{ASSETS_DIR}}/13.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_12}}
+    </div>
+  </div>
+
+  <!-- PAGE 14 -->
+  <div class="page content-page" id="page-14">
+    <img class="page-bg" src="{{ASSETS_DIR}}/14.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_13}}
+    </div>
+  </div>
+
+  <!-- PAGE 15 -->
+  <div class="page content-page" id="page-15">
+    <img class="page-bg" src="{{ASSETS_DIR}}/15.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_14}}
+    </div>
+  </div>
+
+  <!-- PAGE 16 -->
+  <div class="page content-page" id="page-16">
+    <img class="page-bg" src="{{ASSETS_DIR}}/16.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_15}}
+    </div>
+  </div>
+
+  <!-- PAGE 17 -->
+  <div class="page content-page" id="page-17">
+    <img class="page-bg" src="{{ASSETS_DIR}}/17.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_16}}
+    </div>
+  </div>
+
+  <!-- PAGE 18 -->
+  <div class="page content-page" id="page-18">
+    <img class="page-bg" src="{{ASSETS_DIR}}/18.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_17}}
+    </div>
+  </div>
+
+  <!-- PAGE 19 -->
+  <div class="page content-page" id="page-19">
+    <img class="page-bg" src="{{ASSETS_DIR}}/19.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_18}}
+    </div>
+  </div>
+
+  <!-- PAGE 20: RISK MATRIX -->
+  <div class="page content-page" id="page-20">
+    <img class="page-bg" src="{{ASSETS_DIR}}/20.svg" alt="" />
+    <div class="content-zone">
+      <table class="data-table">
+        <thead>
+          <tr><th>Core Challenge</th><th>Psychological Impact</th><th>Transformative Solution</th></tr>
+        </thead>
+        <tbody>{{RISK_MATRIX_ROWS}}</tbody>
+      </table>
+      {{SECTION_19}}
+    </div>
+  </div>
+
+  <!-- PAGE 21 -->
+  <div class="page content-page" id="page-21">
+    <img class="page-bg" src="{{ASSETS_DIR}}/21.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_20}}
+    </div>
+  </div>
+
+  <!-- PAGE 22: 5-YEAR DASHA FORECAST -->
+  <div class="page content-page" id="page-22">
+    <img class="page-bg" src="{{ASSETS_DIR}}/22.svg" alt="" />
+    <div class="content-zone">
+      <table class="data-table">
+        <thead>
+          <tr><th>Dasha Period</th><th>Date Range</th><th>Active Theme &amp; Spiritual Energy</th></tr>
+        </thead>
+        <tbody>{{DASHA_TIMELINE_ROWS}}</tbody>
+      </table>
+      {{SECTION_21}}
+    </div>
+  </div>
+
+  <!-- PAGE 23 -->
+  <div class="page content-page" id="page-23">
+    <img class="page-bg" src="{{ASSETS_DIR}}/23.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_22}}
+    </div>
+  </div>
+
+  <!-- PAGE 24 -->
+  <div class="page content-page" id="page-24">
+    <img class="page-bg" src="{{ASSETS_DIR}}/24.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_23}}
+    </div>
+  </div>
+
+  <!-- PAGE 25 -->
+  <div class="page content-page" id="page-25">
+    <img class="page-bg" src="{{ASSETS_DIR}}/25.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_24}}
+    </div>
+  </div>
+
+  <!-- PAGE 26 -->
+  <div class="page content-page" id="page-26">
+    <img class="page-bg" src="{{ASSETS_DIR}}/26.svg" alt="" />
+    <div class="content-zone">
+      {{SECTION_25}}
+    </div>
+  </div>
+
+</body>
+</html>

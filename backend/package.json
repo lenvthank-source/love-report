@@ -1,0 +1,11 @@
+{
+  "name": "report-engine",
+  "version": "1.0.0",
+  "description": "PDF overlay compilation using pdf-lib",
+  "main": "src/report/compile_report.js",
+  "type": "module",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "@pdf-lib/fontkit": "^1.1.1"
+  }
+}

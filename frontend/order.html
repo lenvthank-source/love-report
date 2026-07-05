@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Love & Marriage Report — Astro Vaastu Savvy</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png?v=2">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #FAF4EE; /* Soft warm light cream background */
+            --card-bg: #FFFFFF; /* Pure white card */
+            --primary: #C9967B; /* Warm rose gold */
+            --primary-dark: #8E5A40;
+            --accent: #A93B52; /* Delicate rose berry */
+            --text-dark: #3C332D; /* Rich chocolate brown */
+            --text-muted: #96867F; /* Warm taupe */
+            --border-color: rgba(201, 150, 123, 0.28);
+            --transition-fluid: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow-soft: 0 15px 40px rgba(142, 110, 94, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(201, 150, 123, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(169, 59, 82, 0.04) 0%, transparent 40%);
+            color: var(--text-dark);
+            font-family: 'Lora', Georgia, serif;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* --- Floating Stardust Particles --- */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star-particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: drift-float 25s linear infinite;
+        }
+
+        @keyframes drift-float {
+            0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Navigation Bar --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 8%;
+            position: relative;
+            z-index: 100;
+        }
+
+        nav .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition-fluid);
+        }
+
+        nav .nav-links a:hover {
+            color: var(--primary-dark);
+        }
+
+        .login-btn {
+            border: 1px solid var(--primary-dark);
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: var(--transition-fluid);
+        }
+
+        .login-btn:hover {
+            background: var(--primary-dark);
+            color: #FFFFFF !important;
+        }
+
+        @media (max-width: 768px) {
+            nav .nav-links {
+                display: none;
+            }
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            padding: 40px 8% 80px;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 992px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        .hero-left h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.2rem;
+            font-weight: 300;
+            line-height: 1.2;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .hero-left h1 span {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .hero-left p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            line-height: 1.8;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 30px;
+            padding: 16px 45px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(201, 150, 123, 0.3);
+            transition: var(--transition-fluid);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(201, 150, 123, 0.45);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 30px;
+            padding: 16px 45px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(201, 150, 123, 0.3);
+            transition: var(--transition-fluid);
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(201, 150, 123, 0.45);
+        }
+
+
+        /* Hero Image Archway */
+        .hero-right {
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-arch {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            aspect-ratio: 1 / 1.45;
+            border-radius: 160px 160px 12px 12px;
+            border: 2px solid var(--primary);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 55px rgba(142, 110, 94, 0.12);
+            transition: var(--transition-fluid);
+        }
+
+        .hero-arch:hover {
+            transform: scale(1.02) translateY(-5px);
+        }
+
+        .hero-cover {
+            width: 100%;
+            height: 100%;
+            border-radius: 150px 150px 6px 6px;
+            background-image: url("/Coverpage.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- Metrics Bar --- */
+        .metrics-bar {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(201, 150, 123, 0.05);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 30px 8%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .metrics-bar {
+                flex-direction: column;
+                gap: 25px;
+            }
+        }
+
+        .metric-item h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+
+        .metric-item p {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        /* --- Section Template Common Styles --- */
+        section {
+            padding: 100px 8%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .section-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.6rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .section-header h2 span {
+            color: var(--accent);
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        /* --- What is Love Report Section --- */
+        .what-is-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .what-is-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .what-is-left h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 30px 0 40px;
+        }
+
+        .checklist li {
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .checklist li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+        }
+
+        /* --- Grid Box Cards Section --- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .grid-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 35px 30px;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-fluid);
+        }
+
+        .grid-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(142, 110, 94, 0.1);
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+        }
+
+        .grid-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .grid-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* --- 3-Step Process Section --- */
+        .process-steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .step-num {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(201, 150, 123, 0.1);
+            border: 1px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+        }
+
+        .step-item h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .step-item p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 260px;
+        }
+
+        /* --- Features Matrix Table --- */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #FFFFFF;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: rgba(201, 150, 123, 0.06);
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--primary-dark);
+        }
+
+        td.feature-name {
+            text-align: left;
+            font-family: 'Jost', sans-serif;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .check-icon { color: green; font-weight: bold; }
+        .cross-icon { color: red; font-weight: bold; }
+
+        /* --- Who is this report for --- */
+        .who-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .who-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .who-item {
+            margin-bottom: 25px;
+        }
+
+        .who-item h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        /* --- Package Choice Cards --- */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .package-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-fluid);
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+        }
+
+        .package-badge {
+            width: 100px;
+            aspect-ratio: 1 / 1.45;
+            border-radius: 50px 50px 4px 4px;
+            border: 1px solid var(--primary);
+            margin: 0 auto 20px;
+            background-image: url("/Coverpage.png");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .package-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .package-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            min-height: 45px;
+        }
+
+        .package-price {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+        }
+
+        .package-price span {
+            text-decoration: line-through;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+
+        /* --- Dynamic Geocoded Order Form Section --- */
+        .form-section-container {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 60px;
+            box-shadow: var(--shadow);
+            max-width: 850px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        @media (max-width: 600px) {
+            .form-section-container {
+                padding: 35px 24px;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        label {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: var(--transition-fluid);
+        }
+
+        /* Seamless Underline Inputs */
+        input, select {
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid var(--border-color);
+            border-radius: 0;
+            padding: 10px 0;
+            color: var(--text-dark);
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            outline: none;
+            transition: var(--transition-fluid);
+        }
+
+        input:focus, select:focus {
+            border-bottom-color: var(--primary-dark);
+        }
+
+        .form-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%; width: 0; height: 1.5px;
+            background: var(--accent);
+            transition: var(--transition-fluid);
+        }
+
+        .form-group:focus-within::after {
+            left: 0;
+            width: 100%;
+        }
+
+        .form-group:focus-within label {
+            color: var(--accent);
+        }
+
+        /* Autocomplete results dropdown */
+        .autocomplete-list {
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background: #FFFFFF;
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            max-height: 160px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 10px 25px rgba(142, 110, 94, 0.12);
+            display: none;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .autocomplete-list.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .autocomplete-item {
+            padding: 12px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(201, 150, 123, 0.08);
+            color: var(--text-dark);
+        }
+
+        .autocomplete-item:hover {
+            background: rgba(201, 150, 123, 0.08);
+        }
+
+        /* Blur Loading Overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(250, 244, 238, 0.92);
+            backdrop-filter: blur(5px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            border-radius: 4px;
+            transition: opacity 0.3s ease;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 2px solid rgba(201, 150, 123, 0.2);
+            border-top: 2px solid var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-banner {
+            background: rgba(220, 53, 69, 0.08);
+            border-left: 3px solid #DC3545;
+            color: #C0392B;
+            padding: 12px 18px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* --- About Author Section --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .author-arch {
+            position: relative;
+            width: 100%;
+            max-width: 340px;
+            aspect-ratio: 1 / 1.45;
+            border-radius: 170px 170px 12px 12px;
+            border: 2px solid var(--primary);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            margin: 0 auto;
+        }
+
+        .author-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 160px 160px 6px 6px;
+            background-image: url("/savvy_singh.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* --- FAQ Accordion --- */
+        .faq-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1.5px solid var(--border-color);
+            padding: 24px 0;
+            cursor: pointer;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, margin-top 0.4s ease;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 120px;
+            margin-top: 15px;
+        }
+
+        .faq-toggle {
+            font-size: 1.3rem;
+            transition: transform 0.4s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #FFFDFB;
+            border-top: 1px solid var(--border-color);
+            padding: 60px 8%;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a {
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: var(--transition-fluid);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary-dark);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(201, 150, 123, 0.15);
+            padding-top: 30px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Stardust Background -->
+    <div class="stars-container" id="starsContainer"></div>
+
+    <!-- Top Navigation -->
+    <nav>
+        <a href="https://www.astrosavvysingh.com" class="logo">Astro Savvy</a>
+        <ul class="nav-links">
+            <li><a href="#about-report">What is it?</a></li>
+            <li><a href="#whats-inside">Inside the Report</a></li>
+            <li><a href="#pricing">Packages</a></li>
+            <li><a href="#order-form-section">Get Report</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-left">
+            <h1>Love... A Mystery the Heart <span>Loves to Chase!</span></h1>
+            <p>An Exclusive Love &amp; Marriage Destiny Report by Acharya Savvy Singh to Uncover Your True Love Patterns. Unveil Venus placements, 7th house configurations, and compatibility timings.</p>
+            <a href="#order-form-section" class="cta-btn">🔮 Get Your Love Report Now</a>
+        </div>
+        <div class="hero-right">
+            <div class="hero-arch">
+                <div class="hero-cover"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Love Calculator Banner Card -->
+    <section style="padding: 30px 8%; text-align: center;">
+        <div style="background: #FFFFFF; border: 1.5px solid var(--primary); border-radius: 8px; padding: 40px; box-shadow: var(--shadow-soft); max-width: 800px; margin: 0 auto; position: relative;">
+            <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: bold; padding: 5px 20px; border-radius: 30px; letter-spacing: 1.5px; text-transform: uppercase;">
+                Free Tool
+            </div>
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; text-transform: uppercase; margin-top: 10px; margin-bottom: 12px; color: var(--text-dark);">
+                💖 Try the Free Chaldean Love Calculator
+            </h2>
+            <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 25px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.7;">
+                Instantly check your name resonance compatibility score in 30 seconds using ancient Chaldean numerology before checking your deep birth charts.
+            </p>
+            <a href="/love-calculator" class="cta-btn" style="background: transparent; color: var(--primary-dark); border: 2px solid var(--primary); box-shadow: none;">
+                ✔ Check Love Score (Calculator)
+            </a>
+        </div>
+    </section>
+
+    <!-- Metrics highlights -->
+
+    <div class="metrics-bar">
+        <div class="metric-item">
+            <h3>7 Lakh+</h3>
+            <p>Reports Compiled</p>
+        </div>
+        <div class="metric-item">
+            <h3>4.8 / 5 ★</h3>
+            <p>Average Client Rating</p>
+        </div>
+        <div class="metric-item">
+            <h3>100% Secure</h3>
+            <p>Personalized Calculations</p>
+        </div>
+    </div>
+
+    <!-- Section: What is Love Report -->
+    <section id="about-report">
+        <div class="what-is-grid">
+            <div class="what-is-left">
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; text-transform: uppercase;">What is <span>Love Report?</span></h2>
+                <div style="width: 50px; height: 1.5px; background: var(--primary); margin: 15px 0 25px;"></div>
+                <p>Your Guide to Understanding Your Love Life. Astro Savvy’s Love Report is a personalized astrological guide that reveals deep insights into your emotional world and relationship patterns. Based on your birth chart, planetary positions, and key houses like the 5th and 7th, this report helps you understand how you love, what you seek, and how your journey in relationships unfolds over time.</p>
+                <ul class="checklist">
+                    <li>Reveals your natural love patterns and emotional needs.</li>
+                    <li>Explains how Venus and key houses influence your romantic life.</li>
+                    <li>Decodes your approach to love, attraction, and commitment.</li>
+                    <li>Guides you toward building deeper, more fulfilling relationships.</li>
+                </ul>
+                <a href="#order-form-section" class="cta-btn">Order now</a>
+            </div>
+            <div class="hero-right">
+                <div class="hero-arch" style="border-radius: 12px; aspect-ratio: 1 / 1.414;">
+                    <div class="hero-cover" style="border-radius: 6px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: What's Inside -->
+    <section id="whats-inside" style="background: rgba(201, 150, 123, 0.02);">
+        <div class="section-header">
+            <h2>What's Inside <span>Your Love Report?</span></h2>
+            <p>Every phase of your relationship destiny decoded in a 26-page report</p>
+        </div>
+        <div class="card-grid">
+            <div class="grid-card">
+                <div class="card-icon">🤎</div>
+                <h3>Love Personality Analysis</h3>
+                <p>Detailed Venus & Moon sign analysis revealing your romantic nature, emotional needs, and what you truly seek in a partner.</p>
+            </div>
+            <div class="grid-card">
+                <div class="card-icon">💍</div>
+                <h3>7th House & Partnership Reading</h3>
+                <p>Deep dive into your 7th house of marriage and partnerships to understand your relationship patterns and ideal partner traits.</p>
+            </div>
+            <div class="grid-card">
+                <div class="card-icon">✨</div>
+                <h3>Love & Marriage Predictions</h3>
+                <p>Timing predictions for romance, engagement, and marriage based on planetary transits and Dasha periods in your chart.</p>
+            </div>
+            <div class="grid-card">
+                <div class="card-icon">🕊️</div>
+                <h3>Your Relationship Mindset</h3>
+                <p>Discover how your thoughts, fears, and expectations influence your love life and the kind of relationships you naturally attract.</p>
+            </div>
+            <div class="grid-card">
+                <div class="card-icon">🪷</div>
+                <h3>Remedies &amp; Guidance</h3>
+                <p>Personalized Vedic remedies including crystals, mantras, gemstones, and rituals to attract love and overcome relationship obstacles.</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="#order-form-section" class="cta-btn">Order Now</a>
+        </div>
+    </section>
+
+    <!-- Section: 3 Step Process -->
+    <section>
+        <div class="section-header">
+            <h2>3-Step <span>Love Report</span> Process</h2>
+            <p>How we calculate and deliver your customized astral matrix</p>
+        </div>
+        <div class="process-steps">
+            <div class="step-item">
+                <div class="step-num">1</div>
+                <h3>Tell Us About You</h3>
+                <p>Just enter your birth details (date, time, and birthplace coordinates).</p>
+            </div>
+            <div class="step-item">
+                <div class="step-num">2</div>
+                <h3>We Study Your Chart</h3>
+                <p>Our backend engine calculates planetary charts (D1, D9 Navamsa, and D30).</p>
+            </div>
+            <div class="step-item">
+                <div class="step-num">3</div>
+                <h3>Get Your Report</h3>
+                <p>An exclusive, gorgeous 26-page PDF love report sent to your inbox within 24-36 hours.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Table Matrix -->
+    <section style="background: rgba(201, 150, 123, 0.02);" id="pricing">
+        <div class="section-header">
+            <h2>Choose Your Perfect <span>Love Report Package</span></h2>
+            <p>Compare our customized report bundles and consultation tiers</p>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Features</th>
+                        <th>Love Report</th>
+                        <th>Love Report + Ask The Astrologer</th>
+                        <th>Love Report + 1-on-1 Consultation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature-name">Personalized Love Report (26 Pages)</td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Detailed Relationship Insights</td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Compatibility &amp; Relationship Guidance</td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Remedies &amp; Suggestions for Love</td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Ask 1 Question to Astrologer</td>
+                        <td><span class="cross-icon">✗</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Priority Customer Support</td>
+                        <td><span class="cross-icon">✗</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">30-min 1-on-1 Consultation Call</td>
+                        <td><span class="cross-icon">✗</span></td>
+                        <td><span class="cross-icon">✗</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr style="font-weight: bold; font-size: 1.1rem;">
+                        <td class="feature-name">Price</td>
+                        <td style="color: var(--primary-dark);">₹499</td>
+                        <td style="color: var(--primary-dark);">₹999</td>
+                        <td style="color: var(--primary-dark);">₹1,299</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Section: Who is this report for -->
+    <section>
+        <div class="who-grid">
+            <div class="hero-right">
+                <div class="hero-arch">
+                    <div class="hero-cover"></div>
+                </div>
+            </div>
+            <div>
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; text-transform: uppercase; margin-bottom: 25px;">Who Is This <span>Love Report For?</span></h2>
+                <div class="who-item">
+                    <h4>1. Singles Seeking Clarity</h4>
+                    <p style="color: var(--text-muted);">Confused about your love life or repeating the same patterns? Discover the planetary positions that shape your dating patterns.</p>
+                </div>
+                <div class="who-item">
+                    <h4>2. Couples Wanting Deeper Understanding</h4>
+                    <p style="color: var(--text-muted);">Gain insight into communication styles, emotional compatibilities, and dasha timings for alignment.</p>
+                </div>
+                <div class="who-item">
+                    <h4>3. Those Facing Relationship Challenges</h4>
+                    <p style="color: var(--text-muted);">Identify cosmic blocks and apply recommended Vedic remedies to smooth out rough transits.</p>
+                </div>
+                <a href="#order-form-section" class="cta-btn">Order Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Packages -->
+    <section style="background: rgba(201, 150, 123, 0.02);">
+        <div class="section-header">
+            <h2>Select Your Perfect <span>Love Report Package</span></h2>
+            <p>Choose the level of personal astrological guidance you need</p>
+        </div>
+        <div class="packages-grid">
+            <div class="package-card">
+                <div class="package-badge"></div>
+                <h3>Love Report</h3>
+                <p>Detailed analysis of your planetary positions, compatibility indices, and timeline predictions.</p>
+                <div class="package-price"><span>₹1,500</span> ₹499</div>
+                <a href="#order-form-section" class="cta-btn" onclick="selectPackage('Standard', 499)">BUY NOW ➔</a>
+            </div>
+            <div class="package-card">
+                <div class="package-badge"></div>
+                <h3>Report + Ask Astrologer</h3>
+                <p>Comprehensive 26-page report, plus direct email response to one custom query from Astro Savvy.</p>
+                <div class="package-price"><span>₹1,999</span> ₹999</div>
+                <a href="#order-form-section" class="cta-btn" onclick="selectPackage('Astrologer', 999)">BUY NOW ➔</a>
+            </div>
+            <div class="package-card">
+                <div class="package-badge"></div>
+                <h3>Report + Consultation</h3>
+                <p>Full 26-page report, plus a personal 30-minute Zoom call with Acharya Savvy Singh to decode details.</p>
+                <div class="package-price"><span>₹5,500</span> ₹1,299</div>
+                <a href="#order-form-section" class="cta-btn" onclick="selectPackage('Consultation', 1299)">BUY NOW ➔</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: The Dynamic Checkout Form (NO CLUNKY BOXES, FLOATING UNDERLINES) -->
+    <section id="order-form-section">
+        <div class="section-header">
+            <h2>Enter Your <span>Birth Parameters</span></h2>
+            <p>Acharya Savvy Singh will generate your report directly using these alignments</p>
+        </div>
+        
+        <div class="form-section-container">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-style: italic; color: var(--primary-dark);">Aligning charts with coordinates...</p>
+            </div>
+
+            <div class="error-banner" id="errorBanner"></div>
+
+            <form id="orderForm">
+                <div class="form-section">
+                    <div class="section-title">1. Your Identity</div>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" required placeholder="e.g. Meera Patel">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" required>
+                                <option value="Female" selected>Female</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required placeholder="e.g. meera@domain.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input type="tel" id="mobile" required placeholder="e.g. +91 98765 43210">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-title">2. Birth Matrix</div>
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tob">Time of Birth</label>
+                            <input type="time" id="tob" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="birthplace">Place of Birth (Search Lookup)</label>
+                            <input type="text" id="birthplace" required autocomplete="off" placeholder="Search birthplace...">
+                            <div class="autocomplete-list" id="autocompleteList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-area" style="margin-top: 40px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 30px;">
+                    <div class="price-text" style="font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; margin-bottom: 15px;">
+                        Selected Tier Price: <span id="priceLabel">₹499</span>
+                    </div>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.7;">
+                        Your detailed 26-page report will be compiled by the backend and dispatched directly to your email inbox within 24 to 36 hours.
+                    </p>
+                    <button type="submit" class="submit-btn" id="payBtn">💳 Complete Purchase</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Section: About Author -->
+    <section style="background: rgba(201, 150, 123, 0.02);">
+        <div class="about-grid">
+            <div class="author-arch">
+                <div class="author-img"></div>
+            </div>
+            <div>
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; text-transform: uppercase; margin-bottom: 25px;">Meet <span>Astro Vaastu Savvy</span></h2>
+                <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: var(--primary-dark); margin-top: -20px; margin-bottom: 20px;">Blending Ancient Astrology with Scientific Vaastu</p>
+                <p style="margin-bottom: 20px; text-align: justify;">Acharaya Dr. Savvy Singh, popularly known as Astro Vaastu Savvy, is a renowned celebrity astrologer, medal-winning scientific vastu expert, and space strategist. Her growing social media presence and authentic practice have made her a trusted name among individuals, professionals, and public figures.</p>
+                <p style="margin-bottom: 20px; text-align: justify;">With over six years of professional experience and qualifications from esteemed institutions, she blends traditional astrological wisdom with scientific vastu principles to deliver practical, ethical, and result-oriented guidance.</p>
+                <p style="margin-bottom: 20px; text-align: justify;">Her work spans across India, Dubai, the United States, the United Kingdom, Finland, Estonia, and Canada, supported by a strong and loyal global client base. She has also been featured on multiple national and international forums and has received numerous awards and accolades for her contributions.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; font-weight: 600; font-family: 'Jost', sans-serif; color: var(--primary-dark); margin-top: 10px;">
+                    <span>ZEE MEDIA</span> &bull; <span>SADHNA TV</span> &bull; <span>NDTV</span> &bull; <span>NETWORK 10</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Section: FAQ Accordion -->
+    <section>
+        <div class="section-header">
+            <h2>Frequently Asked <span>Questions</span></h2>
+            <p>Everything you need to know about the creation and delivery of your report</p>
+        </div>
+        <div class="faq-wrapper">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How is this report created?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    The report is created by calculating your planetary charts (D1, D9 Navamsa, and D30) using your exact birth coordinates and date. Our system maps the Vedic parameters and passes them to our Gemini generative layer for personalization.
+                </div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>Is this suitable for singles?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes, absolutely. The report analyzes your Venus placement, your 7th house patterns, and timings for new partnerships, making it highly valuable for singles looking for clarity.
+                </div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>How long will it take to receive my report?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Since each report is generated individually using customized planetary charts and timezone calculations, compilation and review take between 24 and 36 hours before delivery to your inbox.
+                </div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">
+                    <span>What if I want deeper guidance?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    You can purchase our high-tier package which includes a direct 30-minute Zoom consultation call with Acharya Savvy Singh to read and navigate your charts together.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Astro Savvy</h4>
+                <p>Personal consultations and destiny charting by Acharya Savvy Singh.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Horoscopes</h4>
+                <ul>
+                    <li><a href="#">Daily Forecasts</a></li>
+                    <li><a href="#">Monthly Transit Reports</a></li>
+                    <li><a href="#">Yearly Horoscope 2026</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Astro Savvy Singh. All Rights Reserved. Made with love by Google Antigravity.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Generate floating stardust particles
+        const starsContainer = document.getElementById("starsContainer");
+        for (let i = 0; i < 20; i++) {
+            const star = document.createElement("div");
+            star.className = "star-particle";
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.width = `${Math.random() * 3 + 2}px`;
+            star.style.height = star.style.width;
+            star.style.animationDelay = `${Math.random() * 15}s`;
+            star.style.animationDuration = `${Math.random() * 12 + 18}s`;
+            starsContainer.appendChild(star);
+        }
+
+        let selectedPlace = null;
+        let autocompleteTimeout = null;
+        let selectedTierPrice = 499;
+
+        const birthplaceInput = document.getElementById("birthplace");
+        const autocompleteList = document.getElementById("autocompleteList");
+        const orderForm = document.getElementById("orderForm");
+        const loadingOverlay = document.getElementById("loadingOverlay");
+        const errorBanner = document.getElementById("errorBanner");
+        const priceLabel = document.getElementById("priceLabel");
+
+        function selectPackage(tier, price) {
+            selectedTierPrice = price;
+            priceLabel.innerText = `₹${price}`;
+        }
+
+        function toggleFaq(el) {
+            el.classList.toggle("active");
+        }
+
+        // Autocomplete Search logic
+        birthplaceInput.addEventListener("input", function() {
+            const query = this.value.trim();
+            if (query.length < 3) {
+                autocompleteList.classList.remove("show");
+                setTimeout(() => { autocompleteList.style.display = "none"; }, 300);
+                return;
+            }
+
+            clearTimeout(autocompleteTimeout);
+            autocompleteTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+                    
+                    if (data.results && data.results.length > 0) {
+                        autocompleteList.innerHTML = "";
+                        data.results.forEach(res => {
+                            const div = document.createElement("div");
+                            div.className = "autocomplete-item";
+                            div.innerText = res.formatted;
+                            div.addEventListener("click", () => {
+                                birthplaceInput.value = res.formatted;
+                                selectedPlace = res;
+                                autocompleteList.classList.remove("show");
+                                setTimeout(() => { autocompleteList.style.display = "none"; }, 300);
+                                showError("");
+                            });
+                            autocompleteList.appendChild(div);
+                        });
+                        autocompleteList.style.display = "block";
+                        setTimeout(() => { autocompleteList.classList.add("show"); }, 50);
+                    } else {
+                        autocompleteList.classList.remove("show");
+                        setTimeout(() => { autocompleteList.style.display = "none"; }, 300);
+                    }
+                } catch (e) {
+                    console.error("Geocoding failed:", e);
+                }
+            }, 300);
+        });
+
+        document.addEventListener("click", (e) => {
+            if (e.target !== birthplaceInput) {
+                autocompleteList.classList.remove("show");
+                setTimeout(() => { autocompleteList.style.display = "none"; }, 300);
+            }
+        });
+
+        function showLoading(show) {
+            if (show) {
+                loadingOverlay.style.display = "flex";
+                setTimeout(() => { loadingOverlay.style.opacity = "1"; }, 50);
+            } else {
+                loadingOverlay.style.opacity = "0";
+                setTimeout(() => { loadingOverlay.style.display = "none"; }, 400);
+            }
+        }
+
+        function showError(msg) {
+            if (msg) {
+                errorBanner.innerText = msg;
+                errorBanner.style.display = "block";
+            } else {
+                errorBanner.style.display = "none";
+            }
+        }
+
+        orderForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            showError("");
+            showLoading(true);
+
+            try {
+                const payload = {
+                    name: document.getElementById("name").value,
+                    email: document.getElementById("email").value,
+                    mobile: document.getElementById("mobile").value,
+                    gender: document.getElementById("gender").value,
+                    dob: document.getElementById("dob").value,
+                    tob: document.getElementById("tob").value,
+                    place: selectedPlace.formatted,
+                    latitude: selectedPlace.latitude,
+                    longitude: selectedPlace.longitude,
+                    timezone: selectedPlace.timezone,
+                    geocoded_place: selectedPlace.raw
+                };
+
+                const res = await fetch("/api/orders/create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!res.ok) throw new Error("Failed to create order on server.");
+
+                const order = await res.json();
+                showLoading(false);
+
+                const options = {
+                    key: order.razorpay_order_id.startsWith("order_mock_") ? "rzp_test_mock" : "",
+                    amount: selectedTierPrice * 100, // Dynamic amount based on chosen tier
+                    currency: order.currency,
+                    name: "Acharya Savvy Singh",
+                    description: "Love & Marriage Destiny Report Fee",
+                    order_id: order.razorpay_order_id,
+                    handler: async function(payment) {
+                        showLoading(true);
+                        try {
+                            const verifyPayload = {
+                                order_id: order.order_id,
+                                razorpay_order_id: payment.razorpay_order_id,
+                                razorpay_payment_id: payment.razorpay_payment_id,
+                                razorpay_signature: payment.razorpay_signature
+                            };
+
+                            const verifyRes = await fetch("/api/payments/verify", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(verifyPayload)
+                            });
+
+                            if (!verifyRes.ok) throw new Error("Payment validation failed.");
+
+                            window.location.href = `/success?order_id=${order.order_id}&name=${encodeURIComponent(payload.name)}&email=${encodeURIComponent(payload.email)}`;
+                        } catch (err) {
+                            showLoading(false);
+                            showError(err.message);
+                        }
+                    },
+                    prefill: {
+                        name: payload.name,
+                        email: payload.email,
+                        contact: payload.mobile
+                    },
+                    theme: { color: "#C9967B" }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+
+                rzp.on('payment.failed', function(response) {
+                    showError(`Payment failed: ${response.error.description}`);
+                });
+
+            } catch (err) {
+                showLoading(false);
+                showError(err.message);
+            }
+        });
+    </script>
+</body>
+</html>

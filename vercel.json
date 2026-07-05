@@ -1,22 +1,22 @@
 {
   "version": 2,
   "builds": [
-    { "src": "src/server.py", "use": "@vercel/python" },
-    { "src": "src/static/**", "use": "@vercel/static" }
+    { "src": "backend/src/server.py", "use": "@vercel/python" },
+    { "src": "frontend/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "src/server.py" },
-    { "src": "/order", "dest": "src/server.py" },
-    { "src": "/success", "dest": "src/server.py" },
-    { "src": "/love-calculator", "dest": "src/server.py" },
-    { "src": "/testbed", "dest": "src/server.py" },
-    { "src": "/admin/login", "dest": "src/server.py" },
-    { "src": "/admin", "dest": "src/server.py" },
-    { "src": "/Coverpage.png", "dest": "src/server.py" },
-    { "src": "/savvy_singh.jpg", "dest": "src/server.py" },
-    { "src": "/favicon.png", "dest": "src/server.py" },
-    { "src": "/favicon.ico", "dest": "src/server.py" },
-    { "src": "/", "dest": "src/server.py" },
-    { "src": "/(.*)", "dest": "src/static/$1" }
+    { "src": "/api/(.*)", "dest": "backend/src/server.py" },
+    { "src": "/order", "dest": "backend/src/server.py" },
+    { "src": "/success", "dest": "backend/src/server.py" },
+    { "src": "/love-calculator", "dest": "backend/src/server.py" },
+    { "src": "/testbed", "dest": "backend/src/server.py" },
+    { "src": "/admin/login", "dest": "backend/src/server.py" },
+    { "src": "/admin", "dest": "backend/src/server.py" },
+    { "src": "/Coverpage.png", "dest": "backend/src/server.py" },
+    { "src": "/savvy_singh.jpg", "dest": "backend/src/server.py" },
+    { "src": "/favicon.png", "dest": "backend/src/server.py" },
+    { "src": "/favicon.ico", "dest": "backend/src/server.py" },
+    { "src": "/", "dest": "backend/src/server.py" },
+    { "src": "/(.*)", "dest": "frontend/$1" }
   ]
 }
