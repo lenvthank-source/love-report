@@ -46,8 +46,8 @@ def get_settings() -> Settings:
             RAZORPAY_KEY_ID=os.getenv("RAZORPAY_KEY_ID"),
             RAZORPAY_KEY_SECRET=os.getenv("RAZORPAY_KEY_SECRET"),
             SENDPULSE_SMTP_USER=os.getenv("SENDPULSE_SMTP_USER"),
-            SENDPULSE_SMTP_PASSWORD=os.getenv("SENDPULSE_SMTP_PASSWORD"),
-            SENDER_EMAIL=os.getenv("SENDER_EMAIL"),
+            SENDPULSE_SMTP_PASSWORD=os.getenv("SENDPULSE_SMTP_PASSWORD") or os.getenv("SENDPULSE_SMTP_PASS"),
+            SENDER_EMAIL=os.getenv("SENDER_EMAIL") or os.getenv("SENDPULSE_SENDER"),
             SENDER_NAME=os.getenv("SENDER_NAME"),
             SENDPULSE_SMTP_PORT=os.getenv("SENDPULSE_SMTP_PORT")
         )

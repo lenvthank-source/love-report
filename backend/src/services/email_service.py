@@ -6,11 +6,13 @@ from typing import Dict, Any, Optional
 
 class EmailService:
     def __init__(self):
-        self.smtp_host = "smtp-pulse.com"
+        self.smtp_host = os.getenv("SENDPULSE_SMTP_HOST", "smtp-pulse.com")
         self.smtp_port = int(os.getenv("SENDPULSE_SMTP_PORT", "465"))
         self.smtp_user = os.getenv("SENDPULSE_SMTP_USER")
-        self.smtp_pass = os.getenv("SENDPULSE_SMTP_PASSWORD")
-        self.sender_email = os.getenv("SENDER_EMAIL", "hello@cosmicreport.com")
+        # Support both SENDPULSE_SMTP_PASSWORD and SENDPULSE_SMTP_PASS naming conventions
+        self.smtp_pass = os.getenv("SENDPULSE_SMTP_PASSWORD") or os.getenv("SENDPULSE_SMTP_PASS")
+        # Support SENDER_EMAIL and SENDPULSE_SENDER naming conventions
+        self.sender_email = os.getenv("SENDER_EMAIL") or os.getenv("SENDPULSE_SENDER") or "hello@cosmicreport.com"
         self.sender_name = os.getenv("SENDER_NAME", "Cosmic Oracle Support")
 
     def is_configured(self) -> bool:
