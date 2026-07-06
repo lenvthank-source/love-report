@@ -5,8 +5,14 @@ from jose import jwt
 
 class SupabaseService:
     def __init__(self):
-        self.url = os.getenv("SUPABASE_URL")
-        self.key = os.getenv("SUPABASE_KEY")  # Service role key is preferred for backend CRUD
+        self.url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        # Support service role key (preferred for backend bypass), standard key, and anon key fallbacks
+        self.key = (
+            os.getenv("SUPABASE_SERVICE_ROLE_KEY") or 
+            os.getenv("SUPABASE_KEY") or 
+            os.getenv("SUPABASE_ANON_KEY") or
+            os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+        )
         self.jwt_secret = os.getenv("SUPABASE_JWT_SECRET")
 
         if not self.url or not self.key:
