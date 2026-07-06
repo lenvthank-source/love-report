@@ -552,7 +552,14 @@ async def api_verify_payment(req: VerifyPaymentRequest, background_tasks: Backgr
         supabase.update_order_status(req.order_id, "paid", "not_started")
         
         order = supabase.get_order_by_id(req.order_id)
-        cust = order.get("customers") or {}
+        if not order:
+            print(f"[VerifyPayment] Order {req.order_id} not found in database. Using mock fallback details.")
+            cust = {
+                "full_name": "Valued Customer",
+                "email": "customer@example.com"
+            }
+        else:
+            cust = order.get("customers") or {}
         
         # 3. Fire immediate 24-36 hour confirmation email
         sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], req.order_id)
