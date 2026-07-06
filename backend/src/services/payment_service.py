@@ -67,3 +67,17 @@ class PaymentService:
         except Exception as e:
             print(f"[Razorpay] Error verifying signature: {e}")
             return False
+
+    def verify_webhook_signature(self, raw_body: str, signature: str, secret: str) -> bool:
+        """Verifies the authenticity of Razorpay webhook signature."""
+        if not self.is_configured():
+            # For local mock/testing, return True if secret is 'test_secret' and signature is present
+            if secret == "test_secret" and signature:
+                return True
+            return False
+        try:
+            self.client.utility.verify_webhook_signature(raw_body, signature, secret)
+            return True
+        except Exception as e:
+            print(f"[Razorpay Webhook] Signature verification failed: {e}")
+            return False

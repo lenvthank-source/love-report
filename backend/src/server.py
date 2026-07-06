@@ -571,6 +571,74 @@ async def api_verify_payment(req: VerifyPaymentRequest, background_tasks: Backgr
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/api/payments/webhook")
+async def api_payments_webhook(request: Request, background_tasks: BackgroundTasks):
+    """Secure webhook endpoint listening to order.paid or payment.captured events from Razorpay."""
+    # Read raw body bytes
+    body_bytes = await request.body()
+    body_str = body_bytes.decode("utf-8")
+    
+    # Get signature header
+    signature = request.headers.get("X-Razorpay-Signature", "")
+    secret = os.getenv("RAZORPAY_WEBHOOK_SECRET", "")
+    
+    if not secret:
+        print("[Webhook] RAZORPAY_WEBHOOK_SECRET not set in environment.")
+        raise HTTPException(status_code=400, detail="Webhook secret not configured.")
+        
+    payment_service = PaymentService()
+    verified = payment_service.verify_webhook_signature(body_str, signature, secret)
+    if not verified:
+        raise HTTPException(status_code=400, detail="Invalid webhook signature.")
+        
+    # Process event payload
+    try:
+        payload = json.loads(body_str)
+        event = payload.get("event")
+        
+        # We process order.paid (Razorpay order completed and paid)
+        if event == "order.paid":
+            entity = payload.get("payload", {}).get("order", {}).get("entity", {})
+            rz_order_id = entity.get("id")
+            
+            # Fetch order from Supabase by rz_order_id
+            supabase = SupabaseService()
+            order = supabase.get_order_by_rz_id(rz_order_id)
+            if order:
+                order_id = order["id"]
+                # Only execute if the order has not been fulfilled already
+                if order["order_status"] not in ["paid", "processing", "completed", "delivered"]:
+                    print(f"[Webhook] Fulfilling order {order_id} via webhook...")
+                    
+                    # 1. Update status
+                    # Get payment details from payments array inside payload if available
+                    payments_list = payload.get("payload", {}).get("payments", [])
+                    rz_payment_id = "webhook_captured"
+                    if payments_list:
+                        rz_payment_id = payments_list[0].get("entity", {}).get("id", "webhook_captured")
+                    
+                    supabase.confirm_payment(rz_order_id, rz_payment_id, payload)
+                    supabase.update_order_status(order_id, "paid", "not_started")
+                    
+                    # 2. Fire immediate 24-36 hour confirmation email
+                    email_service = EmailService()
+                    cust = order.get("customers") or {}
+                    sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], order_id)
+                    supabase.log_email(order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
+                    
+                    # 3. Spawn background async report generation task
+                    background_tasks.add_task(
+                        generate_report_background_task,
+                        order_id=order_id,
+                        provider="openrouter",
+                        model=None
+                    )
+        return {"status": "accepted"}
+    except Exception as e:
+        print(f"[Webhook Error] {e}")
+        return {"status": "error", "detail": str(e)}
+
+
 # --- Admin Dashboard APIs (JWT Protected) ---
 
 @app.get("/api/admin/orders")

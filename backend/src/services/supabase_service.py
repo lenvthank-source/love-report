@@ -115,6 +115,18 @@ class SupabaseService:
         res = self.client.table("orders").select("*, customers(*)").eq("id", order_id).execute()
         return res.data[0] if res.data else None
 
+    def get_order_by_rz_id(self, rz_order_id: str) -> Optional[Dict[str, Any]]:
+        """Resolves the internal order UUID and customer details from a Razorpay Order ID."""
+        if not self.is_configured():
+            return None
+        # 1. Look up payment record
+        pay_res = self.client.table("payments").select("order_id").eq("razorpay_order_id", rz_order_id).execute()
+        if not pay_res.data:
+            return None
+        order_id = pay_res.data[0]["order_id"]
+        # 2. Return order detail
+        return self.get_order_by_id(order_id)
+
     def get_orders(self, status: Optional[str] = None, search: Optional[str] = None) -> List[Dict[str, Any]]:
         if not self.is_configured():
             return []
