@@ -518,7 +518,8 @@ async def api_create_order(req: CreateOrderRequest):
             "order_id": order_id,
             "razorpay_order_id": rz_order["id"],
             "amount": rz_order["amount"],
-            "currency": "INR"
+            "currency": "INR",
+            "razorpay_key_id": os.getenv("RAZORPAY_KEY_ID", "")
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -1443,7 +1443,7 @@
                 showLoading(false);
 
                 const options = {
-                    key: order.razorpay_order_id.startsWith("order_mock_") ? "rzp_test_mock" : "",
+                    key: order.razorpay_key_id || (order.razorpay_order_id.startsWith("order_mock_") ? "rzp_test_mock" : ""),
                     amount: selectedTierPrice * 100, // Dynamic amount based on chosen tier
                     currency: order.currency,
                     name: "Acharya Savvy Singh",
