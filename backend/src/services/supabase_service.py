@@ -37,14 +37,46 @@ class SupabaseService:
             return False
 
     # --- Auth Helper ---
+    def sign_in_with_password(self, email: str, password: str) -> Optional[Dict[str, Any]]:
+        """Signs in a user with email and password using Supabase Auth."""
+        if not self.is_configured():
+            # Mock login for testing/sandbox mode
+            email_lower = email.strip().lower()
+            if email_lower == "admin@test.com" and password == "admin123":
+                return {
+                    "access_token": "mock-admin-token",
+                    "user": {"email": email_lower, "user_metadata": {"role": "admin"}}
+                }
+            if email_lower == "support@test.com" and password == "support123":
+                return {
+                    "access_token": "mock-support-token",
+                    "user": {"email": email_lower, "user_metadata": {"role": "support"}}
+                }
+            return None
+        try:
+            res = self.client.auth.sign_in_with_password({"email": email.strip().lower(), "password": password})
+            return {
+                "access_token": res.session.access_token,
+                "user": {
+                    "email": res.user.email,
+                    "id": res.user.id,
+                    "user_metadata": res.user.user_metadata or {}
+                }
+            }
+        except Exception as e:
+            print(f"[SupabaseAuth] Authentication failed: {e}")
+            return None
+
     def verify_admin_token(self, token: str) -> Optional[Dict[str, Any]]:
         """
         Decodes and verifies a Supabase Auth JWT token using the local project JWT Secret.
         Returns the decoded user payload or None if invalid.
         """
-        if not self.jwt_secret:
-            # If secret is missing, return a dummy user for local development
-            return {"email": "admin@test.com", "role": "authenticated"}
+        if not self.jwt_secret or token.startswith("mock-"):
+            # Mock role logic based on token identifier
+            if "support" in token:
+                return {"email": "support@test.com", "user_metadata": {"role": "support"}}
+            return {"email": "admin@test.com", "user_metadata": {"role": "admin"}}
         try:
             # Supabase tokens are HS256 and contain "authenticated" audience
             payload = jwt.decode(

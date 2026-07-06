@@ -490,11 +490,11 @@
                         <div class="detail-row"><span class="detail-label">Name</span><span class="detail-val" id="detName">-</span></div>
                         <div class="detail-row"><span class="detail-label">Email</span><span class="detail-val" id="detEmail">-</span></div>
                         <div class="detail-row"><span class="detail-label">Mobile</span><span class="detail-val" id="detMobile">-</span></div>
-                        <div class="detail-row"><span class="detail-label">Birth Date/Time</span><span class="detail-val" id="detBirth">-</span></div>
-                        <div class="detail-row"><span class="detail-label">Birth Place</span><span class="detail-val" id="detPlace">-</span></div>
+                        <div class="detail-row" id="rowBirth"><span class="detail-label">Birth Date/Time</span><span class="detail-val" id="detBirth">-</span></div>
+                        <div class="detail-row" id="rowPlace"><span class="detail-label">Birth Place</span><span class="detail-val" id="detPlace">-</span></div>
                     </div>
 
-                    <div class="detail-section">
+                    <div class="detail-section" id="secPayment">
                         <div class="detail-title">Payment &amp; Billing</div>
                         <div class="detail-row"><span class="detail-label">Amount</span><span class="detail-val">₹499.00</span></div>
                         <div class="detail-row"><span class="detail-label">Razorpay Order ID</span><span class="detail-val" id="detRzOrder">-</span></div>
@@ -502,7 +502,7 @@
                         <div class="detail-row"><span class="detail-label">Payment Status</span><span class="detail-val" id="detPayStatus">-</span></div>
                     </div>
 
-                    <div class="detail-section">
+                    <div class="detail-section" id="secMetadata">
                         <div class="detail-title">Report Metadata</div>
                         <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val" id="detRepStatus">-</span></div>
                         <div class="detail-row"><span class="detail-label">PDF Link</span><span class="detail-val" id="detRepUrl">-</span></div>
@@ -511,20 +511,20 @@
 
                 <!-- Right Column: Notes, Actions & Emails -->
                 <div>
-                    <div class="detail-section">
+                    <div class="detail-section" id="secNotes">
                         <div class="detail-title">Internal Notes</div>
                         <textarea id="adminNotes" placeholder="Write internal processing notes here..."></textarea>
                         <button class="action-btn" style="margin-top: 15px; width: 100%;" onclick="saveNotes()">Save Notes</button>
                     </div>
 
-                    <div class="detail-section">
+                    <div class="detail-section" id="secNotifications">
                         <div class="detail-title">Notification History</div>
                         <div id="emailLogs" style="background: rgba(201,150,123,0.02); border: 1px solid var(--border-color); border-radius: 4px; padding: 10px; max-height: 150px; overflow-y: auto;">
                             <!-- Dynamic log records -->
                         </div>
                     </div>
 
-                    <div class="actions-panel">
+                    <div class="actions-panel" id="secActions">
                         <h4 style="font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 1px;">Actions</h4>
                         <div class="btn-group">
                             <button class="action-btn" id="btnProcessing" onclick="updateOrderStatus('processing')">Mark Processing</button>
@@ -586,6 +586,8 @@
             return r.json();
         }
 
+        let userRole = "admin";
+
         async function loadOrders() {
             try {
                 let url = `/api/admin/orders?`;
@@ -594,6 +596,7 @@
                 
                 const data = await apiCall(url);
                 if (!data) return;
+                userRole = data.role || "admin";
 
                 const tbody = document.getElementById("ordersTableBody");
                 tbody.innerHTML = "";
@@ -663,48 +666,75 @@
                 document.getElementById("detName").innerText = cust.full_name || 'N/A';
                 document.getElementById("detEmail").innerText = cust.email || 'N/A';
                 document.getElementById("detMobile").innerText = cust.mobile || 'N/A';
-                document.getElementById("detBirth").innerText = `${o.dob} at ${o.tob} (TZ: ${o.timezone})`;
-                document.getElementById("detPlace").innerText = o.place;
-                document.getElementById("detPayStatus").innerText = "CAPTURED";
-                
-                // Razorpay properties
-                document.getElementById("detRzOrder").innerText = o.geocoded_place?.razorpay_order_id || 'N/A';
-                document.getElementById("detRzPayment").innerText = o.geocoded_place?.razorpay_payment_id || 'N/A';
-                
-                document.getElementById("detRepStatus").innerText = o.report_status.toUpperCase();
-                
-                const repUrl = document.getElementById("detRepUrl");
-                if (o.report_url) {
-                    repUrl.innerHTML = `<a href="${o.report_url}" target="_blank" style="color: var(--primary-dark); font-weight: bold;">View Report PDF</a>`;
+                if (userRole === "support") {
+                    document.getElementById("rowBirth").style.display = "none";
+                    document.getElementById("rowPlace").style.display = "none";
+                    document.getElementById("secPayment").style.display = "none";
+                    document.getElementById("secMetadata").style.display = "none";
+                    document.getElementById("secNotes").style.display = "none";
+                    document.getElementById("secNotifications").style.display = "none";
+                    document.getElementById("secActions").style.display = "none";
                 } else {
-                    repUrl.innerText = "Not generated yet";
-                }
-                
-                document.getElementById("adminNotes").value = o.notes || "";
+                    document.getElementById("rowBirth").style.display = "flex";
+                    document.getElementById("rowPlace").style.display = "flex";
+                    document.getElementById("secPayment").style.display = "block";
+                    document.getElementById("secMetadata").style.display = "block";
+                    document.getElementById("secNotes").style.display = "block";
+                    document.getElementById("secNotifications").style.display = "block";
+                    document.getElementById("secActions").style.display = "block";
 
-                // Bind Email logs history
-                const logsContainer = document.getElementById("emailLogs");
-                logsContainer.innerHTML = "";
-                if (data.email_logs.length === 0) {
-                    logsContainer.innerHTML = `<div style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 10px;">No emails logged yet</div>`;
-                } else {
-                    data.email_logs.forEach(l => {
-                        const div = document.createElement("div");
-                        div.className = "log-item";
-                        div.innerHTML = `
-                            <div>
-                                <strong style="color: var(--accent);">${l.template_name}</strong><br>
-                                <span style="font-size: 0.75rem; color: var(--text-muted);">${new Date(l.sent_at).toLocaleString()}</span>
-                            </div>
-                            <span class="log-status ${l.status}">${l.status}</span>
-                        `;
-                        logsContainer.appendChild(div);
-                    });
-                }
+                    // Bind admin properties safely using textContent
+                    document.getElementById("detBirth").textContent = `${o.dob} at ${o.tob} (TZ: ${o.timezone})`;
+                    document.getElementById("detPlace").textContent = o.place;
+                    document.getElementById("detPayStatus").textContent = "CAPTURED";
+                    
+                    // Razorpay properties
+                    document.getElementById("detRzOrder").textContent = o.geocoded_place?.razorpay_order_id || 'N/A';
+                    document.getElementById("detRzPayment").textContent = o.geocoded_place?.razorpay_payment_id || 'N/A';
+                    
+                    document.getElementById("detRepStatus").textContent = o.report_status.toUpperCase();
+                    
+                    const repUrl = document.getElementById("detRepUrl");
+                    if (o.report_url) {
+                        repUrl.innerHTML = `<a href="${o.report_url}" target="_blank" style="color: var(--primary-dark); font-weight: bold;">View Report PDF</a>`;
+                    } else {
+                        repUrl.textContent = "Not generated yet";
+                    }
+                    
+                    document.getElementById("adminNotes").value = o.notes || "";
 
-                // Enable/disable buttons based on status
-                document.getElementById("btnSend").disabled = !o.report_url;
-                document.getElementById("btnGenerate").disabled = o.report_status === 'generating';
+                    // Bind Email logs history
+                    const logsContainer = document.getElementById("emailLogs");
+                    logsContainer.innerHTML = "";
+                    if (data.email_logs.length === 0) {
+                        logsContainer.innerHTML = `<div style="font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 10px;">No emails logged yet</div>`;
+                    } else {
+                        data.email_logs.forEach(l => {
+                            const div = document.createElement("div");
+                            div.className = "log-item";
+                            // Safely template structural content
+                            div.innerHTML = `
+                                <div>
+                                    <strong style="color: var(--accent);" class="template-name"></strong><br>
+                                    <span style="font-size: 0.75rem; color: var(--text-muted);" class="sent-at"></span>
+                                </div>
+                                <span class="log-status" class="log-badge"></span>
+                            `;
+                            div.querySelector(".template-name").textContent = l.template_name;
+                            div.querySelector(".sent-at").textContent = new Date(l.sent_at).toLocaleString();
+                            
+                            const badge = div.querySelector("span.log-status");
+                            badge.textContent = l.status;
+                            badge.className = `log-status ${l.status}`;
+                            
+                            logsContainer.appendChild(div);
+                        });
+                    }
+
+                    // Enable/disable buttons based on status
+                    document.getElementById("btnSend").disabled = !o.report_url;
+                    document.getElementById("btnGenerate").disabled = o.report_status === 'generating';
+                }
 
                 document.getElementById("orderModal").style.display = "flex";
             } catch (e) {

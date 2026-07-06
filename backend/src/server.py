@@ -522,16 +522,26 @@ class CreateOrderRequest(BaseModel):
     geocoded_place: Dict[str, Any]
 
 @app.post("/api/orders/create")
-async def api_create_order(req: CreateOrderRequest):
-    """Register customer, record order in Supabase, and spawn Razorpay Order ID."""
+async def api_create_order(payload: Dict[str, Any]):
+    """Register customer, record order in Supabase, and spawn Razorpay Order ID, or authenticate admin."""
     supabase = SupabaseService()
     payment_service = PaymentService()
     
+    # 1. Admin login interceptor (for backward compatibility with admin_login.html)
+    if payload.get("auth_admin"):
+        email = payload.get("email", "")
+        password = payload.get("password", "")
+        session = supabase.sign_in_with_password(email, password)
+        if not session:
+            raise HTTPException(status_code=401, detail="Invalid admin credentials.")
+        return session
+        
     try:
-        # 1. Customer signup / resolve
+        req = CreateOrderRequest(**payload)
+        # 2. Customer signup / resolve
         customer_id = supabase.get_or_create_customer(req.name, req.email, req.mobile)
         
-        # 2. Append gender to geocoded metadata
+        # 3. Append gender to geocoded metadata
         geo_payload = req.geocoded_place.copy()
         geo_payload["gender"] = req.gender
         
@@ -684,55 +694,117 @@ async def api_payments_webhook(request: Request, background_tasks: BackgroundTas
         print(f"[Webhook Error] {e}")
         return {"status": "error", "detail": str(e)}
 
+def get_admin_role(user: Dict[str, Any]) -> str:
+    """Helper to extract admin user role: 'admin' or 'support'."""
+    email = user.get("email", "").lower()
+    metadata = user.get("user_metadata") or {}
+    if not isinstance(metadata, dict):
+        metadata = {}
+    
+    role = metadata.get("role") or user.get("role") or ""
+    if role == "support" or "support" in email:
+        return "support"
+    return "admin"
 
-# --- Admin Dashboard APIs (JWT Protected) ---
 
 @app.get("/api/admin/orders")
 async def api_admin_orders(status: Optional[str] = None, search: Optional[str] = None, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    role = get_admin_role(user)
+    
     supabase = SupabaseService()
     orders = supabase.get_orders(status, search)
-    return {"orders": orders}
+    
+    # Secure role-based filtering: Customer Support gets a clean truncated view
+    if role == "support":
+        truncated_orders = []
+        for o in orders:
+            cust = o.get("customers") or {}
+            truncated_orders.append({
+                "id": o.get("id"),
+                "order_status": o.get("order_status"),
+                "report_status": o.get("report_status"),
+                "created_at": o.get("created_at"),
+                "customers": {
+                    "full_name": cust.get("full_name"),
+                    "email": cust.get("email"),
+                    "mobile": cust.get("mobile")
+                }
+            })
+        return {"orders": truncated_orders, "role": role}
+        
+    return {"orders": orders, "role": role}
+
 
 @app.get("/api/admin/orders/{order_id}")
 async def api_admin_order_detail(order_id: str, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    role = get_admin_role(user)
+    
     supabase = SupabaseService()
     order = supabase.get_order_by_id(order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+        
+    # Secure detail truncation for Customer Support
+    if role == "support":
+        cust = order.get("customers") or {}
+        truncated_order = {
+            "id": order.get("id"),
+            "order_status": order.get("order_status"),
+            "report_status": order.get("report_status"),
+            "created_at": order.get("created_at"),
+            "customers": {
+                "full_name": cust.get("full_name"),
+                "email": cust.get("email"),
+                "mobile": cust.get("mobile")
+            }
+        }
+        return {"order": truncated_order, "email_logs": [], "role": role}
+        
     logs = supabase.get_email_logs(order_id)
-    return {"order": order, "email_logs": logs}
+    return {"order": order, "email_logs": logs, "role": role}
+
 
 class UpdateNotesRequest(BaseModel):
     notes: str
 
 @app.post("/api/admin/orders/{order_id}/notes")
 async def api_admin_update_notes(order_id: str, req: UpdateNotesRequest, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
     supabase = SupabaseService()
     success = supabase.save_admin_notes(order_id, req.notes)
     if not success:
         raise HTTPException(status_code=500, detail="Failed to save admin notes")
     return {"status": "success"}
 
+
 class UpdateStatusRequest(BaseModel):
     status: str
 
 @app.post("/api/admin/orders/{order_id}/status")
 async def api_admin_update_status(order_id: str, req: UpdateStatusRequest, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
     supabase = SupabaseService()
     success = supabase.update_order_status(order_id, req.status)
     if not success:
         raise HTTPException(status_code=500, detail="Failed to update order status")
     return {"status": "success"}
 
+
 @app.post("/api/admin/orders/{order_id}/generate")
 async def api_admin_trigger_generate(order_id: str, background_tasks: BackgroundTasks, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
     supabase = SupabaseService()
-    
     order = supabase.get_order_by_id(order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -745,21 +817,29 @@ async def api_admin_trigger_generate(order_id: str, background_tasks: Background
     )
     return {"status": "success", "detail": "Async report generation re-triggered."}
 
+
 class ManualUploadRequest(BaseModel):
     report_url: str
 
 @app.post("/api/admin/orders/{order_id}/upload")
 async def api_admin_manual_upload(order_id: str, req: ManualUploadRequest, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
     supabase = SupabaseService()
     success = supabase.update_order_report(order_id, req.report_url)
     if not success:
         raise HTTPException(status_code=500, detail="Failed to upload manual report url")
     return {"status": "success"}
 
+
 @app.post("/api/admin/orders/{order_id}/resend-confirmation")
 async def api_admin_resend_confirmation(order_id: str, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
     supabase = SupabaseService()
     email_service = EmailService()
     
@@ -775,9 +855,13 @@ async def api_admin_resend_confirmation(order_id: str, admin: Any = Header(None)
         raise HTTPException(status_code=500, detail="Failed to resend confirmation email")
     return {"status": "success"}
 
+
 @app.post("/api/admin/orders/{order_id}/send-report")
 async def api_admin_send_report(order_id: str, admin: Any = Header(None)):
-    await get_current_admin(admin)
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
     supabase = SupabaseService()
     email_service = EmailService()
     
@@ -797,6 +881,7 @@ async def api_admin_send_report(order_id: str, admin: Any = Header(None)):
         return {"status": "success"}
     else:
         raise HTTPException(status_code=500, detail="Email delivery failed")
+
 
 # --- Legacy Testbed API Endpoint (For Backward Compatibility) ---
 class GenerateRequest(BaseModel):
