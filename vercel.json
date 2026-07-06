@@ -1,24 +1,23 @@
 {
   "version": 2,
-  "cleanUrls": true,
   "builds": [
     { "src": "backend/src/server.py", "use": "@vercel/python" },
     { "src": "frontend/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/src/server.py" },
-    { "src": "/order", "dest": "/frontend/order.html" },
-    { "src": "/mobile", "dest": "/frontend/mobile.html" },
-    { "src": "/success", "dest": "/frontend/success.html" },
-    { "src": "/love-calculator", "dest": "/frontend/love_calculator.html" },
-    { "src": "/testbed", "dest": "/frontend/index.html" },
-    { "src": "/admin/login", "dest": "/frontend/admin_login.html" },
-    { "src": "/admin", "dest": "/frontend/admin.html" },
-    { "src": "/Coverpage.png", "dest": "/frontend/Coverpage.png" },
-    { "src": "/savvy_singh.jpg", "dest": "/frontend/savvy_singh.jpg" },
-    { "src": "/favicon.png", "dest": "/frontend/favicon.png" },
-    { "src": "/favicon.ico", "dest": "/frontend/favicon.ico" },
-    { "src": "/", "dest": "/frontend/order.html" },
-    { "src": "/((?!api|frontend).*)", "dest": "/frontend/$1" }
+    { "src": "/order", "dest": "frontend/order.html" },
+    { "src": "/mobile", "dest": "frontend/mobile.html" },
+    { "src": "/success", "dest": "frontend/success.html" },
+    { "src": "/love-calculator", "dest": "frontend/love_calculator.html" },
+    { "src": "/testbed", "dest": "frontend/index.html" },
+    { "src": "/admin/login", "dest": "frontend/admin_login.html" },
+    { "src": "/admin", "dest": "frontend/admin.html" },
+    { "src": "/Coverpage.png", "dest": "frontend/Coverpage.png" },
+    { "src": "/savvy_singh.jpg", "dest": "frontend/savvy_singh.jpg" },
+    { "src": "/favicon.png", "dest": "frontend/favicon.png" },
+    { "src": "/favicon.ico", "dest": "frontend/favicon.ico" },
+    { "src": "/", "dest": "frontend/order.html" },
+    { "src": "/((?!api|frontend).*)", "dest": "frontend/$1" }
   ]
 }
