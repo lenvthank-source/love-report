@@ -19,6 +19,6 @@
     { "src": "/favicon.png", "dest": "/frontend/favicon.png" },
     { "src": "/favicon.ico", "dest": "/frontend/favicon.ico" },
     { "src": "/", "dest": "/frontend/order.html" },
-    { "src": "/(.*)", "dest": "/frontend/$1" }
+    { "src": "/((?!api|frontend).*)", "dest": "/frontend/$1" }
   ]
 }
