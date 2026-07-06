@@ -113,6 +113,45 @@ def get_public_config():
     }
 
 
+@app.get("/api/health")
+def api_health():
+    """System health check endpoint verifying database connectivity and configuration status."""
+    supabase = SupabaseService()
+    db_connected = supabase.check_connection()
+    
+    payment = PaymentService()
+    rz_configured = payment.is_configured()
+    
+    email = EmailService()
+    email_configured = email.is_configured()
+    
+    opencage_key = os.getenv("OPENCAGE_API_KEY")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    
+    status = "healthy" if db_connected else "degraded"
+    
+    return {
+        "status": status,
+        "timestamp": datetime.utcnow().isoformat(),
+        "database": {
+            "connected": db_connected,
+            "configured": supabase.is_configured()
+        },
+        "payment_gateway": {
+            "configured": rz_configured
+        },
+        "email_service": {
+            "configured": email_configured
+        },
+        "geocoding": {
+            "configured": bool(opencage_key)
+        },
+        "llm_service": {
+            "configured": bool(openrouter_key)
+        }
+    }
+
+
 # --- Admin Authentication Dependency ---
 async def get_current_admin(authorization: Optional[str] = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):

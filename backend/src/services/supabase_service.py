@@ -18,6 +18,18 @@ class SupabaseService:
     def is_configured(self) -> bool:
         return self.client is not None
 
+    def check_connection(self) -> bool:
+        """Verifies if the Supabase client is configured and can query the database successfully."""
+        if not self.is_configured():
+            return False
+        try:
+            # Query a single row from customers table to verify read connection
+            self.client.table("customers").select("id").limit(1).execute()
+            return True
+        except Exception as e:
+            print(f"[Supabase] Connection health check failed: {e}")
+            return False
+
     # --- Auth Helper ---
     def verify_admin_token(self, token: str) -> Optional[Dict[str, Any]]:
         """
