@@ -439,33 +439,31 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
 
 @app.get("/api/geocode")
 def api_geocode(q: str):
-    """Proxy autocomplete search directly using VedAstro AddressToGeoLocation API."""
-    if not q or not q.strip():
+    """Search locations using OpenCage API directly for sub-second autocomplete latency."""
+    if not q or not q.strip() or len(q.strip()) < 2:
         return {"results": []}
         
-    url = f"https://api.vedastro.org/api/Calculate/AddressToGeoLocation/Address/{q}"
+    opencage_key = os.getenv("OPENCAGE_API_KEY", "3723e0d7ceb64eb3bd3623477d4c3142")
     try:
-        r = requests.get(url, timeout=10)
-        r.raise_for_status()
-        data = r.json()
-        if data.get("Status") == "Pass":
-            loc = data["Payload"]["AddressToGeoLocation"]
-            # Fetch timezone coordinates via OpenCage mapping for accuracy
-            opencage_key = os.getenv("OPENCAGE_API_KEY", "3723e0d7ceb64eb3bd3623477d4c3142")
-            geocoder = GeocodingService(opencage_key)
-            geo_info = geocoder.geocode(loc["Name"])
-            tz = geo_info["timezone"] if geo_info else "Asia/Kolkata"
+        from opencage.geocoder import OpenCageGeocode
+        geocoder = OpenCageGeocode(opencage_key)
+        results = geocoder.geocode(q, no_annotations=0, limit=5)
+        
+        formatted_results = []
+        for r in results:
+            geometry = r.get("geometry", {})
+            annotations = r.get("annotations", {})
+            timezone_info = annotations.get("timezone", {})
             
-            return {
-                "results": [{
-                    "formatted": loc["Name"],
-                    "latitude": loc["Latitude"],
-                    "longitude": loc["Longitude"],
-                    "timezone": tz,
-                    "raw": loc
-                }]
-            }
-        return {"results": []}
+            formatted_results.append({
+                "formatted": r.get("formatted"),
+                "latitude": geometry.get("lat"),
+                "longitude": geometry.get("lng"),
+                "timezone": timezone_info.get("name") or "Asia/Kolkata",
+                "raw": r
+            })
+            
+        return {"results": formatted_results}
     except Exception as e:
         print(f"[GeocodeProxy] Error: {e}")
         return {"results": []}
