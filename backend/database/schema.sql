@@ -38,7 +38,7 @@ CREATE INDEX IF NOT EXISTS idx_orders_created ON public.orders(created_at DESC);
 CREATE TABLE IF NOT EXISTS public.payments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE,
-    amount NUMERIC(10, 2) NOT NULL DEFAULT 499.00,
+    amount NUMERIC(10, 2) NOT NULL DEFAULT 999.00,
     razorpay_order_id TEXT NOT NULL UNIQUE,
     razorpay_payment_id TEXT UNIQUE,
     payment_status TEXT NOT NULL DEFAULT 'created', -- created, authorized, captured, failed, refunded

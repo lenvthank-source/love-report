@@ -561,8 +561,8 @@ async def api_create_order(payload: Dict[str, Any]):
         )
         
         # 4. Generate Razorpay Order
-        rz_order = payment_service.create_razorpay_order(499.00, order_id)
-        supabase.create_payment(order_id, rz_order["id"], 499.00)
+        rz_order = payment_service.create_razorpay_order(999.00, order_id)
+        supabase.create_payment(order_id, rz_order["id"], 999.00)
         
         return {
             "order_id": order_id,
