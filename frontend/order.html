@@ -928,89 +928,23 @@
     <!-- Section: Love Calculator Banner Card -->
     <section style="padding: 30px 8%; text-align: center;">
         <a href="/love-calculator" style="text-decoration: none; display: block; max-width: 800px; margin: 0 auto;">
-            <div class="love-banner-card" style="background: #FFFFFF; border: 1.5px solid var(--primary); border-radius: 8px; padding: 40px; box-shadow: var(--shadow-soft); position: relative;">
-                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: bold; padding: 5px 20px; border-radius: 30px; letter-spacing: 1.5px; text-transform: uppercase;">
-                    Free Tool
+            <div class="love-banner-card" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.3); border-radius: 16px; padding: 45px 30px; box-shadow: 0 20px 50px rgba(180, 80, 120, 0.1); position: relative; overflow: hidden; text-align: center;">
+                <!-- Decorative background radial glows -->
+                <div style="position: absolute; top: -100px; left: -100px; width: 250px; height: 250px; background: rgba(212, 105, 138, 0.15); filter: blur(60px); border-radius: 50%; pointer-events: none;"></div>
+                <div style="position: absolute; bottom: -100px; right: -100px; width: 250px; height: 250px; background: rgba(196, 40, 77, 0.15); filter: blur(60px); border-radius: 50%; pointer-events: none;"></div>
+
+                <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #D4698A 0%, #C4284D 100%); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 700; padding: 6px 24px; border-radius: 30px; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(196, 40, 77, 0.3);">
+                    🔥 FREE SOUL-MATE TEST
                 </div>
                 
-                <!-- Animated SVG Astrological Love Calculator Device -->
-                <svg width="80" height="80" viewBox="0 0 120 120" style="margin: 0 auto 15px; display: block;">
-                    <defs>
-                        <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="3" result="blur" />
-                            <feMerge>
-                                <feMergeNode in="blur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                    </defs>
-                    <style>
-                        @keyframes heartbeat {
-                            0%, 100% { transform: scale(1); transform-origin: 60px 48px; }
-                            50% { transform: scale(1.25); transform-origin: 60px 48px; }
-                        }
-                        @keyframes ledBlink {
-                            0%, 100% { fill: #C4284D; filter: none; }
-                            50% { fill: #FF4D79; filter: url(#neonGlow); }
-                        }
-                        @keyframes screenShift {
-                            0%, 100% { opacity: 0.4; }
-                            50% { opacity: 1; }
-                        }
-                        .beating-heart {
-                            animation: heartbeat 1.5s infinite ease-in-out;
-                        }
-                        .led-1 {
-                            animation: ledBlink 1.2s infinite ease-in-out;
-                        }
-                        .led-2 {
-                            animation: ledBlink 1.2s infinite ease-in-out 0.6s;
-                        }
-                        .number-text {
-                            font-family: 'Jost', sans-serif;
-                            font-weight: bold;
-                            font-size: 14px;
-                            fill: #FF4D79;
-                            filter: url(#neonGlow);
-                            animation: screenShift 2s infinite ease-in-out;
-                        }
-                    </style>
-                    <rect x="25" y="10" width="70" height="100" rx="10" fill="#3A2030" stroke="#D4698A" stroke-width="2.5" />
-                    <rect x="29" y="14" width="62" height="92" rx="7" fill="none" stroke="rgba(212, 105, 138, 0.15)" stroke-width="1" />
-                    <circle cx="40" cy="22" r="3" class="led-1" />
-                    <circle cx="80" cy="22" r="3" class="led-2" />
-                    <rect x="33" y="30" width="54" height="32" rx="4" fill="#1C0A15" stroke="rgba(212, 105, 138, 0.3)" stroke-width="1.5" />
-                    <line x1="33" y1="46" x2="87" y2="46" stroke="rgba(212, 105, 138, 0.08)" stroke-width="1" />
-                    <line x1="60" y1="30" x2="60" y2="62" stroke="rgba(212, 105, 138, 0.08)" stroke-width="1" />
-                    <path d="M 60 48 C 58 45, 55 45, 55 48 C 55 52, 60 55, 60 55 C 60 55, 65 52, 65 48 C 65 45, 62 45, 60 48 Z" fill="#C4284D" class="beating-heart" />
-                    <text x="38" y="50" class="number-text">77%</text>
-                    <text x="68" y="50" class="number-text">99%</text>
-                    <rect x="33" y="68" width="54" height="30" rx="3" fill="#2A1422" />
-                    <circle cx="41" cy="74" r="3.5" fill="#9E3A5E" />
-                    <circle cx="50" cy="74" r="3.5" fill="#D4698A" />
-                    <circle cx="59" cy="74" r="3.5" fill="#D4698A" />
-                    <circle cx="68" cy="74" r="3.5" fill="#D4698A" />
-                    <circle cx="77" cy="74" r="3.5" fill="#9E3A5E" />
-                    <circle cx="41" cy="83" r="3.5" fill="#D4698A" />
-                    <circle cx="50" cy="83" r="3.5" fill="#D4698A" />
-                    <circle cx="59" cy="83" r="3.5" fill="#C4284D" />
-                    <circle cx="68" cy="83" r="3.5" fill="#D4698A" />
-                    <circle cx="77" cy="83" r="3.5" fill="#D4698A" />
-                    <circle cx="41" cy="92" r="3.5" fill="#9E3A5E" />
-                    <circle cx="50" cy="92" r="3.5" fill="#D4698A" />
-                    <circle cx="59" cy="92" r="3.5" fill="#D4698A" />
-                    <circle cx="68" cy="92" r="3.5" fill="#D4698A" />
-                    <circle cx="77" cy="92" r="3.5" fill="#9E3A5E" />
-                </svg>
-
-                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; text-transform: uppercase; margin-top: 10px; margin-bottom: 12px; color: var(--text-dark);">
-                    Try the Free Chaldean Love Calculator
+                <h2 style="font-family: 'Jost', sans-serif; font-size: 2.3rem; font-weight: 800; text-transform: uppercase; margin-top: 15px; margin-bottom: 15px; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.2;">
+                    ✨ DECODE YOUR ROMANTIC FREQUENCY ✨
                 </h2>
-                <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 10px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.7;">
-                    Instantly check your name resonance compatibility score in 30 seconds using ancient Chaldean numerology before checking your deep birth charts.
+                <p style="color: var(--text-muted); font-family: 'Lora', serif; font-size: 1.1rem; margin-bottom: 25px; max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.8;">
+                    Are you a cosmic match or absolute chaos? Instantly verify your name resonance score in 30 seconds using ancient Chaldean numerology before checking your deep birth charts.
                 </p>
-                <div style="color: var(--primary-dark); font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 15px;">
-                    ✨ CLICK TO CALCULATE SCORE ✨
+                <div style="display: inline-block; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 30px; border-radius: 30px; box-shadow: 0 4px 15px rgba(212, 105, 138, 0.3);">
+                    Check Love Compatibility 🔮
                 </div>
             </div>
         </a>
