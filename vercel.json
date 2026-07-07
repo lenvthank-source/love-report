@@ -11,6 +11,7 @@
     { "src": "/success", "dest": "frontend/success.html" },
     { "src": "/love-calculator", "dest": "frontend/love_calculator.html" },
     { "src": "/testbed", "dest": "frontend/index.html" },
+    { "src": "/admin/signup", "dest": "frontend/admin_signup.html" },
     { "src": "/admin/login", "dest": "frontend/admin_login.html" },
     { "src": "/admin", "dest": "frontend/admin.html" },
     { "src": "/Coverpage.png", "dest": "frontend/Coverpage.png" },

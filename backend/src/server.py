@@ -531,10 +531,13 @@ async def api_create_order(payload: Dict[str, Any]):
     if payload.get("auth_admin"):
         email = payload.get("email", "")
         password = payload.get("password", "")
-        session = supabase.sign_in_with_password(email, password)
-        if not session:
-            raise HTTPException(status_code=401, detail="Invalid admin credentials.")
-        return session
+        try:
+            session = supabase.sign_in_with_password(email, password)
+            if not session:
+                raise HTTPException(status_code=401, detail="Invalid admin credentials.")
+            return session
+        except ValueError as e:
+            raise HTTPException(status_code=403, detail=str(e))
         
     try:
         req = CreateOrderRequest(**payload)
@@ -881,6 +884,89 @@ async def api_admin_send_report(order_id: str, admin: Any = Header(None)):
         return {"status": "success"}
     else:
         raise HTTPException(status_code=500, detail="Email delivery failed")
+
+
+# --- Admin User Management Endpoints ---
+
+class AdminSignupRequest(BaseModel):
+    full_name: str
+    email: str
+    password: str
+
+@app.post("/api/admin/signup")
+async def api_admin_signup(req: AdminSignupRequest):
+    """Sign up a new admin user as pending support."""
+    supabase = SupabaseService()
+    success = supabase.sign_up_admin(req.email, req.password, req.full_name)
+    if not success:
+        raise HTTPException(status_code=400, detail="Registration failed. Email may already be registered.")
+    return {"status": "success", "detail": "User registered successfully, pending approval."}
+
+
+@app.get("/api/admin/users")
+async def api_admin_list_users(admin: Any = Header(None)):
+    """List all admin users (Admin role only)."""
+    user = await get_current_admin(admin)
+    if get_admin_role(user) != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden: Full Admin privileges required.")
+        
+    supabase = SupabaseService()
+    users = supabase.list_admin_users()
+    return {"users": users}
+
+
+class ApproveUserRequest(BaseModel):
+    status: str  # approved or rejected
+
+@app.post("/api/admin/users/{email}/approve")
+async def api_admin_approve_user(email: str, req: ApproveUserRequest, admin: Any = Header(None)):
+    """Approve or reject a pending admin user (Admin role only)."""
+    user = await get_current_admin(admin)
+    if get_admin_role(user) != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden: Full Admin privileges required.")
+        
+    if req.status not in ["approved", "rejected", "pending"]:
+        raise HTTPException(status_code=400, detail="Invalid status value.")
+        
+    supabase = SupabaseService()
+    success = supabase.update_admin_user_status(email, req.status)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return {"status": "success", "detail": f"User status updated to {req.status}."}
+
+
+class UpdateUserRoleRequest(BaseModel):
+    role: str  # admin or support
+
+@app.post("/api/admin/users/{email}/role")
+async def api_admin_update_user_role(email: str, req: UpdateUserRoleRequest, admin: Any = Header(None)):
+    """Change an admin user's role (Admin role only)."""
+    user = await get_current_admin(admin)
+    if get_admin_role(user) != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden: Full Admin privileges required.")
+        
+    if req.role not in ["admin", "support"]:
+        raise HTTPException(status_code=400, detail="Invalid role value.")
+        
+    supabase = SupabaseService()
+    success = supabase.update_admin_user_role(email, req.role)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return {"status": "success", "detail": f"User role updated to {req.role}."}
+
+
+@app.delete("/api/admin/users/{email}")
+async def api_admin_delete_user(email: str, admin: Any = Header(None)):
+    """Delete an admin user (Admin role only)."""
+    user = await get_current_admin(admin)
+    if get_admin_role(user) != "admin":
+        raise HTTPException(status_code=403, detail="Forbidden: Full Admin privileges required.")
+        
+    supabase = SupabaseService()
+    success = supabase.delete_admin_user(email)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return {"status": "success", "detail": "User deleted successfully."}
 
 
 # --- Legacy Testbed API Endpoint (For Backward Compatibility) ---

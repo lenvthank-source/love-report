@@ -4,6 +4,11 @@ from supabase import create_client, Client
 from jose import jwt
 
 class SupabaseService:
+    # Class-level mock database for admin users to persist across instances in local testing
+    _mock_admin_users = [
+        {"email": "admin@test.com", "full_name": "Mock Admin", "role": "admin", "status": "approved"},
+        {"email": "support@test.com", "full_name": "Mock Support", "role": "support", "status": "approved"}
+    ]
     def __init__(self):
         self.url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
         # Support service role key (preferred for backend bypass), standard key, and anon key fallbacks
@@ -42,30 +47,76 @@ class SupabaseService:
         if not self.is_configured():
             # Mock login for testing/sandbox mode
             email_lower = email.strip().lower()
-            if email_lower == "admin@test.com" and password == "admin123":
+            admin_user = None
+            for u in self._mock_admin_users:
+                if u["email"] == email_lower:
+                    admin_user = u
+                    break
+            
+            if admin_user:
+                # Check password matches local mocks
+                if email_lower == "admin@test.com" and password != "admin123":
+                    return None
+                if email_lower == "support@test.com" and password != "support123":
+                    return None
+                
+                # Check status
+                if admin_user.get("status") == "pending":
+                    raise ValueError("Your account is pending administrator approval.")
+                if admin_user.get("status") == "rejected":
+                    raise ValueError("Your account has been rejected by an administrator.")
+                
                 return {
-                    "access_token": "mock-admin-token",
-                    "user": {"email": email_lower, "user_metadata": {"role": "admin"}}
-                }
-            if email_lower == "support@test.com" and password == "support123":
-                return {
-                    "access_token": "mock-support-token",
-                    "user": {"email": email_lower, "user_metadata": {"role": "support"}}
+                    "access_token": f"mock-{admin_user['role']}-token",
+                    "user": {"email": email_lower, "user_metadata": {"role": admin_user["role"]}}
                 }
             return None
         try:
             res = self.client.auth.sign_in_with_password({"email": email.strip().lower(), "password": password})
+            
+            # Check user record in admin_users table
+            admin_user = self.get_admin_user(res.user.email)
+            if not admin_user:
+                # Auto-create entry as pending support if they exist in auth but not database
+                self.create_admin_user(res.user.email, res.user.email.split("@")[0], role="support", status="pending")
+                raise ValueError("Your account is pending administrator approval.")
+            
+            if admin_user.get("status") == "pending":
+                raise ValueError("Your account is pending administrator approval.")
+            if admin_user.get("status") == "rejected":
+                raise ValueError("Your account has been rejected by an administrator.")
+                
             return {
                 "access_token": res.session.access_token,
                 "user": {
                     "email": res.user.email,
                     "id": res.user.id,
-                    "user_metadata": res.user.user_metadata or {}
+                    "user_metadata": {
+                        "role": admin_user.get("role", "support"),
+                        **(res.user.user_metadata or {})
+                    }
                 }
             }
         except Exception as e:
             print(f"[SupabaseAuth] Authentication failed: {e}")
             return None
+
+    def sign_up_admin(self, email: str, password: str, full_name: str) -> bool:
+        """Signs up a new user using Supabase Auth and registers them in admin_users table."""
+        email_lower = email.strip().lower()
+        if not self.is_configured():
+            # Mock signup
+            return self.create_admin_user(email_lower, full_name, role="support", status="pending")
+        try:
+            # Register in Supabase Auth
+            res = self.client.auth.sign_up({"email": email_lower, "password": password})
+            if res.user:
+                # Add to admin_users table
+                return self.create_admin_user(email_lower, full_name, role="support", status="pending")
+            return False
+        except Exception as e:
+            print(f"[SupabaseAuth] Signup failed: {e}")
+            return False
 
     def verify_admin_token(self, token: str) -> Optional[Dict[str, Any]]:
         """
@@ -272,3 +323,97 @@ class SupabaseService:
         except Exception as e:
             print(f"[SupabaseStorage] Failed to upload PDF report: {e}")
             return None
+
+    # --- Admin Users Management (RBAC) ---
+    def create_admin_user(self, email: str, full_name: str, role: str = "support", status: str = "pending") -> bool:
+        if not self.is_configured():
+            email_lower = email.strip().lower()
+            if any(u["email"] == email_lower for u in self._mock_admin_users):
+                return True
+            self._mock_admin_users.append({
+                "email": email_lower,
+                "full_name": full_name,
+                "role": role,
+                "status": status
+            })
+            return True
+        try:
+            self.client.table("admin_users").insert({
+                "email": email.strip().lower(),
+                "full_name": full_name,
+                "role": role,
+                "status": status
+            }).execute()
+            return True
+        except Exception as e:
+            print(f"[Supabase] Failed to create admin user: {e}")
+            return False
+
+    def get_admin_user(self, email: str) -> Optional[Dict[str, Any]]:
+        if not self.is_configured():
+            email_lower = email.strip().lower()
+            for u in self._mock_admin_users:
+                if u["email"] == email_lower:
+                    return u
+            return None
+        try:
+            res = self.client.table("admin_users").select("*").eq("email", email.strip().lower()).execute()
+            if res.data:
+                return res.data[0]
+            return None
+        except Exception as e:
+            print(f"[Supabase] Failed to get admin user: {e}")
+            return None
+
+    def update_admin_user_status(self, email: str, status: str) -> bool:
+        if not self.is_configured():
+            email_lower = email.strip().lower()
+            for u in self._mock_admin_users:
+                if u["email"] == email_lower:
+                    u["status"] = status
+                    return True
+            return False
+        try:
+            res = self.client.table("admin_users").update({"status": status}).eq("email", email.strip().lower()).execute()
+            return len(res.data) > 0
+        except Exception as e:
+            print(f"[Supabase] Failed to update admin user status: {e}")
+            return False
+
+    def update_admin_user_role(self, email: str, role: str) -> bool:
+        if not self.is_configured():
+            email_lower = email.strip().lower()
+            for u in self._mock_admin_users:
+                if u["email"] == email_lower:
+                    u["role"] = role
+                    return True
+            return False
+        try:
+            res = self.client.table("admin_users").update({"role": role}).eq("email", email.strip().lower()).execute()
+            return len(res.data) > 0
+        except Exception as e:
+            print(f"[Supabase] Failed to update admin user role: {e}")
+            return False
+
+    def list_admin_users(self) -> List[Dict[str, Any]]:
+        if not self.is_configured():
+            return self._mock_admin_users
+        try:
+            res = self.client.table("admin_users").select("*").order("email", desc=False).execute()
+            return res.data or []
+        except Exception as e:
+            print(f"[Supabase] Failed to list admin users: {e}")
+            return []
+
+    def delete_admin_user(self, email: str) -> bool:
+        if not self.is_configured():
+            email_lower = email.strip().lower()
+            initial_len = len(self._mock_admin_users)
+            self._mock_admin_users[:] = [u for u in self._mock_admin_users if u["email"] != email_lower]
+            return len(self._mock_admin_users) < initial_len
+        try:
+            res = self.client.table("admin_users").delete().eq("email", email.strip().lower()).execute()
+            return len(res.data) > 0
+        except Exception as e:
+            print(f"[Supabase] Failed to delete admin user: {e}")
+            return False

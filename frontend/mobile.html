@@ -17,14 +17,14 @@
 
     <style>
         :root {
-            --bg: #FAF4EE; /* Soft warm light cream background */
+            --bg: #FDF0F2; /* Blush-tinted cream background */
             --card-bg: #FFFFFF; /* Pure white card */
-            --primary: #C9967B; /* Warm rose gold */
-            --primary-dark: #8E5A40;
-            --accent: #A93B52; /* Deep rose berry */
-            --text-dark: #3C332D; /* Soft dark brown text */
-            --text-muted: #96867F; /* Muted warm grey */
-            --border-color: rgba(201, 150, 123, 0.28);
+            --primary: #D4698A; /* Deeper dusty rose */
+            --primary-dark: #9E3A5E; /* Dark magenta-plum */
+            --accent: #C4284D; /* Bold crimson-pink */
+            --text-dark: #3A2030; /* Dark plum-brown */
+            --text-muted: #9A7E8A; /* Muted mauve-taupe */
+            --border-color: rgba(212, 105, 138, 0.25);
             --transition-fluid: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -109,7 +109,7 @@
         }
 
         .action-btn {
-            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            background: linear-gradient(135deg, #D4698A 0%, #B84570 100%);
             color: #FFFFFF;
             border: none;
             border-radius: 30px;
@@ -122,7 +122,7 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 4px 15px rgba(201, 150, 123, 0.2);
+            box-shadow: 0 4px 15px rgba(212, 105, 138, 0.2);
             margin-top: 15px;
         }
 
@@ -400,6 +400,45 @@
             font-size: 0.85rem;
             color: var(--text-muted);
         }
+        /* Love Calculator Banner Attention Animations */
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 15px 40px rgba(180, 80, 120, 0.06), 0 0 0 0 rgba(212, 105, 138, 0.2);
+                border-color: var(--primary);
+            }
+            50% {
+                box-shadow: 0 15px 40px rgba(180, 80, 120, 0.12), 0 0 15px 4px rgba(212, 105, 138, 0.4);
+                border-color: var(--accent);
+            }
+        }
+
+        @keyframes heartBeat {
+            0%, 100%, 10% { transform: scale(1); }
+            5% { transform: scale(1.25); }
+            7% { transform: scale(1.1); }
+        }
+
+        .love-banner-card {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        .love-banner-heart {
+            display: inline-block;
+            animation: heartBeat 4s infinite ease-in-out;
+        }
+
+        .love-banner-btn {
+            background: linear-gradient(135deg, #D4698A 0%, #B84570 100%) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 15px rgba(212, 105, 138, 0.3) !important;
+            border: none !important;
+            transition: var(--transition-fluid);
+        }
+
+        .love-banner-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(212, 105, 138, 0.5) !important;
+        }
     </style>
 </head>
 <body>
@@ -419,17 +458,17 @@
 
     <!-- Section: Love Calculator Banner Card Mobile -->
     <div class="mobile-section" style="padding: 25px 20px; text-align: center;">
-        <div style="background: #FFFFFF; border: 1.5px solid var(--primary); border-radius: 8px; padding: 30px 20px; box-shadow: var(--shadow-soft); position: relative;">
+        <div class="love-banner-card" style="background: #FFFFFF; border: 1.5px solid var(--primary); border-radius: 8px; padding: 30px 20px; box-shadow: var(--shadow-soft); position: relative;">
             <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.65rem; font-weight: bold; padding: 4px 15px; border-radius: 30px; letter-spacing: 1px; text-transform: uppercase;">
                 Free Tool
             </div>
             <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; text-transform: uppercase; margin-top: 5px; margin-bottom: 10px; color: var(--text-dark);">
-                💖 Free Love Calculator
+                <span class="love-banner-heart">💖</span> Free Love Calculator
             </h2>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.6;">
                 Check your name resonance compatibility score in 30 seconds using ancient Chaldean numerology.
             </p>
-            <a href="/love-calculator" class="action-btn" style="background: transparent; color: var(--primary-dark); border: 1.5px solid var(--primary); box-shadow: none; width: 100%; margin-top: 0;">
+            <a href="/love-calculator" class="action-btn love-banner-btn" style="background: transparent; color: var(--primary-dark); border: 1.5px solid var(--primary); box-shadow: none; width: 100%; margin-top: 0;">
                 ✔ Check Love Score (Calculator)
             </a>
         </div>
@@ -809,7 +848,7 @@
                         email: payload.email,
                         contact: payload.mobile
                     },
-                    theme: { color: "#C9967B" }
+                    theme: { color: "#D4698A" }
                 };
 
                 const rzp = new Razorpay(options);

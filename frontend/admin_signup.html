@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Access — Cosmic Control Panel</title>
-
+    <title>Admin Registration — Cosmic Astrological Engine</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="/favicon.png?v=2">
-
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-color: #FDF0F2; /* Blush-tinted cream background */
@@ -32,67 +27,58 @@
 
         body {
             background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(201, 150, 123, 0.05) 0%, transparent 45%),
-                radial-gradient(circle at 90% 80%, rgba(169, 59, 82, 0.04) 0%, transparent 45%);
             color: var(--text-dark);
-            font-family: 'Lora', Georgia, serif;
-            min-height: 100vh;
+            font-family: 'Lora', serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* --- Floating Stardust Particles --- */
+        /* Ambient stardust particles in the background */
         .stars-container {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 1;
+            overflow: hidden;
         }
 
         .star-particle {
             position: absolute;
             background: var(--primary);
             border-radius: 50%;
-            opacity: 0.25;
-            animation: drift-float 22s linear infinite;
+            opacity: 0.15;
+            animation: floatParticle 25s infinite linear;
         }
 
-        @keyframes drift-float {
-            0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
-            10% { opacity: 0.35; }
-            90% { opacity: 0.35; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.25; }
+            90% { opacity: 0.25; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- Card Frame --- */
         .container {
-            width: 100%;
-            max-width: 440px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 55px 45px;
+            border-radius: 8px;
             box-shadow: var(--shadow);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 440px;
             position: relative;
             z-index: 10;
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
 
         .container::after {
             content: '';
             position: absolute;
             top: 6px; left: 6px; right: 6px; bottom: 6px;
-            border: 1px solid rgba(201, 150, 123, 0.08);
-            border-radius: 2px;
+            border: 1px solid rgba(212, 105, 138, 0.08);
+            border-radius: 4px;
             pointer-events: none;
         }
 
@@ -103,64 +89,38 @@
 
         header h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.1rem;
+            font-size: 2.3rem;
             font-weight: 300;
-            letter-spacing: 3px;
             text-transform: uppercase;
+            letter-spacing: 2px;
             color: var(--text-dark);
             margin-bottom: 8px;
         }
 
         header p {
-            font-size: 0.95rem;
-            color: var(--primary-dark);
-            font-style: italic;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
         }
 
         .divider {
-            width: 70px;
-            height: 1.5px;
+            width: 50px;
+            height: 1px;
             background: var(--primary);
             margin: 15px auto 0;
+            opacity: 0.5;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 25px;
+            gap: 6px;
+            margin-bottom: 24px;
             position: relative;
         }
 
-        label {
-            font-family: 'Jost', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: var(--transition-fluid);
-        }
-
-        /* Seamless Underline Fields */
-        input {
-            background: transparent;
-            border: none;
-            border-bottom: 1.5px solid var(--border-color);
-            border-radius: 0;
-            padding: 10px 0;
-            color: var(--text-dark);
-            font-family: 'Lora', serif;
-            font-size: 1rem;
-            outline: none;
-            transition: var(--transition-fluid);
-        }
-
-        input:focus {
-            border-bottom-color: var(--primary-dark);
-        }
-
-        /* Expanding gold focus line */
         .form-group::after {
             content: '';
             position: absolute;
@@ -176,6 +136,33 @@
 
         .form-group:focus-within label {
             color: var(--accent);
+        }
+
+        label {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: var(--transition-fluid);
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid var(--border-color);
+            border-radius: 0;
+            padding: 10px 0;
+            color: var(--text-dark);
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition-fluid);
+        }
+
+        input:focus {
+            border-bottom-color: transparent;
         }
 
         .submit-btn {
@@ -219,6 +206,35 @@
             font-size: 0.9rem;
             display: none;
         }
+
+        .success-message {
+            background: rgba(40, 167, 69, 0.08);
+            border-left: 3px solid #28A745;
+            color: #1E7E34;
+            padding: 12px 18px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .login-link a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-fluid);
+        }
+
+        .login-link a:hover {
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -229,25 +245,40 @@
     <div class="container">
         <header>
             <h1>Admin Panel</h1>
-            <p>Secure Astrological Credentials</p>
+            <p>Request Astrological Credentials</p>
             <div class="divider"></div>
         </header>
 
         <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
 
-        <form id="loginForm">
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" required placeholder="e.g. Acharya Savvy Singh">
+            </div>
+
             <div class="form-group">
                 <label for="email">Admin Email</label>
-                <input type="email" id="email" required placeholder="admin@domain.com">
+                <input type="email" id="email" required placeholder="e.g. support@astrosavvysingh.com">
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" required placeholder="••••••••">
+                <input type="password" id="password" required placeholder="••••••••" minlength="8">
             </div>
 
-            <button type="submit" class="submit-btn" id="loginBtn">🔒 Authenticate</button>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" required placeholder="••••••••" minlength="8">
+            </div>
+
+            <button type="submit" class="submit-btn" id="signupBtn">🔒 Register Account</button>
         </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/admin/login">Login here</a>
+        </div>
     </div>
 
     <script>
@@ -264,58 +295,43 @@
             starsContainer.appendChild(star);
         }
 
-        let supabaseUrl = "";
-        let supabaseAnonKey = "";
-        let supabase = null;
-
-        // Fetch Supabase credentials from local server endpoints
-        async function initAuth() {
-            try {
-                const res = await fetch("/api/admin/orders", { method: "GET" });
-                if (res.status === 401) {
-                    const credentialsRes = await fetch("/api/orders/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ get_supabase_keys: true }) }).catch(() => null);
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        // We fetch public keys dynamically or bind locally
-        async function getKeys() {
-            try {
-                const r = await fetch("/api/orders/create", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({ dummy: true }) 
-                });
-            } catch(e){}
-        }
-
-        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        document.getElementById("signupForm").addEventListener("submit", async function(e) {
             e.preventDefault();
-            const email = document.getElementById("email").value;
+            const fullName = document.getElementById("fullName").value.trim();
+            const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            
             const errBanner = document.getElementById("errorMessage");
-            const btn = document.getElementById("loginBtn");
+            const succBanner = document.getElementById("successMessage");
+            const btn = document.getElementById("signupBtn");
+
+            errBanner.style.display = "none";
+            succBanner.style.display = "none";
+
+            if (password !== confirmPassword) {
+                errBanner.innerText = "Passwords do not match.";
+                errBanner.style.display = "block";
+                return;
+            }
 
             btn.disabled = true;
-            errBanner.style.display = "none";
 
             try {
-                const res = await fetch("/api/orders/create", {
+                const res = await fetch("/api/admin/signup", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ auth_admin: true, email, password })
+                    body: JSON.stringify({ full_name: fullName, email, password })
                 });
 
                 if (!res.ok) {
                     const data = await res.json();
-                    throw new Error(data.detail || "Authentication failed.");
+                    throw new Error(data.detail || "Registration failed.");
                 }
 
-                const data = await res.json();
-                localStorage.setItem("admin_token", data.access_token);
-                window.location.href = "/admin";
+                succBanner.innerText = "Registration request submitted. An administrator must approve your account before you can log in.";
+                succBanner.style.display = "block";
+                document.getElementById("signupForm").reset();
             } catch(err) {
                 errBanner.innerText = err.message;
                 errBanner.style.display = "block";

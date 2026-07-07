@@ -10,15 +10,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #FAF4EE; /* Soft warm light cream background */
+            --bg-color: #FDF0F2; /* Blush-tinted cream background */
             --card-bg: #FFFFFF; /* Pure white card */
-            --primary: #C9967B; /* Warm rose gold */
-            --primary-dark: #8E5A40;
-            --accent: #A93B52; /* Delicate rose berry */
-            --text-dark: #3C332D; /* Rich chocolate brown */
-            --text-muted: #96867F; /* Warm taupe */
-            --border-color: rgba(201, 150, 123, 0.28);
-            --shadow: 0 30px 60px rgba(142, 110, 94, 0.08);
+            --primary: #D4698A; /* Deeper dusty rose */
+            --primary-dark: #9E3A5E; /* Dark magenta-plum */
+            --accent: #C4284D; /* Bold crimson-pink */
+            --text-dark: #3A2030; /* Dark plum-brown */
+            --text-muted: #9A7E8A; /* Muted mauve-taupe */
+            --border-color: rgba(212, 105, 138, 0.25);
+            --shadow: 0 30px 60px rgba(180, 80, 120, 0.08);
             --transition-fluid: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             
             --badge-pending: #B38600;
@@ -369,20 +369,20 @@
         }
 
         .action-btn.primary {
-            background: linear-gradient(135deg, #C9967B 0%, #A67358 100%);
+            background: linear-gradient(135deg, #D4698A 0%, #B84570 100%);
             color: #FFFFFF;
             border: none;
-            box-shadow: 0 4px 10px rgba(201, 150, 123, 0.25);
+            box-shadow: 0 4px 10px rgba(212, 105, 138, 0.25);
         }
 
         .action-btn:hover {
             border-color: var(--primary-dark);
-            background: rgba(201, 150, 123, 0.08);
+            background: rgba(212, 105, 138, 0.08);
             transform: translateY(-2px);
         }
 
         .action-btn.primary:hover {
-            box-shadow: 0 6px 18px rgba(201, 150, 123, 0.35);
+            box-shadow: 0 6px 18px rgba(212, 105, 138, 0.35);
         }
 
         .action-btn:disabled {
@@ -437,7 +437,10 @@
             <h1>Cosmic Control Panel</h1>
             <p style="color: var(--primary-dark); font-size: 0.95rem; font-style: italic;">Astrological Order &amp; Delivery Management</p>
         </div>
-        <button class="logout-btn" onclick="logout()">🔐 SECURE LOGOUT</button>
+        <div>
+            <button class="logout-btn" id="btnManageUsers" style="margin-right: 15px; display: none; background: transparent; border: 1.5px solid var(--primary); color: var(--primary-dark);" onclick="toggleUserManagement()">👥 MANAGE USERS</button>
+            <button class="logout-btn" onclick="logout()">🔐 SECURE LOGOUT</button>
+        </div>
     </header>
 
     <div class="controls">
@@ -474,6 +477,31 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- User Management Section (Hidden by default) -->
+    <div class="container" id="userManagementSection" style="display: none; padding: 0 8%; margin-top: 30px; position: relative; z-index: 10;">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; color: var(--text-dark); margin-bottom: 20px;">
+            👥 Admin &amp; Support User Management
+        </h2>
+        <div class="table-container">
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Full Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">Loading users...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Detailed Modal -->
@@ -597,6 +625,14 @@
                 const data = await apiCall(url);
                 if (!data) return;
                 userRole = data.role || "admin";
+
+                // Show/hide manage users button based on role
+                const manageBtn = document.getElementById("btnManageUsers");
+                if (userRole === "admin") {
+                    manageBtn.style.display = "inline-block";
+                } else {
+                    manageBtn.style.display = "none";
+                }
 
                 const tbody = document.getElementById("ordersTableBody");
                 tbody.innerHTML = "";
@@ -821,6 +857,114 @@
                 openOrder(selectedOrderId);
             } catch (e) {
                 alert(`Failed to resend: ${e.message}`);
+            }
+        }
+
+        let isUserMgmtActive = false;
+
+        function toggleUserManagement() {
+            const btn = document.getElementById("btnManageUsers");
+            const orderControls = document.querySelector(".controls");
+            const orderTable = document.querySelector(".table-container");
+            const userSection = document.getElementById("userManagementSection");
+
+            isUserMgmtActive = !isUserMgmtActive;
+            if (isUserMgmtActive) {
+                btn.innerHTML = "📋 VIEW ORDERS";
+                orderControls.style.display = "none";
+                orderTable.style.display = "none";
+                userSection.style.display = "block";
+                loadUsers();
+            } else {
+                btn.innerHTML = "👥 MANAGE USERS";
+                orderControls.style.display = "flex";
+                orderTable.style.display = "block";
+                userSection.style.display = "none";
+                loadOrders();
+            }
+        }
+
+        async function loadUsers() {
+            const tbody = document.getElementById("usersTableBody");
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">Fetching celestial users...</td></tr>`;
+            try {
+                const data = await apiCall("/api/admin/users");
+                if (!data || !data.users) return;
+
+                tbody.innerHTML = "";
+                if (data.users.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No other users found.</td></tr>`;
+                    return;
+                }
+
+                data.users.forEach(u => {
+                    const tr = document.createElement("tr");
+                    
+                    // Status Badge
+                    const statusClass = u.status === 'approved' ? 'paid' : (u.status === 'pending' ? 'processing' : 'failed');
+                    const statusBadge = `<span class="badge ${statusClass}">${u.status.toUpperCase()}</span>`;
+                    
+                    // Role select dropdown
+                    const roleSelect = `
+                        <select onchange="updateUserRole('${u.email}', this.value)" style="background: transparent; border: none; border-bottom: 1px solid var(--border-color); color: var(--text-dark); padding: 4px; outline: none; cursor: pointer; font-family: 'Lora', serif; font-size: 0.9rem;">
+                            <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+                            <option value="support" ${u.role === 'support' ? 'selected' : ''}>Support</option>
+                        </select>
+                    `;
+
+                    // Actions
+                    let actionButtons = "";
+                    if (u.status === "pending") {
+                        actionButtons += `<button class="action-btn primary" style="padding: 6px 12px; font-size: 0.75rem; margin-right: 8px;" onclick="approveUser('${u.email}', 'approved')">Approve</button>`;
+                        actionButtons += `<button class="action-btn" style="padding: 6px 12px; font-size: 0.75rem; border-color: var(--badge-failed); color: var(--badge-failed); margin-right: 8px;" onclick="approveUser('${u.email}', 'rejected')">Reject</button>`;
+                    } else if (u.status === "rejected") {
+                        actionButtons += `<button class="action-btn primary" style="padding: 6px 12px; font-size: 0.75rem; margin-right: 8px;" onclick="approveUser('${u.email}', 'approved')">Re-Approve</button>`;
+                    }
+                    
+                    actionButtons += `<button class="action-btn" style="padding: 6px 12px; font-size: 0.75rem; border-color: var(--badge-failed); color: var(--badge-failed);" onclick="deleteUser('${u.email}')">Delete</button>`;
+
+                    tr.innerHTML = `
+                        <td style="font-weight: 500;">${u.email}</td>
+                        <td>${u.full_name || 'N/A'}</td>
+                        <td>${roleSelect}</td>
+                        <td>${statusBadge}</td>
+                        <td>${actionButtons}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                alert(`Error loading users: ${e.message}`);
+            }
+        }
+
+        async function approveUser(email, status) {
+            try {
+                await apiCall(`/api/admin/users/${email}/approve`, 'POST', { status });
+                alert(`User status updated to ${status}.`);
+                loadUsers();
+            } catch (e) {
+                alert(`Action failed: ${e.message}`);
+            }
+        }
+
+        async function updateUserRole(email, role) {
+            try {
+                await apiCall(`/api/admin/users/${email}/role`, 'POST', { role });
+                alert(`User role updated to ${role}.`);
+                loadUsers();
+            } catch (e) {
+                alert(`Action failed: ${e.message}`);
+            }
+        }
+
+        async function deleteUser(email) {
+            if (!confirm(`Are you sure you want to delete user ${email}?`)) return;
+            try {
+                await apiCall(`/api/admin/users/${email}`, 'DELETE');
+                alert(`User deleted successfully.`);
+                loadUsers();
+            } catch (e) {
+                alert(`Action failed: ${e.message}`);
             }
         }
 
