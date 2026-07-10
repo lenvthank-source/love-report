@@ -44,7 +44,12 @@ class VedAstroService:
         self.base_url = "https://api.vedastro.org/api"
 
     def _make_request(self, endpoint: str) -> Any:
-        url = f"{self.base_url}/{endpoint}"
+        # Prepend the APIKey to the URL path if the endpoint is a Calculation endpoint
+        # e.g., "Calculate/..." becomes "APIKey/YOUR_KEY/Calculate/..."
+        if endpoint.startswith("Calculate/") and self.api_key:
+            url = f"{self.base_url}/APIKey/{self.api_key}/{endpoint}"
+        else:
+            url = f"{self.base_url}/{endpoint}"
         
         # Check cache
         cached_val = self.cache.get(url)
@@ -65,7 +70,11 @@ class VedAstroService:
             raise RuntimeError(f"VedAstro API error for {url}: {data}")
 
     def _make_post_request(self, endpoint: str, payload: Dict[str, Any]) -> Any:
-        url = f"{self.base_url}/{endpoint}"
+        if endpoint.startswith("Calculate/") and self.api_key:
+            url = f"{self.base_url}/APIKey/{self.api_key}/{endpoint}"
+        else:
+            url = f"{self.base_url}/{endpoint}"
+            
         headers = {
             "Content-Type": "application/json",
             "x-api-key": self.api_key
