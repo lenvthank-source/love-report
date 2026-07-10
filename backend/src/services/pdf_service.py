@@ -39,8 +39,8 @@ LAYOUT_CONFIG = {
 def strip_emojis(text: str) -> str:
     if not text:
         return ""
-    # Strip emojis and variation selectors
-    text = "".join(c for c in text if ord(c) < 0x10000 and ord(c) not in range(0xFE00, 0xFE0F))
+    # Strip emojis and variation selectors (0xFE00 to 0xFE0F inclusive)
+    text = "".join(c for c in text if ord(c) < 0x10000 and not (0xFE00 <= ord(c) <= 0xFE0F))
     # Strip zero-width characters and markdown syntax
     for ctrl in ["\u200b", "\u200d", "\ufeff", "**", "*", "__"]:
         text = text.replace(ctrl, "")
@@ -528,9 +528,6 @@ class PDFService:
                 continue
 
             linesToDraw = []
-            if overflowLines.get(pageIdx):
-                linesToDraw.extend(overflowLines[pageIdx])
-                
             pageText = strip_emojis(sections.get(pageIdx, ""))
             if pageText:
                 wrapped = get_wrapped_lines(pageText, rect['x_right'] - rect['x_left'], fontSize, body_font)
@@ -542,15 +539,10 @@ class PDFService:
             print(f"[PDFService] Page {pageIdx + 1}: Writing {len(linesToDraw)} lines of text...")
             currentY = rect['y_top'] - fontSize
             
-            for i, line in enumerate(linesToDraw):
+            for line in linesToDraw:
                 # Page overflow check
                 if currentY < rect['y_bottom']:
-                    print(f"[PDFService] Page {pageIdx + 1} overflowed! Moving remaining lines to next page.")
-                    remainder = linesToDraw[i:]
-                    nextPageIndex = pageIdx + 1
-                    if nextPageIndex not in overflowLines:
-                        overflowLines[nextPageIndex] = []
-                    overflowLines[nextPageIndex].extend(remainder)
+                    print(f"[PDFService] Page {pageIdx + 1} overflowed! Stopping rendering on this page.")
                     break
                     
                 if line:
@@ -560,33 +552,27 @@ class PDFService:
 
         # 4.5. Add hyperlinks on Page 24 (Practical Remedies, index 23)
         # Search page for target words and insert links with underlines
+        # 4.5. Add hyperlinks on Page 24 (Practical Remedies, index 23)
+        # Search page for target words and insert links with underlines
         if len(doc) > 23:
             page24 = doc[23]
             
             # Anchor 1: Divy Love Bracelet
             bracelet_rects = page24.search_for("Divy Love Bracelet")
             for r in bracelet_rects:
-                # Draw a neat blue underline (using color (0.1, 0.4, 0.8))
                 page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
                 page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/product/divy-love-bracelet"})
                 
             # Anchor 2: Rudraksha Suggestion (dynamic)
-            if rudraksha_name and rudraksha_url:
-                # Strip dynamic suffixes/markers if any, search for exact name
-                rud_clean_name = rudraksha_name.split(" - ")[0].strip() # e.g. "6 mukhi Rudraksha (Nepali)"
-                # Search case-insensitively or check variations
-                rud_rects = page24.search_for(rud_clean_name)
-                # Fallback to general lookup if not found due to casing
-                if not rud_rects and "mukhi" in rud_clean_name:
-                    # e.g. "6 Mukhi Rudraksha (Nepali)" vs "6 mukhi Rudraksha (Nepali)"
-                    alt_name = rud_clean_name.replace("mukhi", "Mukhi").replace("Rudraksha", "Rudraksha")
-                    rud_rects = page24.search_for(alt_name)
+            if rudraksha_url:
+                # Search for single word "Rudraksha" on remedies page
+                rud_rects = page24.search_for("Rudraksha")
                 for r in rud_rects:
                     page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
                     page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": rudraksha_url})
                     
             # Anchor 3: Consultation booking
-            consult_rects = page24.search_for("click here to get a live consultation")
+            consult_rects = page24.search_for("live consultation")
             for r in consult_rects:
                 page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
                 page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/kundli-analysis"})

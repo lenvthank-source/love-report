@@ -496,8 +496,8 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
         # Build clean remedies text block
         remedies_block = (
             f"{astrology_remedies_para}\n\n"
-            f"To align the Venusian flow of love, we recommend wearing the Divy Love Bracelet.\n\n"
-            f"Additionally, to ground your emotional energy, wearing a {rud_name} is highly recommended.\n\n"
+            f"To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet.\n\n"
+            f"Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead.\n\n"
             f"For a more detailed analysis, click here to get a live consultation."
         )
         sections_text[24] = remedies_block
@@ -1319,8 +1319,8 @@ async def api_generate(req: GenerateRequest, session_id: str):
         # Build clean remedies text block
         remedies_block = (
             f"{astrology_remedies_para}\n\n"
-            f"To align the Venusian flow of love, we recommend wearing the Divy Love Bracelet.\n\n"
-            f"Additionally, to ground your emotional energy, wearing a {rud_name} is highly recommended.\n\n"
+            f"To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet.\n\n"
+            f"Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead.\n\n"
             f"For a more detailed analysis, click here to get a live consultation."
         )
         sections_text[24] = remedies_block
