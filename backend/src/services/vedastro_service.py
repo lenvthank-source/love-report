@@ -70,10 +70,7 @@ class VedAstroService:
             raise RuntimeError(f"VedAstro API error for {url}: {data}")
 
     def _make_post_request(self, endpoint: str, payload: Dict[str, Any]) -> Any:
-        if endpoint.startswith("Calculate/") and self.api_key:
-            url = f"{self.base_url}/APIKey/{self.api_key}/{endpoint}"
-        else:
-            url = f"{self.base_url}/{endpoint}"
+        url = f"{self.base_url}/{endpoint}"
             
         headers = {
             "Content-Type": "application/json",
