@@ -86,7 +86,8 @@ def draw_table(
     bold_font: fitz.Font,
     page_height: float,
     reg_font_file: Optional[str],
-    bold_font_file: Optional[str]
+    bold_font_file: Optional[str],
+    font_size: float = 9.5
 ) -> float:
     rose_gold = (0.79, 0.59, 0.48)
     text_dark = (0.17, 0.1, 0.07)
@@ -109,11 +110,11 @@ def draw_table(
             cleaned_text = str(cell_text)
             if not is_header:
                 cleaned_text = cleaned_text.replace("/", " / ").replace("-", " - ")
-            cell_lines = wrap_text(cleaned_text, max_text_width, 9.5, font)
+            cell_lines = wrap_text(cleaned_text, max_text_width, font_size, font)
             cell_lines_list.append(cell_lines)
             max_lines = max(max_lines, len(cell_lines))
             
-        row_height = max(default_row_height, max_lines * 12 + 10)
+        row_height = max(default_row_height, max_lines * (font_size + 2.5) + 10)
         
         # 2. Draw cell boxes and text
         current_x = x
@@ -133,17 +134,17 @@ def draw_table(
             else:
                 page.draw_rect(rect, color=rose_gold, width=1)
                 
-            line_gap = 11
+            line_gap = font_size + 1.5
             text_block_height = len(cell_lines) * line_gap
             text_top_offset = (row_height - text_block_height) / 2
             
             for i, line in enumerate(cell_lines):
-                y_text = rect.y0 + text_top_offset + (i * line_gap) + 8.5
+                y_text = rect.y0 + text_top_offset + (i * line_gap) + (font_size * 0.9)
                 point = fitz.Point(rect.x0 + text_padding, y_text)
                 page.insert_text(
                     point, 
                     line, 
-                    fontsize=9.5, 
+                    fontsize=font_size, 
                     fontname="bold" if is_header else "body",
                     fontfile=font_file, 
                     color=text_dark
@@ -366,13 +367,14 @@ class PDFService:
                         ["Moon Sign", moon_sign]
                     ]
                     colWidths = [160.0, 295.0]
-                    rowHeight = 26.0
+                    rowHeight = 32.0
                     totalTableHeight = rowHeight * len(rows)
                     yStart = rect['y_bottom'] + (rect['y_top'] - rect['y_bottom'] - totalTableHeight) / 2 + totalTableHeight
                     
                     draw_table(
                         page, rect['x_left'], yStart, colWidths, rowHeight, rows, 
-                        body_font, bold_font, page_height, reg_font_file, bold_font_file
+                        body_font, bold_font, page_height, reg_font_file, bold_font_file,
+                        font_size=11.5
                     )
                 continue
 

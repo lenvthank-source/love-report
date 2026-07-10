@@ -489,17 +489,26 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
         astrology_remedies_para = sections_text.get(24, "").strip()
         # Clean any bullet marks or raw URLs in case LLM generated them
         astrology_remedies_para = "\n".join([line for line in astrology_remedies_para.split("\n") if "astrosavvysingh" not in line])
-        for marker in ["*", "-", "1.", "2.", "3."]:
+        for marker in ["*", "-", "1.", "2.", "3.", "•"]:
             astrology_remedies_para = astrology_remedies_para.replace(marker, "")
         astrology_remedies_para = astrology_remedies_para.strip()
 
-        # Build clean remedies text block
-        remedies_block = (
-            f"{astrology_remedies_para}\n\n"
-            f"To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet.\n\n"
-            f"Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead.\n\n"
-            f"For a more detailed analysis, click here to get a live consultation."
-        )
+        # Truncate astrology remedies text to maximum ~35 words (~2-3 lines of text)
+        words = astrology_remedies_para.split()
+        if len(words) > 35:
+            astrology_remedies_para = " ".join(words[:35]) + "..."
+
+        # Paragraph 1: Astrology remedies ending with the consultation link
+        para1 = f"{astrology_remedies_para} For a more detailed analysis, click here to get a live consultation."
+
+        # Paragraph 2: Bullet point for Love Bracelet
+        para2 = f"• To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet."
+
+        # Paragraph 3: Bullet point for Rudraksha
+        para3 = f"• Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead."
+
+        # Combine into exactly three paragraphs
+        remedies_block = f"{para1}\n\n{para2}\n\n{para3}"
         sections_text[24] = remedies_block
             
         # PDF compilation via PDFService
@@ -1312,17 +1321,26 @@ async def api_generate(req: GenerateRequest, session_id: str):
         astrology_remedies_para = sections_text.get(24, "").strip()
         # Clean any bullet marks or raw URLs in case LLM generated them
         astrology_remedies_para = "\n".join([line for line in astrology_remedies_para.split("\n") if "astrosavvysingh" not in line])
-        for marker in ["*", "-", "1.", "2.", "3."]:
+        for marker in ["*", "-", "1.", "2.", "3.", "•"]:
             astrology_remedies_para = astrology_remedies_para.replace(marker, "")
         astrology_remedies_para = astrology_remedies_para.strip()
 
-        # Build clean remedies text block
-        remedies_block = (
-            f"{astrology_remedies_para}\n\n"
-            f"To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet.\n\n"
-            f"Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead.\n\n"
-            f"For a more detailed analysis, click here to get a live consultation."
-        )
+        # Truncate astrology remedies text to maximum ~35 words (~2-3 lines of text)
+        words = astrology_remedies_para.split()
+        if len(words) > 35:
+            astrology_remedies_para = " ".join(words[:35]) + "..."
+
+        # Paragraph 1: Astrology remedies ending with the consultation link
+        para1 = f"{astrology_remedies_para} For a more detailed analysis, click here to get a live consultation."
+
+        # Paragraph 2: Bullet point for Love Bracelet
+        para2 = f"• To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet."
+
+        # Paragraph 3: Bullet point for Rudraksha
+        para3 = f"• Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead."
+
+        # Combine into exactly three paragraphs
+        remedies_block = f"{para1}\n\n{para2}\n\n{para3}"
         sections_text[24] = remedies_block
             
         # Redirect output writes to '/tmp' on read-only environments like Vercel
