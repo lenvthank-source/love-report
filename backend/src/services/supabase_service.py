@@ -120,26 +120,39 @@ class SupabaseService:
 
     def verify_admin_token(self, token: str) -> Optional[Dict[str, Any]]:
         """
-        Decodes and verifies a Supabase Auth JWT token using the local project JWT Secret.
-        Returns the decoded user payload or None if invalid.
+        Decodes and verifies a Supabase Auth JWT token.
+        Tries using the Supabase get_user API first, with local JWT decode as a fallback.
         """
-        if not self.jwt_secret or token.startswith("mock-"):
+        if not self.is_configured() or token.startswith("mock-"):
             # Mock role logic based on token identifier
             if "support" in token:
                 return {"email": "support@test.com", "user_metadata": {"role": "support"}}
             return {"email": "admin@test.com", "user_metadata": {"role": "admin"}}
         try:
-            # Supabase tokens are HS256 and contain "authenticated" audience
-            payload = jwt.decode(
-                token, 
-                self.jwt_secret, 
-                algorithms=["HS256"], 
-                options={"verify_aud": False}
-            )
-            return payload
+            res = self.client.auth.get_user(token)
+            if res and res.user:
+                return {
+                    "email": res.user.email,
+                    "id": res.user.id,
+                    "user_metadata": res.user.user_metadata or {}
+                }
         except Exception as e:
-            print(f"[SupabaseAuth] Token verification failed: {e}")
-            return None
+            print(f"[SupabaseAuth] API token verification failed: {e}")
+
+        # Fallback to local JWT decoding if client API verification fails
+        if self.jwt_secret:
+            try:
+                # Supabase tokens are HS256 and contain "authenticated" audience
+                payload = jwt.decode(
+                    token, 
+                    self.jwt_secret, 
+                    algorithms=["HS256"], 
+                    options={"verify_aud": False}
+                )
+                return payload
+            except Exception as e:
+                print(f"[SupabaseAuth] Local JWT verification fallback failed: {e}")
+        return None
 
     # --- Customer CRUD ---
     def get_or_create_customer(self, full_name: str, email: str, mobile: str) -> str:
