@@ -58,3 +58,13 @@ CREATE TABLE IF NOT EXISTS public.email_logs (
     error_message TEXT,
     sent_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- 5. Admin Users Table
+CREATE TABLE IF NOT EXISTS public.admin_users (
+    email TEXT PRIMARY KEY,
+    full_name TEXT,
+    role TEXT NOT NULL DEFAULT 'support', -- admin, support
+    status TEXT NOT NULL DEFAULT 'pending', -- pending, approved, rejected
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_admin_users_status ON public.admin_users(status);
