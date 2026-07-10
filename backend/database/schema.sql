@@ -68,3 +68,4 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_admin_users_status ON public.admin_users(status);
+ALTER TABLE public.admin_users DISABLE ROW LEVEL SECURITY;
