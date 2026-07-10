@@ -14,3 +14,4 @@ python-jose[cryptography]
 fastapi
 uvicorn
 sse-starlette
+PyMuPDF
