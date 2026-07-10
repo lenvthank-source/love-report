@@ -44,12 +44,10 @@ class VedAstroService:
         self.base_url = "https://api.vedastro.org/api"
 
     def _make_request(self, endpoint: str) -> Any:
-        # Prepend the APIKey to the URL path if the endpoint is a Calculation endpoint
-        # e.g., "Calculate/..." becomes "APIKey/YOUR_KEY/Calculate/..."
-        if endpoint.startswith("Calculate/") and self.api_key:
-            url = f"{self.base_url}/APIKey/{self.api_key}/{endpoint}"
-        else:
-            url = f"{self.base_url}/{endpoint}"
+        url = f"{self.base_url}/{endpoint}"
+        if self.api_key:
+            # Query param avoids routing conflicts with path templates
+            url += f"?x-api-key={self.api_key}"
             
         url = url.replace("+", "%2B")
         
@@ -194,18 +192,32 @@ class VedAstroService:
     def get_all_house_rasi_signs(self, lat: float, lon: float, time_str: str, date_str: str, offset_str: str) -> Dict[str, str]:
         endpoint = f"Calculate/AllHouseRasiSigns/Location/{lat},{lon}/Time/{time_str}/{date_str}/{offset_str}/Ayanamsa/LAHIRI"
         res = self._make_request(endpoint)
-        # Clean dictionary values
-        return {k: clean_api_val(v) for k, v in res.items()}
+        output = {}
+        for item in res.get("AllHouseRasiSigns", []):
+            house = item.get("House")
+            val = item.get("AllHouseRasiSigns", "")
+            output[house] = val.split(":")[0].strip() if ":" in val else val.strip()
+        return output
 
     def get_all_planet_navamsha_signs(self, lat: float, lon: float, time_str: str, date_str: str, offset_str: str) -> Dict[str, str]:
         endpoint = f"Calculate/AllPlanetNavamshaSign/Location/{lat},{lon}/Time/{time_str}/{date_str}/{offset_str}/Ayanamsa/LAHIRI"
         res = self._make_request(endpoint)
-        return {k: clean_api_val(v) for k, v in res.items()}
+        output = {}
+        for item in res.get("AllPlanetNavamshaSign", []):
+            planet = item.get("Planet")
+            val = item.get("AllPlanetNavamshaSign", "")
+            output[planet] = val.split(":")[0].strip() if ":" in val else val.strip()
+        return output
 
     def get_all_planet_trimshamsha_signs(self, lat: float, lon: float, time_str: str, date_str: str, offset_str: str) -> Dict[str, str]:
         endpoint = f"Calculate/AllPlanetTrimshamshaSign/Location/{lat},{lon}/Time/{time_str}/{date_str}/{offset_str}/Ayanamsa/LAHIRI"
         res = self._make_request(endpoint)
-        return {k: clean_api_val(v) for k, v in res.items()}
+        output = {}
+        for item in res.get("AllPlanetTrimshamshaSign", []):
+            planet = item.get("Planet")
+            val = item.get("AllPlanetTrimshamshaSign", "")
+            output[planet] = val.split(":")[0].strip() if ":" in val else val.strip()
+        return output
 
     def get_lagna_sign_name(self, lat: float, lon: float, time_str: str, date_str: str, offset_str: str) -> str:
         endpoint = f"Calculate/LagnaSignName/Location/{lat},{lon}/Time/{time_str}/{date_str}/{offset_str}/Ayanamsa/LAHIRI"
