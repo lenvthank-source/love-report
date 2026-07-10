@@ -480,6 +480,28 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
         for page, text in results:
             sections_text[page] = text
             
+        # Parse Rudraksha dynamic name and link
+        rud_parts = rudraksha_remedy.split(" - ")
+        rud_name = rud_parts[0].strip().replace("mukhi", "Mukhi")
+        rud_url = rud_parts[1].strip() if len(rud_parts) > 1 else ""
+
+        # Overwrite/assemble Page 24 Remedies content with exactly three paragraphs
+        astrology_remedies_para = sections_text.get(24, "").strip()
+        # Clean any bullet marks or raw URLs in case LLM generated them
+        astrology_remedies_para = "\n".join([line for line in astrology_remedies_para.split("\n") if "astrosavvysingh" not in line])
+        for marker in ["*", "-", "1.", "2.", "3."]:
+            astrology_remedies_para = astrology_remedies_para.replace(marker, "")
+        astrology_remedies_para = astrology_remedies_para.strip()
+
+        # Build clean remedies text block
+        remedies_block = (
+            f"{astrology_remedies_para}\n\n"
+            f"To align the Venusian flow of love, we recommend wearing the Divy Love Bracelet.\n\n"
+            f"Additionally, to ground your emotional energy, wearing a {rud_name} is highly recommended.\n\n"
+            f"For a more detailed analysis, click here to get a live consultation."
+        )
+        sections_text[24] = remedies_block
+            
         # PDF compilation via PDFService
         # Redirect output writes to '/tmp' on read-only environments like Vercel
         if os.getenv("VERCEL") or os.environ.get("AMAZON_AWS_LAMBDA_STAGE") or not os.access(".", os.W_OK):
@@ -506,6 +528,8 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
             client_dob=dob,
             client_tob=tob,
             client_pob=place,
+            rudraksha_name=rud_name,
+            rudraksha_url=rud_url,
         )
         
         # Upload generated report PDF to Supabase Storage
@@ -1279,6 +1303,28 @@ async def api_generate(req: GenerateRequest, session_id: str):
         for page, text in results:
             sections_text[page] = text
             
+        # Parse Rudraksha dynamic name and link
+        rud_parts = rudraksha_remedy.split(" - ")
+        rud_name = rud_parts[0].strip().replace("mukhi", "Mukhi")
+        rud_url = rud_parts[1].strip() if len(rud_parts) > 1 else ""
+
+        # Overwrite/assemble Page 24 Remedies content with exactly three paragraphs
+        astrology_remedies_para = sections_text.get(24, "").strip()
+        # Clean any bullet marks or raw URLs in case LLM generated them
+        astrology_remedies_para = "\n".join([line for line in astrology_remedies_para.split("\n") if "astrosavvysingh" not in line])
+        for marker in ["*", "-", "1.", "2.", "3."]:
+            astrology_remedies_para = astrology_remedies_para.replace(marker, "")
+        astrology_remedies_para = astrology_remedies_para.strip()
+
+        # Build clean remedies text block
+        remedies_block = (
+            f"{astrology_remedies_para}\n\n"
+            f"To align the Venusian flow of love, we recommend wearing the Divy Love Bracelet.\n\n"
+            f"Additionally, to ground your emotional energy, wearing a {rud_name} is highly recommended.\n\n"
+            f"For a more detailed analysis, click here to get a live consultation."
+        )
+        sections_text[24] = remedies_block
+            
         # Redirect output writes to '/tmp' on read-only environments like Vercel
         if os.getenv("VERCEL") or os.environ.get("AMAZON_AWS_LAMBDA_STAGE") or not os.access(".", os.W_OK):
             output_dir = "/tmp/output"
@@ -1304,6 +1350,8 @@ async def api_generate(req: GenerateRequest, session_id: str):
             client_dob=req.dob,
             client_tob=req.tob,
             client_pob=req.place,
+            rudraksha_name=rud_name,
+            rudraksha_url=rud_url,
         )
         return FileResponse(pdf_path, media_type="application/pdf", filename=f"{req.name.lower()}_individual_love_report.pdf")
     except Exception as e:

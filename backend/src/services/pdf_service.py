@@ -39,8 +39,12 @@ LAYOUT_CONFIG = {
 def strip_emojis(text: str) -> str:
     if not text:
         return ""
-    # Strip emojis and high unicode characters not supported by standard TTF fonts
-    return "".join(c for c in text if ord(c) < 0x10000)
+    # Strip emojis and variation selectors
+    text = "".join(c for c in text if ord(c) < 0x10000 and ord(c) not in range(0xFE00, 0xFE0F))
+    # Strip zero-width characters and markdown syntax
+    for ctrl in ["\u200b", "\u200d", "\ufeff", "**", "*", "__"]:
+        text = text.replace(ctrl, "")
+    return text.strip()
 
 def wrap_text(text: str, max_width: float, fontsize: float, font: fitz.Font) -> List[str]:
     words = text.split()
@@ -240,6 +244,8 @@ class PDFService:
         client_dob: str = "",
         client_tob: str = "",
         client_pob: str = "",
+        rudraksha_name: Optional[str] = None,
+        rudraksha_url: Optional[str] = None,
     ):
         """Coordinates PDF overlay report generation via pure Python PyMuPDF (fitz) operations."""
         from src.utils.chart_drawer import draw_north_indian_chart
@@ -551,6 +557,39 @@ class PDFService:
                     point = fitz.Point(rect['x_left'], page_height - currentY)
                     page.insert_text(point, line, fontsize=fontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
                 currentY -= lineSpacing
+
+        # 4.5. Add hyperlinks on Page 24 (Practical Remedies, index 23)
+        # Search page for target words and insert links with underlines
+        if len(doc) > 23:
+            page24 = doc[23]
+            
+            # Anchor 1: Divy Love Bracelet
+            bracelet_rects = page24.search_for("Divy Love Bracelet")
+            for r in bracelet_rects:
+                # Draw a neat blue underline (using color (0.1, 0.4, 0.8))
+                page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
+                page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/product/divy-love-bracelet"})
+                
+            # Anchor 2: Rudraksha Suggestion (dynamic)
+            if rudraksha_name and rudraksha_url:
+                # Strip dynamic suffixes/markers if any, search for exact name
+                rud_clean_name = rudraksha_name.split(" - ")[0].strip() # e.g. "6 mukhi Rudraksha (Nepali)"
+                # Search case-insensitively or check variations
+                rud_rects = page24.search_for(rud_clean_name)
+                # Fallback to general lookup if not found due to casing
+                if not rud_rects and "mukhi" in rud_clean_name:
+                    # e.g. "6 Mukhi Rudraksha (Nepali)" vs "6 mukhi Rudraksha (Nepali)"
+                    alt_name = rud_clean_name.replace("mukhi", "Mukhi").replace("Rudraksha", "Rudraksha")
+                    rud_rects = page24.search_for(alt_name)
+                for r in rud_rects:
+                    page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
+                    page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": rudraksha_url})
+                    
+            # Anchor 3: Consultation booking
+            consult_rects = page24.search_for("click here to get a live consultation")
+            for r in consult_rects:
+                page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
+                page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/kundli-analysis"})
 
         # 5. Save document
         print(f"[PDFService] Saving compiled PDF to: {output_path}")
