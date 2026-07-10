@@ -187,8 +187,19 @@ Target word count: ~120-150 words.
     24: """
 Generate content for **Page 24: Practical Remedies – Sacred Earth Alignments & Ritual Clearances**.
 Astrological Input: Traditional remedies mapping for afflicted planets: {remedies_data}.
-Provide practical remedies (such as fasts, donations, or gemstone alignments) to clear the channels for love.
-Target word count: ~120-150 words.
+Specific Remedies to recommend:
+- Rudraksha: {rudraksha_remedy} (MUST recommend this specific one and embed the exact product link!)
+- Bracelet: Recommend the Divy Love Bracelet with the exact link: https://www.astrosavvysingh.com/product/divy-love-bracelet
+
+CRITICAL FORMATTING INSTRUCTIONS:
+1. Output the remedies STRICTLY as a bulleted list (pointers) of exactly 2 or 3 items total.
+2. The list MUST include:
+   * The specific Rudraksha recommendation with its link ({rudraksha_remedy}).
+   * The Divy Love Bracelet recommendation (with link: https://www.astrosavvysingh.com/product/divy-love-bracelet).
+   * Optionally one other simple practical remedy.
+3. Underneath the bullet points, write this exact sentence:
+   "For a more detailed analysis, click here to get a live consultation: https://www.astrosavvysingh.com/kundli-analysis"
+Target word count: ~120-150 words total.
 """,
 
     25: """

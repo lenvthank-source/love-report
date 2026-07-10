@@ -181,8 +181,8 @@ class PDFService:
             fonts_dir = os.path.join(workspace_dir, "fonts")
             
         os.makedirs(fonts_dir, exist_ok=True)
-        reg_path = os.path.join(fonts_dir, "CormorantGaramond-Regular.ttf")
-        bold_path = os.path.join(fonts_dir, "CormorantGaramond-Bold.ttf")
+        reg_path = os.path.join(fonts_dir, "Gelasio-Regular.ttf")
+        bold_path = os.path.join(fonts_dir, "Gelasio-Bold.ttf")
         
         # If files exist and are not empty/html placeholders, return them
         if os.path.exists(reg_path) and os.path.getsize(reg_path) > 1000 and os.path.exists(bold_path) and os.path.getsize(bold_path) > 1000:
@@ -195,7 +195,7 @@ class PDFService:
         headers = {
             "User-Agent": "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
         }
-        css_url = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700"
+        css_url = "https://fonts.googleapis.com/css2?family=Gelasio:wght@400;700"
         
         try:
             print(f"[PDFService] Fetching Google Fonts CSS...")
@@ -203,12 +203,12 @@ class PDFService:
             ttf_urls = re.findall(r'url\((https://fonts\.gstatic\.com/[^)]+\.ttf)\)', r.text)
             
             if len(ttf_urls) >= 2:
-                print(f"[PDFService] Downloading CormorantGaramond-Regular from {ttf_urls[0]}")
+                print(f"[PDFService] Downloading Gelasio-Regular from {ttf_urls[0]}")
                 reg_data = requests.get(ttf_urls[0], timeout=15).content
                 with open(reg_path, "wb") as f:
                     f.write(reg_data)
                     
-                print(f"[PDFService] Downloading CormorantGaramond-Bold from {ttf_urls[1]}")
+                print(f"[PDFService] Downloading Gelasio-Bold from {ttf_urls[1]}")
                 bold_data = requests.get(ttf_urls[1], timeout=15).content
                 with open(bold_path, "wb") as f:
                     f.write(bold_data)

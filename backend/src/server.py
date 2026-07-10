@@ -31,6 +31,48 @@ from src.prompts.individual_report_prompts import (
     USER_PROMPT_TEMPLATE,
 )
 
+def get_rudraksha_remedy(gender: str, moon_sign: str, sun_sign: str) -> str:
+    # Sign maps
+    moon_map = {
+        "Aries": "1 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/1-mukhi-rudraksha-nepali",
+        "Taurus": "6 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/6-mukhi-rudraksha-nepali",
+        "Gemini": "4 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/4-mukhi-rudraksha-nepali",
+        "Cancer": "2 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/2-mukhi-rudraksha-nepali",
+        "Leo": "1 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/1-mukhi-rudraksha-nepali",
+        "Virgo": "10 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/10-mukhi-rudraksha-nepali",
+        "Libra": "7 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/7-mukhi-rudraksha-nepali",
+        "Scorpio": "3 mukhi Rudraksha (Indian) - https://www.astrosavvysingh.com/product/3-mukhi-rudraksha-indian",
+        "Sagittarius": "5 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/5-mukhi-rudraksha-nepali",
+        "Capricorn": "14 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/14-mukhi-rudraksha-nepali",
+        "Aquarius": "7 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/7-mukhi-rudraksha-nepali",
+        "Pisces": "2 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/2-mukhi-rudraksha-nepali"
+    }
+    
+    sun_map = {
+        "Aries": "3 mukhi Rudraksha (Indian) - https://www.astrosavvysingh.com/product/3-mukhi-rudraksha-indian",
+        "Taurus": "13 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/13-mukhi-rudraksha-nepali",
+        "Gemini": "5 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/5-mukhi-rudraksha-nepali",
+        "Cancer": "1 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/1-mukhi-rudraksha-nepali",
+        "Leo": "12 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/12-mukhi-rudraksha-nepali",
+        "Virgo": "4 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/4-mukhi-rudraksha-nepali",
+        "Libra": "6 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/6-mukhi-rudraksha-nepali",
+        "Scorpio": "8 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/8-mukhi-rudraksha-nepali",
+        "Sagittarius": "10 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/10-mukhi-rudraksha-nepali",
+        "Capricorn": "7 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/7-mukhi-rudraksha-nepali",
+        "Aquarius": "9 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/9-mukhi-rudraksha-nepali",
+        "Pisces": "5 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/5-mukhi-rudraksha-nepali"
+    }
+    
+    # Normalize sign names to match keys (capitalize first letter, strip spaces)
+    m_sign = str(moon_sign).strip().capitalize()
+    s_sign = str(sun_sign).strip().capitalize()
+    g = str(gender).strip().lower()
+    
+    if "female" in g:
+        return moon_map.get(m_sign, "7 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/7-mukhi-rudraksha-nepali")
+    else:
+        return sun_map.get(s_sign, "5 mukhi Rudraksha (Nepali) - https://www.astrosavvysingh.com/product/5-mukhi-rudraksha-nepali")
+
 app = FastAPI(title="🔮 Cosmic Report Compiler & E-Commerce Server")
 
 # Configure CORS for Vercel / Cloudflare local and production domains
@@ -353,11 +395,13 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
             # Fallback if filtering left empty
             if not dasha_timeline:
                 dasha_timeline.append([dasa_now.split("-")[0], f"{dob} to Future", "Major cycle guiding long term spiritual growth."])
-                
+        
         # Formatting variables
         lagna_tags_str = lagna_tags if lagna_tags else "expressive, initiating"
         moon_nakshatra = next((d.get("PlanetConstellation", "Chitta") for entry in d1_data for p, d in entry.items() if p == "Moon"), "Chitta")
         moon_sign = next((d.get("PlanetRasiD1Sign", {}).get("Name", "Libra") for entry in d1_data for p, d in entry.items() if p == "Moon"), "Libra")
+        sun_sign = next((d.get("PlanetRasiD1Sign", {}).get("Name", "Leo") for entry in d1_data for p, d in entry.items() if p == "Sun"), "Leo")
+        rudraksha_remedy = get_rudraksha_remedy(gender, moon_sign, sun_sign)
         moon_tags = vedastro.get_sign_tags(moon_sign)
         house7_tags = vedastro.get_house_tags("House7")
         planet_navamsa_signs_str = ", ".join([f"{p}: {s}" for p, s in d9_signs.items()])
@@ -387,7 +431,7 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
                 model=model
             )
             return page, strip_thinking_tags(raw_text)
-
+ 
         tasks = []
         for idx, page in enumerate(pages_to_generate):
             instruction = PAGE_PROMPTS[page].format(
@@ -416,7 +460,8 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
                 dasa_now=dasa_now, dasa_timeline=dasa_timeline_str,
                 pratyantar_dasha=dasa_now_raw.get("SubSub", "Mercury"),
                 favorable_tags=favorable_tags_str, afflicted_tags=afflicted_tags_str,
-                remedies_data=remedies_data_str, dasa_info_for_ascendant=dasa_info_str
+                remedies_data=remedies_data_str, dasa_info_for_ascendant=dasa_info_str,
+                rudraksha_remedy=rudraksha_remedy
             )
             
             user_prompt = USER_PROMPT_TEMPLATE.format(
@@ -1154,6 +1199,8 @@ async def api_generate(req: GenerateRequest, session_id: str):
         lagna_tags_str = lagna_tags if lagna_tags else "expressive, initiating"
         moon_nakshatra = next((d.get("PlanetConstellation", "Chitta") for entry in d1_data for p, d in entry.items() if p == "Moon"), "Chitta")
         moon_sign = next((d.get("PlanetRasiD1Sign", {}).get("Name", "Libra") for entry in d1_data for p, d in entry.items() if p == "Moon"), "Libra")
+        sun_sign = next((d.get("PlanetRasiD1Sign", {}).get("Name", "Leo") for entry in d1_data for p, d in entry.items() if p == "Sun"), "Leo")
+        rudraksha_remedy = get_rudraksha_remedy(req.gender, moon_sign, sun_sign)
         moon_tags = vedastro.get_sign_tags(moon_sign)
         house7_tags = vedastro.get_house_tags("House7")
         planet_navamsa_signs_str = ", ".join([f"{p}: {s}" for p, s in d9_signs.items()])
@@ -1212,7 +1259,8 @@ async def api_generate(req: GenerateRequest, session_id: str):
                 dasa_now=dasa_now, dasa_timeline=dasa_timeline_str,
                 pratyantar_dasha=dasa_now_raw.get("SubSub", "Mercury"),
                 favorable_tags=favorable_tags_str, afflicted_tags=afflicted_tags_str,
-                remedies_data=remedies_data_str, dasa_info_for_ascendant=dasa_info_str
+                remedies_data=remedies_data_str, dasa_info_for_ascendant=dasa_info_str,
+                rudraksha_remedy=rudraksha_remedy
             )
             
             user_prompt = USER_PROMPT_TEMPLATE.format(
