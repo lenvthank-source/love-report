@@ -184,22 +184,40 @@ class PDFService:
         reg_path = os.path.join(fonts_dir, "CormorantGaramond-Regular.ttf")
         bold_path = os.path.join(fonts_dir, "CormorantGaramond-Bold.ttf")
         
-        import requests
-        try:
-            if not os.path.exists(reg_path):
-                print(f"[PDFService] Downloading CormorantGaramond-Regular...")
-                r = requests.get("https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/static/CormorantGaramond-Regular.ttf", timeout=10)
-                with open(reg_path, "wb") as f:
-                    f.write(r.content)
-            if not os.path.exists(bold_path):
-                print(f"[PDFService] Downloading CormorantGaramond-Bold...")
-                r = requests.get("https://github.com/google/fonts/raw/main/ofl/cormorantgaramond/static/CormorantGaramond-Bold.ttf", timeout=10)
-                with open(bold_path, "wb") as f:
-                    f.write(r.content)
+        # If files exist and are not empty/html placeholders, return them
+        if os.path.exists(reg_path) and os.path.getsize(reg_path) > 1000 and os.path.exists(bold_path) and os.path.getsize(bold_path) > 1000:
             return reg_path, bold_path
+            
+        # Download from Google Fonts CSS API using old Android user-agent to force TTF format
+        import requests
+        import re
+        
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
+        }
+        css_url = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700"
+        
+        try:
+            print(f"[PDFService] Fetching Google Fonts CSS...")
+            r = requests.get(css_url, headers=headers, timeout=10)
+            ttf_urls = re.findall(r'url\((https://fonts\.gstatic\.com/[^)]+\.ttf)\)', r.text)
+            
+            if len(ttf_urls) >= 2:
+                print(f"[PDFService] Downloading CormorantGaramond-Regular from {ttf_urls[0]}")
+                reg_data = requests.get(ttf_urls[0], timeout=15).content
+                with open(reg_path, "wb") as f:
+                    f.write(reg_data)
+                    
+                print(f"[PDFService] Downloading CormorantGaramond-Bold from {ttf_urls[1]}")
+                bold_data = requests.get(ttf_urls[1], timeout=15).content
+                with open(bold_path, "wb") as f:
+                    f.write(bold_data)
+                    
+                return reg_path, bold_path
         except Exception as e:
-            print(f"[PDFService] Font download failed: {e}. Falling back to standard Helvetica/Times.")
-            return None, None
+            print(f"[PDFService] Dynamic font download failed: {e}. Falling back to standard Helvetica/Times.")
+            
+        return None, None
 
     # ------------------------------------------------------------------
     # Public entry point
