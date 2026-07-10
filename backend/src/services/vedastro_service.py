@@ -50,6 +50,8 @@ class VedAstroService:
             url = f"{self.base_url}/APIKey/{self.api_key}/{endpoint}"
         else:
             url = f"{self.base_url}/{endpoint}"
+            
+        url = url.replace("+", "%2B")
         
         # Check cache
         cached_val = self.cache.get(url)
