@@ -6,8 +6,12 @@ from typing import Any, Optional
 class FileCache:
     def __init__(self, cache_dir: str = ".cache"):
         """Initializes the file cache in the specified directory."""
-        # Ensure we place the cache dir relative to the project root or absolute path
-        self.cache_dir = Path(cache_dir)
+        import os
+        # Direct cache writes to '/tmp' on read-only environments like Vercel
+        if os.getenv("VERCEL") or os.environ.get("AMAZON_AWS_LAMBDA_STAGE") or not os.access(".", os.W_OK):
+            self.cache_dir = Path("/tmp") / cache_dir.replace("..", "").replace("/", "").replace("\\", "")
+        else:
+            self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     def _compute_hash(self, payload: Any) -> str:

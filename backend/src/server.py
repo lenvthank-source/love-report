@@ -436,7 +436,11 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
             sections_text[page] = text
             
         # PDF compilation via PDFService
-        output_dir = "output"
+        # Redirect output writes to '/tmp' on read-only environments like Vercel
+        if os.getenv("VERCEL") or os.environ.get("AMAZON_AWS_LAMBDA_STAGE") or not os.access(".", os.W_OK):
+            output_dir = "/tmp/output"
+        else:
+            output_dir = "output"
         os.makedirs(output_dir, exist_ok=True)
         pdf_path = os.path.join(output_dir, f"{order_id}_report.pdf")
         
@@ -1227,7 +1231,11 @@ async def api_generate(req: GenerateRequest, session_id: str):
         for page, text in results:
             sections_text[page] = text
             
-        output_dir = "output"
+        # Redirect output writes to '/tmp' on read-only environments like Vercel
+        if os.getenv("VERCEL") or os.environ.get("AMAZON_AWS_LAMBDA_STAGE") or not os.access(".", os.W_OK):
+            output_dir = "/tmp/output"
+        else:
+            output_dir = "output"
         os.makedirs(output_dir, exist_ok=True)
         pdf_path = os.path.join(output_dir, f"{session_id}_report.pdf")
         
