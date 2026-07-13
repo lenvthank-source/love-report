@@ -24,11 +24,13 @@ from src.utils.markdown_parser import strip_thinking_tags
 from src.services.supabase_service import SupabaseService
 from src.services.payment_service import PaymentService
 from src.services.email_service import EmailService
+from validate_pdf_report import validate_pdf
 
 from src.prompts.individual_report_prompts import (
     GLOBAL_SYSTEM_INSTRUCTION,
     PAGE_PROMPTS,
     USER_PROMPT_TEMPLATE,
+    PAGE_WORD_LIMITS,
 )
 
 def get_rudraksha_remedy(gender: str, moon_sign: str, sun_sign: str) -> str:
@@ -423,14 +425,17 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
         
         # Concurrent LLM calls with 200 ms pacing
         async def fetch_page(page, prompt):
+            min_w, max_w = PAGE_WORD_LIMITS.get(page, (80, 120))
             raw_text = await asyncio.to_thread(
-                router.generate,
+                router.generate_with_retry,
                 provider=provider,
                 system_instruction=GLOBAL_SYSTEM_INSTRUCTION,
                 user_prompt=prompt,
+                min_words=min_w,
+                max_words=max_w,
                 model=model
             )
-            return page, strip_thinking_tags(raw_text)
+            return page, raw_text
  
         tasks = []
         for idx, page in enumerate(pages_to_generate):
@@ -485,7 +490,7 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
         rud_name = rud_parts[0].strip().replace("mukhi", "Mukhi")
         rud_url = rud_parts[1].strip() if len(rud_parts) > 1 else ""
 
-        # Overwrite/assemble Page 24 Remedies content with exactly three paragraphs
+        # Overwrite/assemble Page 24 Remedies content with 4 structured sections
         astrology_remedies_para = sections_text.get(24, "").strip()
         # Clean any bullet marks or raw URLs in case LLM generated them
         astrology_remedies_para = "\n".join([line for line in astrology_remedies_para.split("\n") if "astrosavvysingh" not in line])
@@ -498,17 +503,24 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
         if len(words) > 35:
             astrology_remedies_para = " ".join(words[:35]) + "..."
 
-        # Paragraph 1: Astrology remedies ending with the consultation link
-        para1 = f"{astrology_remedies_para} For a more detailed analysis, click here to get a live consultation."
+        # Section 1: Personalised spiritual remedies
+        header1 = "§Your personalised spiritual remedies"
+        para1 = f"❤ {astrology_remedies_para} For a more detailed analysis, click here to get a live consultation."
 
-        # Paragraph 2: Bullet point for Love Bracelet
-        para2 = f"• To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet."
+        # Section 2: Love energy bracelet
+        header2 = "§Your personalised love energy bracelet"
+        para2 = f"❤ To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet."
 
-        # Paragraph 3: Bullet point for Rudraksha
-        para3 = f"• Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead."
+        # Section 3: Energised rudraksh
+        header3 = "§Your personalised energised rudraksh"
+        para3 = f"❤ Highly recommend you wearing the authentic {rud_name} energised and charged for you by our expert astrologer through sacred rituals."
 
-        # Combine into exactly three paragraphs
-        remedies_block = f"{para1}\n\n{para2}\n\n{para3}"
+        # Section 4: Gemstone + consultation (merged)
+        header4 = "§Gem stone recommendations"
+        para4 = "Your personalised Love energy stone to boost your love life, heal heartbreaks and bring to you, your desired partner. For personalised compatibility analysis and gem stone recommendations, book your one on one premium personalised consultation with our expert today."
+
+        # Combine into 4 sections
+        remedies_block = f"{header1}\n{para1}\n\n{header2}\n{para2}\n\n{header3}\n{para3}\n\n{header4}\n{para4}"
         sections_text[24] = remedies_block
             
         # PDF compilation via PDFService
@@ -540,6 +552,9 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
             rudraksha_name=rud_name,
             rudraksha_url=rud_url,
         )
+        
+        # Validate PDF structure and pages before uploading
+        validate_pdf(pdf_path)
         
         # Upload generated report PDF to Supabase Storage
         report_url = supabase.upload_pdf_report(order_id, pdf_path)
@@ -1255,14 +1270,17 @@ async def api_generate(req: GenerateRequest, session_id: str):
         
         # Concurrent LLM calls with 200 ms pacing
         async def fetch_page(page, prompt):
+            min_w, max_w = PAGE_WORD_LIMITS.get(page, (80, 120))
             raw_text = await asyncio.to_thread(
-                router.generate,
+                router.generate_with_retry,
                 provider=req.provider,
                 system_instruction=GLOBAL_SYSTEM_INSTRUCTION,
                 user_prompt=prompt,
+                min_words=min_w,
+                max_words=max_w,
                 model=req.model
             )
-            return page, strip_thinking_tags(raw_text)
+            return page, raw_text
 
         tasks = []
         for idx, page in enumerate(pages_to_generate):
@@ -1317,30 +1335,30 @@ async def api_generate(req: GenerateRequest, session_id: str):
         rud_name = rud_parts[0].strip().replace("mukhi", "Mukhi")
         rud_url = rud_parts[1].strip() if len(rud_parts) > 1 else ""
 
-        # Overwrite/assemble Page 24 Remedies content with exactly three paragraphs
+        # Overwrite/assemble Page 24 Remedies content with 4 structured sections
         astrology_remedies_para = sections_text.get(24, "").strip()
-        # Clean any bullet marks or raw URLs in case LLM generated them
         astrology_remedies_para = "\n".join([line for line in astrology_remedies_para.split("\n") if "astrosavvysingh" not in line])
         for marker in ["*", "-", "1.", "2.", "3.", "•"]:
             astrology_remedies_para = astrology_remedies_para.replace(marker, "")
         astrology_remedies_para = astrology_remedies_para.strip()
 
-        # Truncate astrology remedies text to maximum ~35 words (~2-3 lines of text)
         words = astrology_remedies_para.split()
         if len(words) > 35:
             astrology_remedies_para = " ".join(words[:35]) + "..."
 
-        # Paragraph 1: Astrology remedies ending with the consultation link
-        para1 = f"{astrology_remedies_para} For a more detailed analysis, click here to get a live consultation."
+        header1 = "§Your personalised spiritual remedies"
+        para1 = f"❤ {astrology_remedies_para} For a more detailed analysis, click here to get a live consultation."
 
-        # Paragraph 2: Bullet point for Love Bracelet
-        para2 = f"• To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet."
+        header2 = "§Your personalised love energy bracelet"
+        para2 = f"❤ To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet."
 
-        # Paragraph 3: Bullet point for Rudraksha
-        para3 = f"• Additionally, to ground your emotional energy and invite cosmic protection, we highly recommend wearing the authentic {rud_name} bead."
+        header3 = "§Your personalised energised rudraksh"
+        para3 = f"❤ Highly recommend you wearing the authentic {rud_name} energised and charged for you by our expert astrologer through sacred rituals."
 
-        # Combine into exactly three paragraphs
-        remedies_block = f"{para1}\n\n{para2}\n\n{para3}"
+        header4 = "§Gem stone recommendations"
+        para4 = "Your personalised Love energy stone to boost your love life, heal heartbreaks and bring to you, your desired partner. For personalised compatibility analysis and gem stone recommendations, book your one on one premium personalised consultation with our expert today."
+
+        remedies_block = f"{header1}\n{para1}\n\n{header2}\n{para2}\n\n{header3}\n{para3}\n\n{header4}\n{para4}"
         sections_text[24] = remedies_block
             
         # Redirect output writes to '/tmp' on read-only environments like Vercel
@@ -1371,6 +1389,10 @@ async def api_generate(req: GenerateRequest, session_id: str):
             rudraksha_name=rud_name,
             rudraksha_url=rud_url,
         )
+        
+        # Validate PDF structure and pages before returning
+        validate_pdf(pdf_path)
+        
         return FileResponse(pdf_path, media_type="application/pdf", filename=f"{req.name.lower()}_individual_love_report.pdf")
     except Exception as e:
         import traceback

@@ -11,39 +11,70 @@ from typing import Dict, List, Any, Optional
 
 # Static coordinate alignments parsed from 'annotated_Blank Report.pdf'
 LAYOUT_CONFIG = {
-    1: {'x_left': 80.0, 'x_right': 522.0, 'y_bottom': 336.0, 'y_top': 647.0},
-    2: {'x_left': 81.0, 'x_right': 523.0, 'y_bottom': 218.0, 'y_top': 622.0},
-    5: {'x_left': 69.0, 'x_right': 526.0, 'y_bottom': 271.0, 'y_top': 633.0},
-    6: {'x_left': 82.0, 'x_right': 524.0, 'y_bottom': 284.0, 'y_top': 627.0},
-    7: {'x_left': 96.0, 'x_right': 522.0, 'y_bottom': 316.0, 'y_top': 646.0},
+    1: {'x_left': 80.0, 'x_right': 522.0, 'y_bottom': 325.0, 'y_top': 647.0},
+    2: {'x_left': 81.0, 'x_right': 523.0, 'y_bottom': 215.0, 'y_top': 622.0},
+    5: {'x_left': 69.0, 'x_right': 526.0, 'y_bottom': 215.0, 'y_top': 633.0},
+    6: {'x_left': 82.0, 'x_right': 524.0, 'y_bottom': 272.0, 'y_top': 627.0},
+    7: {'x_left': 96.0, 'x_right': 522.0, 'y_bottom': 330.0, 'y_top': 646.0},
     8: {'x_left': 84.0, 'x_right': 523.0, 'y_bottom': 280.0, 'y_top': 607.0},
-    9: {'x_left': 89.0, 'x_right': 516.0, 'y_bottom': 305.0, 'y_top': 623.0},
-    10: {'x_left': 75.0, 'x_right': 517.0, 'y_bottom': 315.0, 'y_top': 619.0},
-    11: {'x_left': 80.0, 'x_right': 522.0, 'y_bottom': 284.0, 'y_top': 624.0},
-    12: {'x_left': 92.0, 'x_right': 509.0, 'y_bottom': 279.0, 'y_top': 618.0},
-    13: {'x_left': 102.0, 'x_right': 520.0, 'y_bottom': 276.0, 'y_top': 593.0},
-    14: {'x_left': 94.0, 'x_right': 527.0, 'y_bottom': 266.0, 'y_top': 602.0},
-    15: {'x_left': 92.0, 'x_right': 507.0, 'y_bottom': 279.0, 'y_top': 621.0},
-    16: {'x_left': 89.0, 'x_right': 529.0, 'y_bottom': 331.0, 'y_top': 618.0},
-    17: {'x_left': 87.0, 'x_right': 526.0, 'y_bottom': 241.0, 'y_top': 626.0},
-    18: {'x_left': 97.0, 'x_right': 509.0, 'y_bottom': 293.0, 'y_top': 604.0},
-    19: {'x_left': 87.0, 'x_right': 528.0, 'y_bottom': 216.0, 'y_top': 604.0},
-    20: {'x_left': 88.0, 'x_right': 527.0, 'y_bottom': 318.0, 'y_top': 625.0},
-    21: {'x_left': 93.0, 'x_right': 528.0, 'y_bottom': 233.0, 'y_top': 622.0},
-    22: {'x_left': 87.0, 'x_right': 519.0, 'y_bottom': 303.0, 'y_top': 615.0},
-    23: {'x_left': 105.0, 'x_right': 523.0, 'y_bottom': 315.0, 'y_top': 623.0},
-    24: {'x_left': 90.0, 'x_right': 520.0, 'y_bottom': 308.0, 'y_top': 604.0},
-    25: {'x_left': 75.0, 'x_right': 525.0, 'y_bottom': 271.0, 'y_top': 629.0}
+    9: {'x_left': 89.0, 'x_right': 516.0, 'y_bottom': 287.0, 'y_top': 623.0},
+    10: {'x_left': 75.0, 'x_right': 517.0, 'y_bottom': 320.0, 'y_top': 619.0},
+    11: {'x_left': 80.0, 'x_right': 522.0, 'y_bottom': 280.0, 'y_top': 624.0},
+    12: {'x_left': 92.0, 'x_right': 509.0, 'y_bottom': 280.0, 'y_top': 618.0},
+    13: {'x_left': 102.0, 'x_right': 520.0, 'y_bottom': 269.0, 'y_top': 593.0},
+    14: {'x_left': 94.0, 'x_right': 527.0, 'y_bottom': 250.0, 'y_top': 602.0},
+    15: {'x_left': 92.0, 'x_right': 507.0, 'y_bottom': 270.0, 'y_top': 621.0},
+    16: {'x_left': 89.0, 'x_right': 529.0, 'y_bottom': 320.0, 'y_top': 618.0},
+    17: {'x_left': 87.0, 'x_right': 526.0, 'y_bottom': 255.0, 'y_top': 626.0},
+    18: {'x_left': 97.0, 'x_right': 509.0, 'y_bottom': 286.0, 'y_top': 604.0},
+    19: {'x_left': 87.0, 'x_right': 528.0, 'y_bottom': 234.0, 'y_top': 604.0},
+    20: {'x_left': 88.0, 'x_right': 527.0, 'y_bottom': 320.0, 'y_top': 625.0},
+    21: {'x_left': 93.0, 'x_right': 528.0, 'y_bottom': 244.0, 'y_top': 622.0},
+    22: {'x_left': 87.0, 'x_right': 519.0, 'y_bottom': 301.0, 'y_top': 615.0},
+    23: {'x_left': 105.0, 'x_right': 523.0, 'y_bottom': 303.0, 'y_top': 623.0},
+    24: {'x_left': 90.0, 'x_right': 520.0, 'y_bottom': 309.0, 'y_top': 604.0},
+    25: {'x_left': 75.0, 'x_right': 525.0, 'y_bottom': 265.0, 'y_top': 629.0}
 }
 
 def strip_emojis(text: str) -> str:
     if not text:
         return ""
-    # Strip emojis and variation selectors (0xFE00 to 0xFE0F inclusive)
-    text = "".join(c for c in text if ord(c) < 0x10000 and not (0xFE00 <= ord(c) <= 0xFE0F))
+        
+    # Replace curly quotes and dashes with standard straight ones to prevent replacement symbol glyphs
+    curly_map = {
+        "“": '"',
+        "”": '"',
+        "‘": "'",
+        "’": "'",
+        "–": "-",  # en-dash
+        "—": "-",  # em-dash
+    }
+    for curly, straight in curly_map.items():
+        text = text.replace(curly, straight)
+        
+    # Filter non-ASCII characters and emojis to avoid unsupported glyph box errors
+    cleaned_chars = []
+    for c in text:
+        o = ord(c)
+        if o < 128:
+            cleaned_chars.append(c)
+        elif 0x2000 <= o <= 0x206F: # General punctuation (curly quotes handled, keep others)
+            cleaned_chars.append(c)
+        elif o == 0x2665 or o == 0x2764: # Keep heart glyph markers
+            cleaned_chars.append(c)
+        elif 0x2600 <= o <= 0x27BF: # Dingbats / symbols (e.g. sparkles)
+            continue
+        elif o >= 0x10000: # Color emojis, etc.
+            continue
+        else:
+            cleaned_chars.append(c)
+            
+    text = "".join(cleaned_chars)
+    
     # Strip zero-width characters and markdown syntax
     for ctrl in ["\u200b", "\u200d", "\ufeff", "**", "*", "__"]:
         text = text.replace(ctrl, "")
+        
     return text.strip()
 
 def wrap_text(text: str, max_width: float, fontsize: float, font: fitz.Font) -> List[str]:
@@ -171,12 +202,13 @@ class PDFService:
         pix.save(output_path)
         doc.close()
 
-    def _load_fonts(self) -> tuple[Optional[str], Optional[str]]:
+    def _load_fonts(self) -> tuple[Optional[str], Optional[str], Optional[str]]:
         # 1. Try local Windows Georgia system fonts (instant & offline)
         local_reg = 'C:/Windows/Fonts/georgia.ttf'
         local_bold = 'C:/Windows/Fonts/georgiab.ttf'
-        if os.path.exists(local_reg) and os.path.exists(local_bold):
-            return local_reg, local_bold
+        local_italic = 'C:/Windows/Fonts/georgiai.ttf'
+        if os.path.exists(local_reg) and os.path.exists(local_bold) and os.path.exists(local_italic):
+            return local_reg, local_bold, local_italic
             
         # 2. Server/Linux environment fallback to Cormorant Garamond inside writable /tmp
         if os.getenv("VERCEL") or os.environ.get("AMAZON_AWS_LAMBDA_STAGE") or not os.access(".", os.W_OK):
@@ -188,10 +220,13 @@ class PDFService:
         os.makedirs(fonts_dir, exist_ok=True)
         reg_path = os.path.join(fonts_dir, "Gelasio-Regular.ttf")
         bold_path = os.path.join(fonts_dir, "Gelasio-Bold.ttf")
+        italic_path = os.path.join(fonts_dir, "Gelasio-Italic.ttf")
         
         # If files exist and are not empty/html placeholders, return them
-        if os.path.exists(reg_path) and os.path.getsize(reg_path) > 1000 and os.path.exists(bold_path) and os.path.getsize(bold_path) > 1000:
-            return reg_path, bold_path
+        if (os.path.exists(reg_path) and os.path.getsize(reg_path) > 1000 and 
+            os.path.exists(bold_path) and os.path.getsize(bold_path) > 1000 and 
+            os.path.exists(italic_path) and os.path.getsize(italic_path) > 1000):
+            return reg_path, bold_path, italic_path
             
         # Download from Google Fonts CSS API using old Android user-agent to force TTF format
         import requests
@@ -200,14 +235,14 @@ class PDFService:
         headers = {
             "User-Agent": "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
         }
-        css_url = "https://fonts.googleapis.com/css2?family=Gelasio:wght@400;700"
+        css_url = "https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400;0,700;1,400"
         
         try:
             print(f"[PDFService] Fetching Google Fonts CSS...")
             r = requests.get(css_url, headers=headers, timeout=10)
             ttf_urls = re.findall(r'url\((https://fonts\.gstatic\.com/[^)]+\.ttf)\)', r.text)
             
-            if len(ttf_urls) >= 2:
+            if len(ttf_urls) >= 3:
                 print(f"[PDFService] Downloading Gelasio-Regular from {ttf_urls[0]}")
                 reg_data = requests.get(ttf_urls[0], timeout=15).content
                 with open(reg_path, "wb") as f:
@@ -218,11 +253,16 @@ class PDFService:
                 with open(bold_path, "wb") as f:
                     f.write(bold_data)
                     
-                return reg_path, bold_path
+                print(f"[PDFService] Downloading Gelasio-Italic from {ttf_urls[2]}")
+                italic_data = requests.get(ttf_urls[2], timeout=15).content
+                with open(italic_path, "wb") as f:
+                    f.write(italic_data)
+                    
+                return reg_path, bold_path, italic_path
         except Exception as e:
             print(f"[PDFService] Dynamic font download failed: {e}. Falling back to standard Helvetica/Times.")
             
-        return None, None
+        return None, None, None
 
     # ------------------------------------------------------------------
     # Public entry point
@@ -282,9 +322,10 @@ class PDFService:
         self._svg_to_png(d30_svg, d30_png_path)
 
         # 2. Setup Fonts
-        reg_font_file, bold_font_file = self._load_fonts()
+        reg_font_file, bold_font_file, italic_font_file = self._load_fonts()
         body_font = fitz.Font(fontfile=reg_font_file) if reg_font_file else fitz.Font("helv")
         bold_font = fitz.Font(fontfile=bold_font_file) if bold_font_file else fitz.Font("helv-bold")
+        italic_font = fitz.Font(fontfile=italic_font_file) if italic_font_file else fitz.Font("helv-oblique")
 
         # 3. Format timeline details
         def format_dasa_date_window(date_window_str: str) -> str:
@@ -531,15 +572,49 @@ class PDFService:
 
             linesToDraw = []
             pageText = strip_emojis(sections.get(pageIdx, ""))
+            
+            # Page 25 (index 24) uses reduced font/spacing and special formatting
+            pageFontSize = 10.0 if pageIdx == 24 else fontSize
+            pageLineSpacing = 15.5 if pageIdx == 24 else lineSpacing
+            
             if pageText:
-                wrapped = get_wrapped_lines(pageText, rect['x_right'] - rect['x_left'], fontSize, body_font)
-                linesToDraw.extend(wrapped)
+                if pageIdx == 24:
+                    # Setup non-breaking spaces for keywords to prevent wrapping splits
+                    keywords = ["Divy Love Bracelet", "live consultation", "consultation with our expert today"]
+                    if rudraksha_name:
+                        keywords.append(rudraksha_name)
+                        
+                    tempText = pageText
+                    for kw in keywords:
+                        tempText = tempText.replace(kw, kw.replace(" ", "\u00A0"))
+                    
+                    # Custom section-aware wrapping for page 25:
+                    # Split on \n\n to get sections, wrap each paragraph within,
+                    # but NO spacer between § header and its content paragraph.
+                    avail_width = rect['x_right'] - rect['x_left']
+                    sections_raw = tempText.split("\n\n")
+                    for s_idx, section in enumerate(sections_raw):
+                        lines_in_section = [l.strip() for l in section.split("\n") if l.strip()]
+                        for l_idx, para in enumerate(lines_in_section):
+                            if para.startswith("§"):
+                                # Header line: no wrapping needed, just add directly
+                                linesToDraw.append(para.replace("\u00A0", " "))
+                            else:
+                                # Content paragraph: wrap normally
+                                w = wrap_text(para, avail_width, pageFontSize, body_font)
+                                linesToDraw.extend([ln.replace("\u00A0", " ") for ln in w])
+                        # Add blank spacer between sections (not after the last one)
+                        if s_idx < len(sections_raw) - 1:
+                            linesToDraw.append("")
+                else:
+                    wrapped = get_wrapped_lines(pageText, rect['x_right'] - rect['x_left'], pageFontSize, body_font)
+                    linesToDraw.extend(wrapped)
                 
             if not linesToDraw:
                 continue
 
             print(f"[PDFService] Page {pageIdx + 1}: Writing {len(linesToDraw)} lines of text...")
-            currentY = rect['y_top'] - fontSize
+            currentY = rect['y_top'] - pageFontSize
             
             for line in linesToDraw:
                 # Page overflow check
@@ -549,35 +624,102 @@ class PDFService:
                     
                 if line:
                     point = fitz.Point(rect['x_left'], page_height - currentY)
-                    page.insert_text(point, line, fontsize=fontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
-                currentY -= lineSpacing
+                    
+                    if pageIdx == 24:
+                        # 0. Section header check (§ prefix = bold header)
+                        if line.startswith("§"):
+                            header_text = line[1:]  # strip § marker
+                            page.insert_text(point, header_text, fontsize=pageFontSize, fontname="bold", fontfile=bold_font_file, color=textColorDark)
+                            currentY -= pageLineSpacing
+                            continue
+                        
+                        # 1. Bullet point vector heart check
+                        is_bullet = False
+                        clean_line = line
+                        if line.strip().startswith("❤"):
+                            is_bullet = True
+                            clean_line = line.replace("❤", "", 1).strip()
+                            
+                            # Draw beautiful filled vector red heart at the bullet point position
+                            bullet_x = rect['x_left'] + 5.0
+                            bullet_y = (page_height - currentY) - pageFontSize / 2.0 + 1.0
+                            r_bullet = 2.0
+                            
+                            shape = page.new_shape()
+                            shape.draw_circle(fitz.Point(bullet_x - r_bullet, bullet_y), r_bullet)
+                            shape.draw_circle(fitz.Point(bullet_x + r_bullet, bullet_y), r_bullet)
+                            bp1 = fitz.Point(bullet_x - 2*r_bullet, bullet_y + r_bullet*0.3)
+                            bp2 = fitz.Point(bullet_x + 2*r_bullet, bullet_y + r_bullet*0.3)
+                            bp3 = fitz.Point(bullet_x, bullet_y + 2.5*r_bullet)
+                            shape.draw_line(bp1, bp2)
+                            shape.draw_line(bp2, bp3)
+                            shape.draw_line(bp3, bp1)
+                            shape.finish(fill=(0.9, 0.1, 0.1), color=(0.9, 0.1, 0.1))
+                            shape.commit()
+                            
+                            point = fitz.Point(rect['x_left'] + 16.0, page_height - currentY)
+                            
+                        # 2. Sequential formatting of keywords in italic Magenta
+                        found_kw = None
+                        for kw in keywords:
+                            if kw in clean_line:
+                                found_kw = kw
+                                break
+                                
+                        if found_kw:
+                            parts = clean_line.split(found_kw, 1)
+                            part1 = parts[0]
+                            part2 = parts[1] if len(parts) > 1 else ""
+                            
+                            x_offset = rect['x_left'] + 16.0 if is_bullet else rect['x_left']
+                            
+                            # Prefix
+                            page.insert_text(fitz.Point(x_offset, page_height - currentY), part1, fontsize=pageFontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
+                            
+                            # Keyword (italic Magenta)
+                            part1_width = body_font.text_length(part1, pageFontSize)
+                            point_kw = fitz.Point(x_offset + part1_width, page_height - currentY)
+                            page.insert_text(point_kw, found_kw, fontsize=pageFontSize, fontname="italic", fontfile=italic_font_file, color=(0.8, 0.0, 0.5))
+                            
+                            # Suffix
+                            kw_width = italic_font.text_length(found_kw, pageFontSize)
+                            point_part2 = fitz.Point(x_offset + part1_width + kw_width, page_height - currentY)
+                            page.insert_text(point_part2, part2, fontsize=pageFontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
+                        else:
+                            page.insert_text(point, clean_line, fontsize=pageFontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
+                    else:
+                        page.insert_text(point, line, fontsize=pageFontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
+                currentY -= pageLineSpacing
 
-        # 4.5. Add hyperlinks on Page 24 (Practical Remedies, index 23)
+        # 4.5. Add hyperlinks on Page 25 (Practical Remedies, index 24)
         # Search page for target words and insert links with underlines
-        # 4.5. Add hyperlinks on Page 24 (Practical Remedies, index 23)
-        # Search page for target words and insert links with underlines
-        if len(doc) > 23:
-            page24 = doc[23]
+        if len(doc) > 24:
+            page25 = doc[24]
             
             # Anchor 1: Divy Love Bracelet
-            bracelet_rects = page24.search_for("Divy Love Bracelet")
+            bracelet_rects = page25.search_for("Divy Love Bracelet")
             for r in bracelet_rects:
-                page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
-                page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/product/divy-love-bracelet"})
+                page25.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.8, 0.0, 0.5), width=0.8)
+                page25.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/product/divy-love-bracelet"})
                 
-            # Anchor 2: Rudraksha Suggestion (dynamic)
-            if rudraksha_url:
-                # Search for single word "Rudraksha" on remedies page
-                rud_rects = page24.search_for("Rudraksha")
+            # Anchor 2: Rudraksha Suggestion (dynamic full product name)
+            if rudraksha_url and rudraksha_name:
+                rud_rects = page25.search_for(rudraksha_name)
                 for r in rud_rects:
-                    page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
-                    page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": rudraksha_url})
+                    page25.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.8, 0.0, 0.5), width=0.8)
+                    page25.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": rudraksha_url})
                     
-            # Anchor 3: Consultation booking
-            consult_rects = page24.search_for("live consultation")
+            # Anchor 3: Consultation booking (from spiritual remedies section)
+            consult_rects = page25.search_for("live consultation")
             for r in consult_rects:
-                page24.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.1, 0.4, 0.8), width=0.8)
-                page24.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/kundli-analysis"})
+                page25.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.8, 0.0, 0.5), width=0.8)
+                page25.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/kundli-analysis"})
+                
+            # Anchor 4: Consultation booking (from gemstone section)
+            consult2_rects = page25.search_for("consultation with our expert today")
+            for r in consult2_rects:
+                page25.draw_line(fitz.Point(r.x0, r.y1 + 1.0), fitz.Point(r.x1, r.y1 + 1.0), color=(0.8, 0.0, 0.5), width=0.8)
+                page25.insert_link({"kind": fitz.LINK_URI, "from": r, "uri": "https://www.astrosavvysingh.com/kundli-analysis"})
 
         # 5. Save document
         print(f"[PDFService] Saving compiled PDF to: {output_path}")
