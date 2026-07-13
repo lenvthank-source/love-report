@@ -445,24 +445,26 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 12px 20px;
-            margin: 0 20px 20px;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(255,255,255,0.5);
-            border-radius: 10px;
+            padding: 16px 10px;
+            margin: -15px 15px 25px;
+            border: 2px solid rgba(212, 105, 138, 0.25);
+            background: linear-gradient(135deg, rgba(253, 240, 242, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(180, 80, 120, 0.08);
+            position: relative;
+            z-index: 20;
         }
         .mobile-metric-item { text-align: center; }
         .mobile-metric-item h3 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--primary-dark);
             margin: 0;
         }
         .mobile-metric-item p {
             font-family: 'Jost', sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
@@ -507,52 +509,7 @@
     </div>
 
     <!-- Section: Love Calculator Banner Card Mobile -->
-    <div class="mobile-section" style="padding: 25px 20px; text-align: center;">
-        <a href="/love-calculator" style="text-decoration: none; display: block; width: 100%;">
-            <div class="love-banner-card" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.3); border-radius: 16px; padding: 35px 20px; box-shadow: 0 15px 40px rgba(180, 80, 120, 0.1); position: relative; overflow: hidden; text-align: center;">
-                <!-- Decorative background radial glows -->
-                <div style="position: absolute; top: -80px; left: -80px; width: 180px; height: 180px; background: rgba(212, 105, 138, 0.12); filter: blur(50px); border-radius: 50%; pointer-events: none;"></div>
-                <div style="position: absolute; bottom: -80px; right: -80px; width: 180px; height: 180px; background: rgba(196, 40, 77, 0.12); filter: blur(50px); border-radius: 50%; pointer-events: none;"></div>
 
-                <div style="display: inline-block; background: linear-gradient(135deg, #D4698A 0%, #C4284D 100%); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.6rem; font-weight: 700; padding: 4px 18px; border-radius: 30px; letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(196, 40, 77, 0.25); margin-bottom: 20px; white-space: nowrap;">
-                    🔥 FREE SOUL-MATE TEST
-                </div>
-                
-                <h2 style="font-family: 'Jost', sans-serif; font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin-top: 0; margin-bottom: 12px; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.2;">
-                    ✨ DECODE YOUR ROMANTIC FREQUENCY ✨
-                </h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.7;">
-                    Are you a cosmic match or absolute chaos? Check your name resonance score in 30 seconds using ancient Chaldean numerology.
-                </p>
-
-                <!-- Heart Fill Gauge Animation (Mobile) -->
-                <div style="width: 90px; height: 90px; margin: 0 auto 20px; position: relative;">
-                    <div id="heartGaugeM" style="width: 100%; height: 100%; position: relative; transition: transform 0.3s ease;">
-                        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
-                            <defs>
-                                <clipPath id="heartClipM">
-                                    <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z"/>
-                                </clipPath>
-                                <linearGradient id="fillGradM" x1="0" y1="1" x2="0" y2="0">
-                                    <stop offset="0%" stop-color="#D4698A"/>
-                                    <stop offset="100%" stop-color="#C4284D"/>
-                                </linearGradient>
-                            </defs>
-                            <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z" fill="none" stroke="rgba(212,105,138,0.3)" stroke-width="2"/>
-                            <g clip-path="url(#heartClipM)">
-                                <rect id="heartFillM" x="0" y="100" width="100" height="100" fill="url(#fillGradM)"/>
-                            </g>
-                        </svg>
-                        <div id="clickbaitScoreM" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--accent); text-shadow: 0 0 10px rgba(196,40,77,0.25);">0%</div>
-                    </div>
-                </div>
-
-                <div style="display: inline-block; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 24px; border-radius: 30px; box-shadow: 0 4px 12px rgba(212, 105, 138, 0.25);">
-                    Check Compatibility 🔮
-                </div>
-            </div>
-        </a>
-    </div>
 
     <!-- What is report -->
 
@@ -614,12 +571,8 @@
                 </li>
             </ul>
             
-            <div style="border-top: 1px solid var(--border-color); padding-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                <div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through;">Regular: ₹1,999</div>
-                    <div style="font-family: 'Jost', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--primary-dark);">₹999 <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-muted);">only</span></div>
-                </div>
-                <a href="#mobile-order-form" class="action-btn" style="margin: 0; padding: 10px 25px; font-size: 0.85rem; width: auto;">ORDER NOW</a>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 20px; text-align: center;">
+                <a href="#mobile-order-form" class="action-btn" style="margin: 0 auto; display: inline-block; padding: 12px 40px; font-size: 0.9rem; width: auto;">ORDER NOW</a>
             </div>
         </div>
     </div>
@@ -684,7 +637,7 @@
                 </div>
 
                 <div style="margin-top: 30px; text-align: center;">
-                    <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 15px;">
+                    <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; display: none;">
                         Price: <span id="priceLabel">₹999</span>
                     </div>
                     <button type="submit" class="action-btn" id="payBtn" style="width: 100%;">💳 Proceed to Payment</button>
@@ -994,6 +947,23 @@
             requestAnimationFrame(tick);
         })();
 
+        // Floating Love Meter scroll hide (Mobile)
+        (function() {
+            var widget = document.getElementById('floatingLoveMeterM');
+            if (!widget) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 800) {
+                    widget.style.opacity = '0';
+                    widget.style.pointerEvents = 'none';
+                    widget.style.transform = 'translateY(20px)';
+                } else {
+                    widget.style.opacity = '1';
+                    widget.style.pointerEvents = 'auto';
+                    widget.style.transform = 'translateY(0)';
+                }
+            });
+        })();
+
         // Live Activity Toast Banner
         (function() {
             var names = ['Ramesh','Jaya','Priya','Ankit','Meera','Arjun','Sneha','Vikram','Pooja','Rahul','Kavita','Rohit','Anjali','Deepak','Nisha','Suresh','Divya','Karan'];
@@ -1020,6 +990,44 @@
             setTimeout(function() { showToast(); setInterval(showToast, 7000); }, 8000);
         })();
     </script>
+    <!-- Floating Love Meter Widget (Mobile) -->
+    <div id="floatingLoveMeterM" style="position: fixed; bottom: 90px; right: 15px; z-index: 1000; width: 170px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.35); border-radius: 16px; padding: 12px 10px; box-shadow: 0 15px 40px rgba(180, 80, 120, 0.15); transition: all 0.5s ease; text-align: center;">
+        <button onclick="document.getElementById('floatingLoveMeterM').style.display='none';" style="position: absolute; top: 4px; right: 6px; background: none; border: none; font-size: 1.1rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
+        <a href="/love-calculator" style="text-decoration: none; display: block;">
+            <div style="font-family: 'Jost', sans-serif; font-size: 0.55rem; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px;">
+                🔥 FREE SOUL-MATE TEST
+            </div>
+            <h4 style="font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--text-dark); margin: 0 0 10px; text-transform: uppercase; letter-spacing: -0.2px;">
+                Decode Frequency ✨
+            </h4>
+            
+            <!-- Heart Fill Gauge -->
+            <div style="width: 55px; height: 55px; margin: 0 auto 10px; position: relative;">
+                <div id="heartGaugeM" style="width: 100%; height: 100%; position: relative; transition: transform 0.3s ease;">
+                    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                        <defs>
+                            <clipPath id="heartClipM">
+                                <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z"/>
+                            </clipPath>
+                            <linearGradient id="fillGradM" x1="0" y1="1" x2="0" y2="0">
+                                <stop offset="0%" stop-color="#D4698A"/>
+                                <stop offset="100%" stop-color="#C4284D"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z" fill="none" stroke="rgba(212,105,138,0.3)" stroke-width="2"/>
+                        <g clip-path="url(#heartClipM)">
+                            <rect id="heartFillM" x="0" y="100" width="100" height="100" fill="url(#fillGradM)"/>
+                        </g>
+                    </svg>
+                    <div id="clickbaitScoreM" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--accent); text-shadow: 0 0 10px rgba(196,40,77,0.25);">0%</div>
+                </div>
+            </div>
+            <div style="font-family: 'Jost', sans-serif; font-size: 0.6rem; font-weight: 700; color: #FFFFFF; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); padding: 5px 10px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 8px rgba(212, 105, 138, 0.25); text-transform: uppercase;">
+                Test compatibility 🔮
+            </div>
+        </a>
+    </div>
+
     <div id="activityToast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 9999; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(212,105,138,0.25); border-radius: 14px; padding: 10px 18px; box-shadow: 0 12px 40px rgba(180,80,120,0.12); font-family: 'Lora', serif; font-size: 0.75rem; color: var(--text-dark); white-space: nowrap; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; opacity: 0; pointer-events: none; max-width: 90vw;">
         <span id="activityText">💫 Someone just checked their love report</span>
     </div>

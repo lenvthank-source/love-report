@@ -266,34 +266,39 @@
         .metrics-bar {
             display: flex;
             justify-content: space-around;
-            background: rgba(201, 150, 123, 0.05);
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 30px 8%;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(253, 240, 242, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+            border: 2px solid rgba(212, 105, 138, 0.25);
+            border-radius: 20px;
+            padding: 35px 5%;
+            margin: -35px 8% 50px;
             text-align: center;
             position: relative;
-            z-index: 10;
+            z-index: 20;
+            box-shadow: var(--shadow-soft);
         }
 
         @media (max-width: 768px) {
             .metrics-bar {
                 flex-direction: column;
                 gap: 25px;
+                margin: -25px 20px 40px;
             }
         }
 
         .metric-item h3 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            color: var(--primary-dark);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
             margin-bottom: 5px;
         }
 
         .metric-item p {
             font-family: 'Jost', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             color: var(--text-muted);
         }
 
@@ -939,53 +944,7 @@
         </div>
     </section>
 
-    <!-- Section: Love Calculator Banner Card -->
-    <section style="padding: 30px 8%; text-align: center;">
-        <a href="/love-calculator" style="text-decoration: none; display: block; max-width: 800px; margin: 0 auto;">
-            <div class="love-banner-card" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.3); border-radius: 16px; padding: 45px 30px; box-shadow: 0 20px 50px rgba(180, 80, 120, 0.1); position: relative; overflow: hidden; text-align: center;">
-                <!-- Decorative background radial glows -->
-                <div style="position: absolute; top: -100px; left: -100px; width: 250px; height: 250px; background: rgba(212, 105, 138, 0.15); filter: blur(60px); border-radius: 50%; pointer-events: none;"></div>
-                <div style="position: absolute; bottom: -100px; right: -100px; width: 250px; height: 250px; background: rgba(196, 40, 77, 0.15); filter: blur(60px); border-radius: 50%; pointer-events: none;"></div>
 
-                <div style="display: inline-block; background: linear-gradient(135deg, #D4698A 0%, #C4284D 100%); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 700; padding: 6px 24px; border-radius: 30px; letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(196, 40, 77, 0.3); margin-bottom: 25px;">
-                    🔥 FREE SOUL-MATE TEST
-                </div>
-                
-                <h2 style="font-family: 'Jost', sans-serif; font-size: 2.3rem; font-weight: 800; text-transform: uppercase; margin-top: 0; margin-bottom: 15px; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.2;">
-                    ✨ DECODE YOUR ROMANTIC FREQUENCY ✨
-                </h2>
-                <p style="color: var(--text-muted); font-family: 'Lora', serif; font-size: 1.1rem; margin-bottom: 25px; max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.8;">
-                    Are you a cosmic match or absolute chaos? Instantly verify your name resonance score in 30 seconds using ancient Chaldean numerology before checking your deep birth charts.
-                </p>
-
-                <!-- Heart Fill Gauge Animation -->
-                <div style="width: 120px; height: 120px; margin: 0 auto 25px; position: relative;">
-                    <div id="heartGauge" style="width: 100%; height: 100%; position: relative; transition: transform 0.3s ease;">
-                        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
-                            <defs>
-                                <clipPath id="heartClip">
-                                    <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z"/>
-                                </clipPath>
-                                <linearGradient id="fillGrad" x1="0" y1="1" x2="0" y2="0">
-                                    <stop offset="0%" stop-color="#D4698A"/>
-                                    <stop offset="100%" stop-color="#C4284D"/>
-                                </linearGradient>
-                            </defs>
-                            <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z" fill="none" stroke="rgba(212,105,138,0.3)" stroke-width="2"/>
-                            <g clip-path="url(#heartClip)">
-                                <rect id="heartFill" x="0" y="100" width="100" height="100" fill="url(#fillGrad)"/>
-                            </g>
-                        </svg>
-                        <div id="clickbaitScore" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--accent); text-shadow: 0 0 10px rgba(196,40,77,0.25);">0%</div>
-                    </div>
-                </div>
-
-                <div style="display: inline-block; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); color: #FFFFFF; font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 12px 30px; border-radius: 30px; box-shadow: 0 4px 15px rgba(212, 105, 138, 0.3);">
-                    Check Love Compatibility 🔮
-                </div>
-            </div>
-        </a>
-    </section>
 
     <!-- Metrics highlights -->
 
@@ -1158,12 +1117,8 @@
                 </li>
             </ul>
             
-            <div style="border-top: 1px solid var(--border-color); padding-top: 25px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
-                <div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through;">Regular Price: ₹1,999</div>
-                    <div style="font-family: 'Jost', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--primary-dark);">₹999 <span style="font-size: 0.9rem; font-weight: 400; color: var(--text-muted);">only</span></div>
-                </div>
-                <a href="#order-form-section" class="cta-btn" style="margin: 0; padding: 14px 40px; font-weight: bold;">GET YOUR REPORT ➔</a>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 25px; text-align: center;">
+                <a href="#order-form-section" class="cta-btn" style="margin: 0 auto; display: inline-block; padding: 16px 50px; font-weight: bold;">GET YOUR REPORT ➔</a>
             </div>
         </div>
     </section>
@@ -1239,9 +1194,6 @@
                 </div>
 
                 <div class="checkout-area" style="margin-top: 40px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 30px;">
-                    <div class="price-text" style="font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; margin-bottom: 15px;">
-                        Selected Tier Price: <span id="priceLabel">₹999</span>
-                    </div>
                     <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.7;">
                         Your detailed 26-page report will be compiled by the backend and dispatched directly to your email inbox within 24 to 36 hours.
                     </p>
@@ -1597,6 +1549,23 @@
             requestAnimationFrame(tick);
         })();
 
+        // Floating Love Meter scroll hide
+        (function() {
+            var widget = document.getElementById('floatingLoveMeter');
+            if (!widget) return;
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 800) {
+                    widget.style.opacity = '0';
+                    widget.style.pointerEvents = 'none';
+                    widget.style.transform = 'translateY(20px)';
+                } else {
+                    widget.style.opacity = '1';
+                    widget.style.pointerEvents = 'auto';
+                    widget.style.transform = 'translateY(0)';
+                }
+            });
+        })();
+
         // Live Activity Toast Banner
         (function() {
             var names = ['Ramesh','Jaya','Priya','Ankit','Meera','Arjun','Sneha','Vikram','Pooja','Rahul','Kavita','Rohit','Anjali','Deepak','Nisha','Suresh','Divya','Karan'];
@@ -1623,6 +1592,44 @@
             setTimeout(function() { showToast(); setInterval(showToast, 7000); }, 8000);
         })();
     </script>
+    <!-- Floating Love Meter Widget -->
+    <div id="floatingLoveMeter" style="position: fixed; bottom: 90px; right: 20px; z-index: 1000; width: 200px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.35); border-radius: 16px; padding: 15px 12px; box-shadow: 0 15px 40px rgba(180, 80, 120, 0.15); transition: all 0.5s ease; text-align: center;">
+        <button onclick="document.getElementById('floatingLoveMeter').style.display='none';" style="position: absolute; top: 6px; right: 8px; background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
+        <a href="/love-calculator" style="text-decoration: none; display: block;">
+            <div style="font-family: 'Jost', sans-serif; font-size: 0.65rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">
+                🔥 FREE SOUL-MATE TEST
+            </div>
+            <h4 style="font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--text-dark); margin: 0 0 12px; text-transform: uppercase; letter-spacing: -0.2px;">
+                Decode Frequency ✨
+            </h4>
+            
+            <!-- Heart Fill Gauge -->
+            <div style="width: 70px; height: 70px; margin: 0 auto 12px; position: relative;">
+                <div id="heartGauge" style="width: 100%; height: 100%; position: relative; transition: transform 0.3s ease;">
+                    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                        <defs>
+                            <clipPath id="heartClip">
+                                <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z"/>
+                            </clipPath>
+                            <linearGradient id="fillGrad" x1="0" y1="1" x2="0" y2="0">
+                                <stop offset="0%" stop-color="#D4698A"/>
+                                <stop offset="100%" stop-color="#C4284D"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M50 88 C25 65, 0 50, 0 30 C0 13, 13 0, 30 0 C40 0, 48 6, 50 15 C52 6, 60 0, 70 0 C87 0, 100 13, 100 30 C100 50, 75 65, 50 88Z" fill="none" stroke="rgba(212,105,138,0.3)" stroke-width="2"/>
+                        <g clip-path="url(#heartClip)">
+                            <rect id="heartFill" x="0" y="100" width="100" height="100" fill="url(#fillGrad)"/>
+                        </g>
+                    </svg>
+                    <div id="clickbaitScore" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 0.95rem; font-weight: 800; color: var(--accent); text-shadow: 0 0 10px rgba(196,40,77,0.25);">0%</div>
+                </div>
+            </div>
+            <div style="font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 700; color: #FFFFFF; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); padding: 6px 14px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 10px rgba(212, 105, 138, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">
+                Test Compatibility 🔮
+            </div>
+        </a>
+    </div>
+
     <div id="activityToast" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 9999; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(212,105,138,0.25); border-radius: 14px; padding: 14px 24px; box-shadow: 0 12px 40px rgba(180,80,120,0.12); font-family: 'Lora', serif; font-size: 0.85rem; color: var(--text-dark); white-space: nowrap; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; opacity: 0; pointer-events: none; max-width: 90vw;">
         <span id="activityText">💫 Someone just checked their love report</span>
     </div>
