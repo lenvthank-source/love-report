@@ -921,83 +921,86 @@
             }
         });
 
-        // Heart Fill Gauge Animation (Mobile)
-        (function() {
-            var fill = document.getElementById('heartFillM');
-            var score = document.getElementById('clickbaitScoreM');
-            var gauge = document.getElementById('heartGaugeM');
-            if (!fill || !score) return;
-            var pct = 0, dir = 1, holding = false;
-            function tick() {
-                if (!holding) {
-                    pct += dir * 0.4;
-                    if (pct >= 98) {
-                        pct = 98; holding = true;
-                        gauge.style.transform = 'scale(1.05)';
-                        setTimeout(function() { holding = false; dir = -1; gauge.style.transform = 'scale(1)'; }, 3000);
-                    } else if (pct <= 0) {
-                        pct = 0; holding = true;
-                        setTimeout(function() { holding = false; dir = 1; }, 1000);
+        // Setup animations and scroll actions after DOM content is loaded
+        window.addEventListener('DOMContentLoaded', function() {
+            // Heart Fill Gauge Animation (Mobile)
+            (function() {
+                var fill = document.getElementById('heartFillM');
+                var score = document.getElementById('clickbaitScoreM');
+                var gauge = document.getElementById('heartGaugeM');
+                if (!fill || !score) return;
+                var pct = 0, dir = 1, holding = false;
+                function tick() {
+                    if (!holding) {
+                        pct += dir * 0.4;
+                        if (pct >= 98) {
+                            pct = 98; holding = true;
+                            if (gauge) gauge.style.transform = 'scale(1.05)';
+                            setTimeout(function() { holding = false; dir = -1; if (gauge) gauge.style.transform = 'scale(1)'; }, 3000);
+                        } else if (pct <= 0) {
+                            pct = 0; holding = true;
+                            setTimeout(function() { holding = false; dir = 1; }, 1000);
+                        }
                     }
+                    fill.setAttribute('y', 100 - pct);
+                    score.textContent = Math.round(pct) + '%';
+                    requestAnimationFrame(tick);
                 }
-                fill.setAttribute('y', 100 - pct);
-                score.textContent = Math.round(pct) + '%';
                 requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-        })();
+            })();
 
-        // Floating Love Meter scroll hide (Mobile)
-        (function() {
-            var widget = document.getElementById('floatingLoveMeterM');
-            if (!widget) return;
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 800) {
-                    widget.style.opacity = '0';
-                    widget.style.pointerEvents = 'none';
-                    widget.style.transform = 'translateY(20px)';
-                } else {
-                    widget.style.opacity = '1';
-                    widget.style.pointerEvents = 'auto';
-                    widget.style.transform = 'translateY(0)';
+            // Floating Love Meter scroll hide (Mobile)
+            (function() {
+                var widget = document.getElementById('floatingLoveMeterM');
+                if (!widget) return;
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 800) {
+                        widget.style.opacity = '0';
+                        widget.style.pointerEvents = 'none';
+                        widget.style.transform = 'translateY(20px)';
+                    } else {
+                        widget.style.opacity = '1';
+                        widget.style.pointerEvents = 'auto';
+                        widget.style.transform = 'translateY(0)';
+                    }
+                });
+            })();
+
+            // Live Activity Toast Banner
+            (function() {
+                var names = ['Ramesh','Jaya','Priya','Ankit','Meera','Arjun','Sneha','Vikram','Pooja','Rahul','Kavita','Rohit','Anjali','Deepak','Nisha','Suresh','Divya','Karan'];
+                var cities = ['Mumbai','Delhi','Bangalore','Chennai','Pune','Jaipur','Kolkata','Hyderabad','Lucknow','Ahmedabad'];
+                var actions = ['just checked their love report','just downloaded their report','just ordered a compatibility report'];
+                var toast = document.getElementById('activityToast');
+                var textEl = document.getElementById('activityText');
+                var lastIdx = -1;
+                function showToast() {
+                    var idx;
+                    do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIdx);
+                    lastIdx = idx;
+                    var city = cities[Math.floor(Math.random() * cities.length)];
+                    var action = actions[Math.floor(Math.random() * actions.length)];
+                    var mins = Math.floor(Math.random() * 12) + 1;
+                    textEl.textContent = '\uD83D\uDCAB ' + names[idx] + ' from ' + city + ' ' + action + ' \u2014 ' + mins + ' min ago';
+                    toast.style.transform = 'translateX(-50%) translateY(0)';
+                    toast.style.opacity = '1';
+                    setTimeout(function() {
+                        toast.style.transform = 'translateX(-50%) translateY(100px)';
+                        toast.style.opacity = '0';
+                    }, 4000);
                 }
-            });
-        })();
-
-        // Live Activity Toast Banner
-        (function() {
-            var names = ['Ramesh','Jaya','Priya','Ankit','Meera','Arjun','Sneha','Vikram','Pooja','Rahul','Kavita','Rohit','Anjali','Deepak','Nisha','Suresh','Divya','Karan'];
-            var cities = ['Mumbai','Delhi','Bangalore','Chennai','Pune','Jaipur','Kolkata','Hyderabad','Lucknow','Ahmedabad'];
-            var actions = ['just checked their love report','just downloaded their report','just ordered a compatibility report'];
-            var toast = document.getElementById('activityToast');
-            var textEl = document.getElementById('activityText');
-            var lastIdx = -1;
-            function showToast() {
-                var idx;
-                do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIdx);
-                lastIdx = idx;
-                var city = cities[Math.floor(Math.random() * cities.length)];
-                var action = actions[Math.floor(Math.random() * actions.length)];
-                var mins = Math.floor(Math.random() * 12) + 1;
-                textEl.textContent = '\uD83D\uDCAB ' + names[idx] + ' from ' + city + ' ' + action + ' \u2014 ' + mins + ' min ago';
-                toast.style.transform = 'translateX(-50%) translateY(0)';
-                toast.style.opacity = '1';
-                setTimeout(function() {
-                    toast.style.transform = 'translateX(-50%) translateY(100px)';
-                    toast.style.opacity = '0';
-                }, 4000);
-            }
-            setTimeout(function() { showToast(); setInterval(showToast, 7000); }, 8000);
-        })();
+                setTimeout(function() { showToast(); setInterval(showToast, 7000); }, 8000);
+            })();
+        });
     </script>
     <!-- Floating Love Meter Widget (Mobile) -->
-    <div id="floatingLoveMeterM" style="position: fixed; bottom: 90px; right: 15px; z-index: 1000; width: 170px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.35); border-radius: 16px; padding: 12px 10px; box-shadow: 0 15px 40px rgba(180, 80, 120, 0.15); transition: all 0.5s ease; text-align: center;">
+    <div id="floatingLoveMeterM" style="position: fixed; bottom: 20px; right: 15px; z-index: 1000; width: 160px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.35); border-radius: 16px; padding: 12px 8px; box-shadow: 0 15px 40px rgba(180, 80, 120, 0.15); transition: all 0.5s ease; text-align: center; opacity: 1;">
         <button onclick="document.getElementById('floatingLoveMeterM').style.display='none';" style="position: absolute; top: 4px; right: 6px; background: none; border: none; font-size: 1.1rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
         <a href="/love-calculator" style="text-decoration: none; display: block;">
             <div style="font-family: 'Jost', sans-serif; font-size: 0.55rem; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px;">
                 🔥 FREE SOUL-MATE TEST
             </div>
-            <h4 style="font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--text-dark); margin: 0 0 10px; text-transform: uppercase; letter-spacing: -0.2px;">
+            <h4 style="font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--text-dark); margin: 0 0 10px; text-transform: uppercase; letter-spacing: -0.2px; line-height: 1.2;">
                 Decode Frequency ✨
             </h4>
             
@@ -1019,7 +1022,8 @@
                             <rect id="heartFillM" x="0" y="100" width="100" height="100" fill="url(#fillGradM)"/>
                         </g>
                     </svg>
-                    <div id="clickbaitScoreM" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--accent); text-shadow: 0 0 10px rgba(196,40,77,0.25);">0%</div>
+                    <!-- CONTRASTED TEXT OVERLAY (MOBILE) -->
+                    <div id="clickbaitScoreM" style="position: absolute; top: 43%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 800; color: #FFFFFF; text-shadow: 1.2px 1.2px 0 #3A2030, -1.2px -1.2px 0 #3A2030, 1.2px -1.2px 0 #3A2030, -1.2px 1.2px 0 #3A2030, 0 2px 4px rgba(0,0,0,0.35);">0%</div>
                 </div>
             </div>
             <div style="font-family: 'Jost', sans-serif; font-size: 0.6rem; font-weight: 700; color: #FFFFFF; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); padding: 5px 10px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 8px rgba(212, 105, 138, 0.25); text-transform: uppercase;">

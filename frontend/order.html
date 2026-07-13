@@ -1523,88 +1523,91 @@
             }
         });
 
-        // Heart Fill Gauge Animation
-        (function() {
-            var fill = document.getElementById('heartFill');
-            var score = document.getElementById('clickbaitScore');
-            var gauge = document.getElementById('heartGauge');
-            if (!fill || !score) return;
-            var pct = 0, dir = 1, holding = false;
-            function tick() {
-                if (!holding) {
-                    pct += dir * 0.4;
-                    if (pct >= 98) {
-                        pct = 98; holding = true;
-                        gauge.style.transform = 'scale(1.05)';
-                        setTimeout(function() { holding = false; dir = -1; gauge.style.transform = 'scale(1)'; }, 3000);
-                    } else if (pct <= 0) {
-                        pct = 0; holding = true;
-                        setTimeout(function() { holding = false; dir = 1; }, 1000);
+        // Setup animations and scroll actions after DOM content is loaded
+        window.addEventListener('DOMContentLoaded', function() {
+            // Heart Fill Gauge Animation
+            (function() {
+                var fill = document.getElementById('heartFill');
+                var score = document.getElementById('clickbaitScore');
+                var gauge = document.getElementById('heartGauge');
+                if (!fill || !score) return;
+                var pct = 0, dir = 1, holding = false;
+                function tick() {
+                    if (!holding) {
+                        pct += dir * 0.4;
+                        if (pct >= 98) {
+                            pct = 98; holding = true;
+                            if (gauge) gauge.style.transform = 'scale(1.05)';
+                            setTimeout(function() { holding = false; dir = -1; if (gauge) gauge.style.transform = 'scale(1)'; }, 3000);
+                        } else if (pct <= 0) {
+                            pct = 0; holding = true;
+                            setTimeout(function() { holding = false; dir = 1; }, 1000);
+                        }
                     }
+                    fill.setAttribute('y', 100 - pct);
+                    score.textContent = Math.round(pct) + '%';
+                    requestAnimationFrame(tick);
                 }
-                fill.setAttribute('y', 100 - pct);
-                score.textContent = Math.round(pct) + '%';
                 requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-        })();
+            })();
 
-        // Floating Love Meter scroll hide
-        (function() {
-            var widget = document.getElementById('floatingLoveMeter');
-            if (!widget) return;
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 800) {
-                    widget.style.opacity = '0';
-                    widget.style.pointerEvents = 'none';
-                    widget.style.transform = 'translateY(20px)';
-                } else {
-                    widget.style.opacity = '1';
-                    widget.style.pointerEvents = 'auto';
-                    widget.style.transform = 'translateY(0)';
+            // Floating Love Meter scroll hide
+            (function() {
+                var widget = document.getElementById('floatingLoveMeter');
+                if (!widget) return;
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 800) {
+                        widget.style.opacity = '0';
+                        widget.style.pointerEvents = 'none';
+                        widget.style.transform = 'translateY(20px)';
+                    } else {
+                        widget.style.opacity = '1';
+                        widget.style.pointerEvents = 'auto';
+                        widget.style.transform = 'translateY(0)';
+                    }
+                });
+            })();
+
+            // Live Activity Toast Banner
+            (function() {
+                var names = ['Ramesh','Jaya','Priya','Ankit','Meera','Arjun','Sneha','Vikram','Pooja','Rahul','Kavita','Rohit','Anjali','Deepak','Nisha','Suresh','Divya','Karan'];
+                var cities = ['Mumbai','Delhi','Bangalore','Chennai','Pune','Jaipur','Kolkata','Hyderabad','Lucknow','Ahmedabad'];
+                var actions = ['just checked their love report','just downloaded their report','just ordered a compatibility report'];
+                var toast = document.getElementById('activityToast');
+                var textEl = document.getElementById('activityText');
+                var lastIdx = -1;
+                function showToast() {
+                    var idx;
+                    do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIdx);
+                    lastIdx = idx;
+                    var city = cities[Math.floor(Math.random() * cities.length)];
+                    var action = actions[Math.floor(Math.random() * actions.length)];
+                    var mins = Math.floor(Math.random() * 12) + 1;
+                    textEl.textContent = '\uD83D\uDCAB ' + names[idx] + ' from ' + city + ' ' + action + ' \u2014 ' + mins + ' min ago';
+                    toast.style.transform = 'translateX(-50%) translateY(0)';
+                    toast.style.opacity = '1';
+                    setTimeout(function() {
+                        toast.style.transform = 'translateX(-50%) translateY(100px)';
+                        toast.style.opacity = '0';
+                    }, 4000);
                 }
-            });
-        })();
-
-        // Live Activity Toast Banner
-        (function() {
-            var names = ['Ramesh','Jaya','Priya','Ankit','Meera','Arjun','Sneha','Vikram','Pooja','Rahul','Kavita','Rohit','Anjali','Deepak','Nisha','Suresh','Divya','Karan'];
-            var cities = ['Mumbai','Delhi','Bangalore','Chennai','Pune','Jaipur','Kolkata','Hyderabad','Lucknow','Ahmedabad'];
-            var actions = ['just checked their love report','just downloaded their report','just ordered a compatibility report'];
-            var toast = document.getElementById('activityToast');
-            var textEl = document.getElementById('activityText');
-            var lastIdx = -1;
-            function showToast() {
-                var idx;
-                do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIdx);
-                lastIdx = idx;
-                var city = cities[Math.floor(Math.random() * cities.length)];
-                var action = actions[Math.floor(Math.random() * actions.length)];
-                var mins = Math.floor(Math.random() * 12) + 1;
-                textEl.textContent = '\uD83D\uDCAB ' + names[idx] + ' from ' + city + ' ' + action + ' \u2014 ' + mins + ' min ago';
-                toast.style.transform = 'translateX(-50%) translateY(0)';
-                toast.style.opacity = '1';
-                setTimeout(function() {
-                    toast.style.transform = 'translateX(-50%) translateY(100px)';
-                    toast.style.opacity = '0';
-                }, 4000);
-            }
-            setTimeout(function() { showToast(); setInterval(showToast, 7000); }, 8000);
-        })();
+                setTimeout(function() { showToast(); setInterval(showToast, 7000); }, 8000);
+            })();
+        });
     </script>
     <!-- Floating Love Meter Widget -->
-    <div id="floatingLoveMeter" style="position: fixed; bottom: 90px; right: 20px; z-index: 1000; width: 200px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.35); border-radius: 16px; padding: 15px 12px; box-shadow: 0 15px 40px rgba(180, 80, 120, 0.15); transition: all 0.5s ease; text-align: center;">
+    <div id="floatingLoveMeter" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; width: 190px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px solid rgba(212, 105, 138, 0.35); border-radius: 16px; padding: 14px 10px; box-shadow: 0 15px 40px rgba(180, 80, 120, 0.15); transition: all 0.5s ease; text-align: center; opacity: 1;">
         <button onclick="document.getElementById('floatingLoveMeter').style.display='none';" style="position: absolute; top: 6px; right: 8px; background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
         <a href="/love-calculator" style="text-decoration: none; display: block;">
-            <div style="font-family: 'Jost', sans-serif; font-size: 0.65rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">
+            <div style="font-family: 'Jost', sans-serif; font-size: 0.6rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;">
                 🔥 FREE SOUL-MATE TEST
             </div>
-            <h4 style="font-family: 'Jost', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--text-dark); margin: 0 0 12px; text-transform: uppercase; letter-spacing: -0.2px;">
+            <h4 style="font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 800; color: var(--text-dark); margin: 0 0 10px; text-transform: uppercase; letter-spacing: -0.2px; line-height: 1.2;">
                 Decode Frequency ✨
             </h4>
             
             <!-- Heart Fill Gauge -->
-            <div style="width: 70px; height: 70px; margin: 0 auto 12px; position: relative;">
+            <div style="width: 65px; height: 65px; margin: 0 auto 10px; position: relative;">
                 <div id="heartGauge" style="width: 100%; height: 100%; position: relative; transition: transform 0.3s ease;">
                     <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
                         <defs>
@@ -1621,10 +1624,11 @@
                             <rect id="heartFill" x="0" y="100" width="100" height="100" fill="url(#fillGrad)"/>
                         </g>
                     </svg>
-                    <div id="clickbaitScore" style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 0.95rem; font-weight: 800; color: var(--accent); text-shadow: 0 0 10px rgba(196,40,77,0.25);">0%</div>
+                    <!-- CONTRASTED TEXT OVERLAY -->
+                    <div id="clickbaitScore" style="position: absolute; top: 43%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 1rem; font-weight: 800; color: #FFFFFF; text-shadow: 1.5px 1.5px 0 #3A2030, -1.5px -1.5px 0 #3A2030, 1.5px -1.5px 0 #3A2030, -1.5px 1.5px 0 #3A2030, 0 2px 4px rgba(0,0,0,0.3);">0%</div>
                 </div>
             </div>
-            <div style="font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 700; color: #FFFFFF; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); padding: 6px 14px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 10px rgba(212, 105, 138, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">
+            <div style="font-family: 'Jost', sans-serif; font-size: 0.65rem; font-weight: 700; color: #FFFFFF; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); padding: 5px 12px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 10px rgba(212, 105, 138, 0.25); text-transform: uppercase;">
                 Test Compatibility 🔮
             </div>
         </a>
