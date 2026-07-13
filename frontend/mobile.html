@@ -1045,7 +1045,7 @@
                     if (window.scrollY > 800) {
                         widget.style.opacity = '0';
                         widget.style.pointerEvents = 'none';
-                        widget.style.transform = 'translateY(20px)';
+                        widget.style.transform = 'translateY(100%)';
                     } else {
                         widget.style.opacity = '1';
                         widget.style.pointerEvents = 'auto';
@@ -1087,19 +1087,11 @@
             })();
         });
     </script>
-    <!-- Floating Love Meter Widget (Mobile) -->
-    <div id="floatingLoveMeterM" style="position: fixed; bottom: 20px; right: 15px; z-index: 1000; width: 240px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2.5px solid rgba(212, 105, 138, 0.4); border-radius: 20px; padding: 16px 12px; box-shadow: 0 15px 45px rgba(180, 80, 120, 0.18); transition: all 0.5s ease; text-align: center; opacity: 1;">
-        <button onclick="document.getElementById('floatingLoveMeterM').style.display='none';" style="position: absolute; top: 6px; right: 8px; background: none; border: none; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
-        <a href="/love-calculator" style="text-decoration: none; display: block;">
-            <div style="font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px;">
-                🔥 FREE SOUL-MATE TEST
-            </div>
-            <h4 style="font-family: 'Jost', sans-serif; font-size: 0.95rem; font-weight: 800; color: var(--text-dark); margin: 0 0 12px; text-transform: uppercase; letter-spacing: -0.2px; line-height: 1.2;">
-                Decode Frequency ✨
-            </h4>
-            
-            <!-- Heart Fill Gauge -->
-            <div style="width: 80px; height: 80px; margin: 0 auto 12px; position: relative;">
+    <!-- Floating Love Meter Bar (Mobile Full-Width, Low Height) -->
+    <div id="floatingLoveMeterM" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; width: 100%; height: 64px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1.5px solid rgba(212, 105, 138, 0.35); box-shadow: 0 -5px 25px rgba(180, 80, 120, 0.12); padding: 8px 15px; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; transition: all 0.5s ease; opacity: 1; transform: translateY(0);">
+        <a href="/love-calculator" style="text-decoration: none; display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+            <!-- Heart Fill Gauge (Compact) -->
+            <div style="width: 44px; height: 44px; position: relative; flex-shrink: 0;">
                 <div id="heartGaugeM" style="width: 100%; height: 100%; position: relative; transition: transform 0.3s ease;">
                     <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
                         <defs>
@@ -1116,14 +1108,27 @@
                             <rect id="heartFillM" x="0" y="100" width="100" height="100" fill="url(#fillGradM)"/>
                         </g>
                     </svg>
-                    <!-- CONTRASTED TEXT OVERLAY (MOBILE) -->
-                    <div id="clickbaitScoreM" style="position: absolute; top: 43%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 1.15rem; font-weight: 800; color: #FFFFFF; text-shadow: 1.5px 1.5px 0 #3A2030, -1.5px -1.5px 0 #3A2030, 1.5px -1.5px 0 #3A2030, -1.5px 1.5px 0 #3A2030, 0 2px 4px rgba(0,0,0,0.35);">0%</div>
+                    <!-- CONTRASTED TEXT OVERLAY (COMPACT) -->
+                    <div id="clickbaitScoreM" style="position: absolute; top: 43%; left: 50%; transform: translate(-50%, -50%); font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 800; color: #FFFFFF; text-shadow: 1px 1px 0 #3A2030, -1px -1px 0 #3A2030, 1px -1px 0 #3A2030, -1px 1px 0 #3A2030, 0 2px 4px rgba(0,0,0,0.3);">0%</div>
                 </div>
             </div>
-            <div style="font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 700; color: #FFFFFF; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); padding: 6px 16px; border-radius: 20px; display: inline-block; box-shadow: 0 4px 10px rgba(212, 105, 138, 0.25); text-transform: uppercase;">
-                Test Compatibility 🔮
+            
+            <!-- Text message -->
+            <div style="flex: 1; min-width: 0; text-align: left;">
+                <div style="font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 800; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase;">
+                    🔥 Free Soul-mate Test
+                </div>
+                <div style="font-family: 'Jost', sans-serif; font-size: 0.65rem; font-weight: 500; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    Decode Compatibility Frequency ✨
+                </div>
+            </div>
+            
+            <!-- CTA Button -->
+            <div style="font-family: 'Jost', sans-serif; font-size: 0.65rem; font-weight: 700; color: #FFFFFF; background: linear-gradient(135deg, #D4698A 0%, #B84570 100%); padding: 8px 14px; border-radius: 20px; text-transform: uppercase; box-shadow: 0 4px 8px rgba(212, 105, 138, 0.2); white-space: nowrap; flex-shrink: 0;">
+                Test Now 🔮
             </div>
         </a>
+        <button onclick="document.getElementById('floatingLoveMeterM').style.display='none';" style="background: none; border: none; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0 0 0 10px; margin-left: 5px; flex-shrink: 0;">&times;</button>
     </div>
 
     <!-- New Purchase Toast Notification Popup (Mobile) -->
