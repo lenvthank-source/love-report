@@ -380,10 +380,15 @@ class PDFService:
                 break
 
         for pageIdx in range(page_count):
+            if pageIdx == 1:
+                # Page 2 (index 1) is the preformatted static page, do not overlay
+                continue
+                
+            origIdx = pageIdx - 1 if pageIdx > 1 else pageIdx
             page = doc[pageIdx]
             page_height = page.rect.height
             
-            rect = LAYOUT_CONFIG.get(pageIdx)
+            rect = LAYOUT_CONFIG.get(origIdx)
             if rect:
                 # Override margins to match compile_report.js wider margins
                 rect = {
@@ -393,8 +398,8 @@ class PDFService:
                     'y_bottom': rect['y_bottom']
                 }
 
-            # Page 2 (index 1): User Details Table
-            if pageIdx == 1:
+            # Page 2 (index 1 in original, pageIdx == 2 in shifted): User Details Table
+            if origIdx == 1:
                 if rect:
                     print(f"[PDFService] Page {pageIdx + 1}: Drawing User Details Table...")
                     rows = [
@@ -419,8 +424,8 @@ class PDFService:
                     )
                 continue
 
-            # Page 6 (index 5): D1 Chart and explanation text below
-            if pageIdx == 5:
+            # Page 6 (index 5 in original, pageIdx == 6 in shifted): D1 Chart and explanation text below
+            if origIdx == 5:
                 if rect and os.path.exists(d1_png_path):
                     print(f"[PDFService] Page {pageIdx + 1}: Drawing D1 Chart...")
                     chartSize = 250.0
@@ -442,8 +447,8 @@ class PDFService:
                         expY -= lineSpacing
                 continue
 
-            # Page 11 (index 10): D9 and D30 side-by-side
-            if pageIdx == 10:
+            # Page 11 (index 10 in original, pageIdx == 11 in shifted): D9 and D30 side-by-side
+            if origIdx == 10:
                 if rect:
                     print(f"[PDFService] Page {pageIdx + 1}: Drawing D9 and D30 Charts...")
                     chartSize = 200.0
@@ -473,8 +478,8 @@ class PDFService:
                         page.insert_text(point, txt, fontsize=12.0, fontname="bold", fontfile=bold_font_file, color=textColorDark)
                 continue
 
-            # Page 20 (index 19): Risk Matrix Table
-            if pageIdx == 19:
+            # Page 20 (index 19 in original, pageIdx == 20 in shifted): Risk Matrix Table
+            if origIdx == 19:
                 if rect:
                     print(f"[PDFService] Page {pageIdx + 1}: Drawing Compatibility/Risk Matrix...")
                     rows = [
@@ -504,8 +509,8 @@ class PDFService:
                             txtY -= lineSpacing
                 continue
 
-            # Page 22 (index 21): 3-Year Love Timeline
-            if pageIdx == 21:
+            # Page 22 (index 21 in original, pageIdx == 22 in shifted): 3-Year Love Timeline
+            if origIdx == 21:
                 if rect:
                     print(f"[PDFService] Page {pageIdx + 1}: Drawing 3-Year Timeline Table...")
                     rows = [
@@ -535,8 +540,8 @@ class PDFService:
                             txtY -= lineSpacing
                 continue
 
-            # Page 23 (index 22): Prayantar Dasha Timing
-            if pageIdx == 22:
+            # Page 23 (index 22 in original, pageIdx == 23 in shifted): Prayantar Dasha Timing
+            if origIdx == 22:
                 if rect:
                     print(f"[PDFService] Page {pageIdx + 1}: Drawing Prayantar Dasha Table...")
                     rows = [
@@ -571,14 +576,14 @@ class PDFService:
                 continue
 
             linesToDraw = []
-            pageText = strip_emojis(sections.get(pageIdx, ""))
+            pageText = strip_emojis(sections.get(origIdx, ""))
             
-            # Page 25 (index 24) uses reduced font/spacing and special formatting
-            pageFontSize = 10.0 if pageIdx == 24 else fontSize
-            pageLineSpacing = 15.5 if pageIdx == 24 else lineSpacing
+            # Page 25 (index 24 in original) uses reduced font/spacing and special formatting
+            pageFontSize = 10.0 if origIdx == 24 else fontSize
+            pageLineSpacing = 15.5 if origIdx == 24 else lineSpacing
             
             if pageText:
-                if pageIdx == 24:
+                if origIdx == 24:
                     # Setup non-breaking spaces for keywords to prevent wrapping splits
                     keywords = ["Divy Love Bracelet", "live consultation", "consultation with our expert today"]
                     if rudraksha_name:
@@ -625,7 +630,7 @@ class PDFService:
                 if line:
                     point = fitz.Point(rect['x_left'], page_height - currentY)
                     
-                    if pageIdx == 24:
+                    if origIdx == 24:
                         # 0. Section header check (§ prefix = bold header)
                         if line.startswith("§"):
                             header_text = line[1:]  # strip § marker
@@ -691,10 +696,11 @@ class PDFService:
                         page.insert_text(point, line, fontsize=pageFontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
                 currentY -= pageLineSpacing
 
-        # 4.5. Add hyperlinks on Page 25 (Practical Remedies, index 24)
+        # 4.5. Add hyperlinks on Page 26 (Practical Remedies, index 25 in 0-based shifted index)
         # Search page for target words and insert links with underlines
-        if len(doc) > 24:
-            page25 = doc[24]
+        target_remedies_page_idx = 25 if page_count > 25 else 24
+        if len(doc) > target_remedies_page_idx:
+            page25 = doc[target_remedies_page_idx]
             
             # Anchor 1: Divy Love Bracelet
             bracelet_rects = page25.search_for("Divy Love Bracelet")
