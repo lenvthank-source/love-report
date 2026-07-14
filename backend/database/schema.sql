@@ -16,6 +16,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_mobile ON public.customers(mobile);
 -- 2. Orders Table
 CREATE TABLE IF NOT EXISTS public.orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reference_id TEXT UNIQUE,
     customer_id UUID REFERENCES public.customers(id) ON DELETE CASCADE,
     dob DATE NOT NULL,
     tob TIME NOT NULL,
@@ -69,3 +70,7 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
 );
 CREATE INDEX IF NOT EXISTS idx_admin_users_status ON public.admin_users(status);
 ALTER TABLE public.admin_users DISABLE ROW LEVEL SECURITY;
+
+-- DDL migrations for existing databases
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS reference_id TEXT UNIQUE;
+

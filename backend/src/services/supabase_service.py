@@ -1,4 +1,5 @@
 import os
+import random
 from typing import Dict, Any, List, Optional
 from supabase import create_client, Client
 from jose import jwt
@@ -174,14 +175,33 @@ class SupabaseService:
         return res.data[0]["id"]
 
     # --- Order CRUD ---
+    def generate_unique_reference(self) -> str:
+        """Generates a unique 7-character reference ID in the format AS-XXXX (where XXXX are 4 digits)."""
+        if not self.is_configured():
+            return "AS-1234"
+        for _ in range(50):
+            digits = "".join(random.choices("0123456789", k=4))
+            ref_id = f"AS-{digits}"
+            try:
+                res = self.client.table("orders").select("id").eq("reference_id", ref_id).execute()
+                if not res.data:
+                    return ref_id
+            except Exception:
+                return ref_id
+        digits = "".join(random.choices("0123456789", k=5))
+        return f"AS-{digits}"
+
     def create_order(self, customer_id: str, dob: str, tob: str, place: str, 
                      lat: float, lng: float, tz: str, geocoded_place: Dict[str, Any]) -> str:
         """Inserts a new pending order and returns the order UUID."""
         if not self.is_configured():
             return "dummy-order-uuid"
 
+        ref_id = self.generate_unique_reference()
+
         res = self.client.table("orders").insert({
             "customer_id": customer_id,
+            "reference_id": ref_id,
             "dob": dob,
             "tob": tob,
             "place": place,
@@ -193,6 +213,24 @@ class SupabaseService:
             "report_status": "not_started"
         }).execute()
         return res.data[0]["id"]
+
+    def confirm_order_payment_atomic(self, order_id: str) -> bool:
+        """
+        Atomically updates the order status from 'pending' to 'paid'.
+        Returns True if this call made the transition, False if it was already updated.
+        """
+        if not self.is_configured():
+            return True
+        try:
+            res = self.client.table("orders").update({
+                "order_status": "paid",
+                "report_status": "not_started",
+                "updated_at": "now()"
+            }).eq("id", order_id).eq("order_status", "pending").execute()
+            return len(res.data) > 0
+        except Exception as e:
+            print(f"[Supabase] Error during atomic payment check: {e}")
+            return False
 
     def update_order_status(self, order_id: str, order_status: str, report_status: Optional[str] = None) -> bool:
         if not self.is_configured():

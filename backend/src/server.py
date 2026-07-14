@@ -702,12 +702,16 @@ async def api_create_order(payload: Dict[str, Any]):
             geocoded_place=geo_payload
         )
         
+        order_details = supabase.get_order_by_id(order_id)
+        ref_id = order_details.get("reference_id") if order_details else "AS-1234"
+        
         # 4. Generate Razorpay Order
         rz_order = payment_service.create_razorpay_order(999.00, order_id)
         supabase.create_payment(order_id, rz_order["id"], 999.00)
         
         return {
             "order_id": order_id,
+            "reference_id": ref_id,
             "razorpay_order_id": rz_order["id"],
             "amount": rz_order["amount"],
             "currency": "INR",
@@ -741,33 +745,38 @@ async def api_verify_payment(req: VerifyPaymentRequest, background_tasks: Backgr
         raise HTTPException(status_code=400, detail="Razorpay signature verification failed.")
         
     try:
-        # 2. Confirm Payment details & capture
-        supabase.confirm_payment(req.razorpay_order_id, req.razorpay_payment_id, req.model_dump())
-        supabase.update_order_status(req.order_id, "paid", "not_started")
-        
-        order = supabase.get_order_by_id(req.order_id)
-        if not order:
-            print(f"[VerifyPayment] Order {req.order_id} not found in database. Using mock fallback details.")
-            cust = {
-                "full_name": "Valued Customer",
-                "email": "customer@example.com"
-            }
+        # 2. Confirm Payment details & capture atomically
+        was_pending = supabase.confirm_order_payment_atomic(req.order_id)
+        if was_pending:
+            supabase.confirm_payment(req.razorpay_order_id, req.razorpay_payment_id, req.model_dump())
+            
+            order = supabase.get_order_by_id(req.order_id)
+            if not order:
+                print(f"[VerifyPayment] Order {req.order_id} not found in database. Using mock fallback details.")
+                cust = {
+                    "full_name": "Valued Customer",
+                    "email": "customer@example.com"
+                }
+                ref_id = "AS-1234"
+            else:
+                cust = order.get("customers") or {}
+                ref_id = order.get("reference_id") or req.order_id[-8:]
+            
+            # 3. Fire immediate 24-36 hour confirmation email
+            sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], ref_id)
+            supabase.log_email(req.order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
+            
+            # 4. Spawn background async report generation task
+            background_tasks.add_task(
+                generate_report_background_task,
+                order_id=req.order_id,
+                provider="openrouter",
+                model=None
+            )
+            return {"status": "success", "detail": "Payment captured and order generation started."}
         else:
-            cust = order.get("customers") or {}
-        
-        # 3. Fire immediate 24-36 hour confirmation email
-        sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], req.order_id)
-        supabase.log_email(req.order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
-        
-        # 4. Spawn background async report generation task
-        background_tasks.add_task(
-            generate_report_background_task,
-            order_id=req.order_id,
-            provider="openrouter",
-            model=None
-        )
-        
-        return {"status": "success", "detail": "Payment captured and order generation started."}
+            print(f"[VerifyPayment] Order {req.order_id} was already confirmed paid. Skipping duplicate actions.")
+            return {"status": "success", "detail": "Payment already processed."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -811,29 +820,33 @@ async def api_payments_webhook(request: Request, background_tasks: BackgroundTas
                 if order["order_status"] not in ["paid", "processing", "completed", "delivered"]:
                     print(f"[Webhook] Fulfilling order {order_id} via webhook...")
                     
-                    # 1. Update status
-                    # Get payment details from payments array inside payload if available
-                    payments_list = payload.get("payload", {}).get("payments", [])
-                    rz_payment_id = "webhook_captured"
-                    if payments_list:
-                        rz_payment_id = payments_list[0].get("entity", {}).get("id", "webhook_captured")
-                    
-                    supabase.confirm_payment(rz_order_id, rz_payment_id, payload)
-                    supabase.update_order_status(order_id, "paid", "not_started")
-                    
-                    # 2. Fire immediate 24-36 hour confirmation email
-                    email_service = EmailService()
-                    cust = order.get("customers") or {}
-                    sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], order_id)
-                    supabase.log_email(order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
-                    
-                    # 3. Spawn background async report generation task
-                    background_tasks.add_task(
-                        generate_report_background_task,
-                        order_id=order_id,
-                        provider="openrouter",
-                        model=None
-                    )
+                    # 1. Update status atomically
+                    was_pending = supabase.confirm_order_payment_atomic(order_id)
+                    if was_pending:
+                        # Get payment details from payments array inside payload if available
+                        payments_list = payload.get("payload", {}).get("payments", [])
+                        rz_payment_id = "webhook_captured"
+                        if payments_list:
+                            rz_payment_id = payments_list[0].get("entity", {}).get("id", "webhook_captured")
+                        
+                        supabase.confirm_payment(rz_order_id, rz_payment_id, payload)
+                        
+                        # 2. Fire immediate 24-36 hour confirmation email
+                        email_service = EmailService()
+                        cust = order.get("customers") or {}
+                        ref_id = order.get("reference_id") or order_id[-8:]
+                        sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], ref_id)
+                        supabase.log_email(order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
+                        
+                        # 3. Spawn background async report generation task
+                        background_tasks.add_task(
+                            generate_report_background_task,
+                            order_id=order_id,
+                            provider="openrouter",
+                            model=None
+                        )
+                    else:
+                        print(f"[Webhook] Order {order_id} was already confirmed paid. Skipping duplicate actions.")
         return {"status": "accepted"}
     except Exception as e:
         print(f"[Webhook Error] {e}")
@@ -993,7 +1006,8 @@ async def api_admin_resend_confirmation(order_id: str, admin: Any = Header(None)
         raise HTTPException(status_code=404, detail="Order not found")
         
     cust = order.get("customers") or {}
-    sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], order_id)
+    ref_id = order.get("reference_id") or order_id[-8:]
+    sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], ref_id)
     supabase.log_email(order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
     
     if not sent:
@@ -1018,7 +1032,8 @@ async def api_admin_send_report(order_id: str, admin: Any = Header(None)):
         raise HTTPException(status_code=400, detail="Report has not been generated yet.")
         
     cust = order.get("customers") or {}
-    sent = email_service.send_report_delivered(cust["email"], cust["full_name"], order_id, order["report_url"])
+    ref_id = order.get("reference_id") or order_id[-8:]
+    sent = email_service.send_report_delivered(cust["email"], cust["full_name"], ref_id, order["report_url"])
     supabase.log_email(order_id, "report_delivered", cust["email"], "sent" if sent else "failed")
     
     if sent:

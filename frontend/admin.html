@@ -647,7 +647,7 @@
                     tr.addEventListener("click", () => openOrder(o.id));
                     
                     const cust = o.customers || {};
-                    const shortId = o.id.substring(0, 8);
+                    const shortId = o.reference_id || o.id.substring(0, 8);
                     const formattedBirth = `${o.dob} at ${o.tob} in ${o.place.split(',')[0]}`;
                     
                     // Determine badges
@@ -698,7 +698,7 @@
                 const o = data.order;
                 const cust = o.customers || {};
                 
-                document.getElementById("modalHeader").innerText = `Order Detail #${o.id.substring(0, 8)}`;
+                document.getElementById("modalHeader").innerText = `Order Detail #${o.reference_id || o.id.substring(0, 8)}`;
                 document.getElementById("detName").innerText = cust.full_name || 'N/A';
                 document.getElementById("detEmail").innerText = cust.email || 'N/A';
                 document.getElementById("detMobile").innerText = cust.mobile || 'N/A';

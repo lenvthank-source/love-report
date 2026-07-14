@@ -13,7 +13,7 @@ class EmailService:
         self.smtp_pass = os.getenv("SENDPULSE_SMTP_PASSWORD") or os.getenv("SENDPULSE_SMTP_PASS")
         # Support SENDER_EMAIL and SENDPULSE_SENDER naming conventions
         self.sender_email = os.getenv("SENDER_EMAIL") or os.getenv("SENDPULSE_SENDER") or "support@astrosavvysingh.com"
-        self.sender_name = os.getenv("SENDER_NAME", "Cosmic Oracle Report")
+        self.sender_name = os.getenv("SENDER_NAME", "AstroSavvy Order")
 
     def is_configured(self) -> bool:
         return bool(self.smtp_user and self.smtp_pass)
@@ -55,7 +55,7 @@ class EmailService:
 
     def send_order_confirmation(self, to_email: str, customer_name: str, order_id: str) -> bool:
         """Sends the immediate 24-36 hour delivery confirmation email."""
-        subject = f"✨ Preparing Your Cosmic Love & Marriage Report — Order #{order_id[-8:]}"
+        subject = f"✨ Preparing Your Cosmic Love Report — Order #{order_id}"
         
         html = f"""
         <!DOCTYPE html>
@@ -124,8 +124,8 @@ class EmailService:
                 </div>
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
-                    <p>Thank you for placing your trust in the stars. Your order for the <strong>Personalised Love & Marriage Analysis Report</strong> has been successfully received, and payment has been captured.</p>
-                    <p>Unlike standard generic horoscopes, each report is compiled individually. Our astrologer <strong>Acharya Savvy Singh</strong> will personally align your natal placements (D1 Birth Chart) with your marital destiny gateway (D9 Navamsa) and karmic path (D30 Trimsamsha) to map your unique emotional profile.</p>
+                    <p>Thank you for placing your trust in the stars. Your order for the <strong>Personalised Love Analysis Report</strong> has been successfully received, and payment has been captured.</p>
+                    <p>Unlike standard generic horoscopes, each report is compiled individually. Our astrologer <strong>Acharya Savvy Singh</strong> will personally align your natal placements (D1 Birth Chart) with your D9 Navamsa relationship gateway and karmic path (D30 Trimsamsha) to map your unique emotional profile.</p>
                     
                     <div class="boxed-info">
                         <h3>📋 Order Details</h3>
@@ -148,7 +148,7 @@ class EmailService:
 
     def send_report_delivered(self, to_email: str, customer_name: str, order_id: str, report_url: str) -> bool:
         """Sends the final PDF delivery email containing the Storage download link."""
-        subject = f"🎉 Your Cosmic Individual Love & Marriage Report is Ready!"
+        subject = f"🎉 Your Cosmic Individual Love Report is Ready!"
         
         html = f"""
         <!DOCTYPE html>
@@ -222,7 +222,7 @@ class EmailService:
                 </div>
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
-                    <p>We are delighted to inform you that your **Cosmic Individual Love & Marriage Report** is complete.</p>
+                    <p>We are delighted to inform you that your **Cosmic Individual Love Report** is complete.</p>
                     <p>Acharya Savvy Singh has finished mapping your personal charts. The insights, D1/D9/D30 maps, planetary seasons, and customized behavioural shifts are now consolidated into a premium 26-page report designed specifically for your soul's growth.</p>
                     
                     <div class="btn-container">

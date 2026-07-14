@@ -1551,7 +1551,7 @@
 
                             if (!verifyRes.ok) throw new Error("Payment validation failed.");
 
-                            window.location.href = `/success?order_id=${order.order_id}&name=${encodeURIComponent(payload.name)}&email=${encodeURIComponent(payload.email)}`;
+                            window.location.href = `/success?order_id=${order.reference_id}&name=${encodeURIComponent(payload.name)}&email=${encodeURIComponent(payload.email)}`;
                         } catch (err) {
                             showLoading(false);
                             showError(err.message);

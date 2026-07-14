@@ -519,7 +519,7 @@ class PDFService:
                     if formatted_dasha_timeline:
                         rows.extend(formatted_dasha_timeline)
                     else:
-                        rows.append(["Jupiter - Saturn", "Current - Dec 2026", "Subtle, steady emotional growth and marriage gateway."])
+                        rows.append(["Jupiter - Saturn", "Current - Dec 2026", "Subtle, steady emotional growth and relationship gateway."])
                         
                     colWidths = [125.0, 135.0, 195.0]
                     rowHeight = 24.0

@@ -1,5 +1,5 @@
 # ──────────────────────────────────────────────────────────────
-# Individual Love & Marriage PDF Report — Prompt System
+# Individual Love PDF Report — Prompt System
 # Model: gemini-3.1-flash-lite / Groq / OpenRouter
 # Tone: Cosmic Best Friend & Soul Coach (Emotional, Casual, Personal)
 # ──────────────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ Generate content for **Page 4: Master Index (Table of Contents)**.
 Write a brief introduction explaining the structure of the report, describing the 6 phases of the journey:
 - Phase 1: Front Matter & Introduction (Pages 1–4)
 - Phase 2: Core Cosmic Personality (Pages 5–9)
-- Phase 3: The Marriage Gateway (Pages 10–15)
+- Phase 3: The Relationship Gateway (Pages 10–15)
 - Phase 4: Karmic Loops & Red Flags (Pages 16–19)
 - Phase 5: The Sacred Timeline (Pages 20–22)
 - Phase 6: Remedies & Synthesis (Pages 23–25)
@@ -119,7 +119,7 @@ Target word count: exactly 140 to 155 words.
 """,
 
     11: """
-Generate content for **Page 11: 7th House Energy – The Sacred Sanctuary of Marriage**.
+Generate content for **Page 11: 7th House Energy – The Sacred Sanctuary of Union**.
 Astrological Input: 7th House Sign in D1 is {house7_sign}, ruled by {house7_lord}. Planets occupying the 7th House: {house7_planets}.
 Discuss the transition from romance into the profound, quiet emotional space of 7th house long-term partnership.
 Target word count: exactly 140 to 155 words.
@@ -140,9 +140,9 @@ Target word count: exactly 140 to 155 words.
 """,
 
     14: """
-Generate content for **Page 14: The D9 Navamsa Revelation – Inner Marital Dynamics**.
+Generate content for **Page 14: The D9 Navamsa Revelation – Inner Relationship Dynamics**.
 Astrological Input: 7th house Navamsa D9 Sign is {navamsa_house7_sign}, ruled by {navamsa_house7_lord}. Planets in D9 7th house: {navamsa_house7_planets}.
-Unveil the private, hidden environment of their marital home life. Describe the core psychological currents that will flow through their marriage.
+Unveil the private, hidden environment of their shared relationship home life. Describe the core psychological currents that will flow through their relationship.
 Target word count: exactly 150 to 165 words.
 """,
 
@@ -227,7 +227,7 @@ Target word count: exactly 150 to 165 words.
 }
 
 USER_PROMPT_TEMPLATE = """
-You are generating the content for Page {page_number} of the Individual Love & Marriage Report.
+You are generating the content for Page {page_number} of the Individual Love Report.
 
 {page_instruction}
 
