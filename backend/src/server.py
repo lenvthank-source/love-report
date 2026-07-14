@@ -755,7 +755,10 @@ async def api_verify_payment(req: VerifyPaymentRequest, background_tasks: Backgr
         # 2. Confirm Payment details & capture atomically
         was_pending = supabase.confirm_order_payment_atomic(req.order_id)
         if was_pending:
-            supabase.confirm_payment(req.razorpay_order_id, req.razorpay_payment_id, req.model_dump())
+            try:
+                supabase.confirm_payment(req.razorpay_order_id, req.razorpay_payment_id, req.model_dump())
+            except Exception as pe:
+                print(f"[VerifyPayment Error] Failed to save payments log (likely unique constraint): {pe}")
             
             order = supabase.get_order_by_id(req.order_id)
             if not order:
@@ -834,11 +837,14 @@ async def api_payments_webhook(request: Request, background_tasks: BackgroundTas
                     if was_pending:
                         # Get payment details from payments array inside payload if available
                         payments_list = payload.get("payload", {}).get("payments", [])
-                        rz_payment_id = "webhook_captured"
+                        rz_payment_id = f"webhook_{rz_order_id[-8:]}"
                         if payments_list:
-                            rz_payment_id = payments_list[0].get("entity", {}).get("id", "webhook_captured")
+                            rz_payment_id = payments_list[0].get("entity", {}).get("id", f"webhook_{rz_order_id[-8:]}")
                         
-                        supabase.confirm_payment(rz_order_id, rz_payment_id, payload)
+                        try:
+                            supabase.confirm_payment(rz_order_id, rz_payment_id, payload)
+                        except Exception as pe:
+                            print(f"[Webhook Error] Failed to save payments log (likely unique constraint): {pe}")
                         
                         # 2. Fire immediate 24-36 hour confirmation email in background
                         email_service = EmailService()
