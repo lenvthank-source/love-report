@@ -20,6 +20,7 @@ class Settings(BaseModel):
     sender_email: Optional[str] = Field(None, alias="SENDER_EMAIL")
     sender_name: Optional[str] = Field(None, alias="SENDER_NAME")
     sendpulse_smtp_port: Optional[str] = Field(None, alias="SENDPULSE_SMTP_PORT")
+    meta_pixel_id: Optional[str] = Field(None, alias="META_PIXEL_ID")
 
     @field_validator("opencage_api_key", "openrouter_api_key", mode="before")
     @classmethod
@@ -49,7 +50,8 @@ def get_settings() -> Settings:
             SENDPULSE_SMTP_PASSWORD=os.getenv("SENDPULSE_SMTP_PASSWORD") or os.getenv("SENDPULSE_SMTP_PASS"),
             SENDER_EMAIL=os.getenv("SENDER_EMAIL") or os.getenv("SENDPULSE_SENDER"),
             SENDER_NAME=os.getenv("SENDER_NAME"),
-            SENDPULSE_SMTP_PORT=os.getenv("SENDPULSE_SMTP_PORT")
+            SENDPULSE_SMTP_PORT=os.getenv("SENDPULSE_SMTP_PORT"),
+            META_PIXEL_ID=os.getenv("META_PIXEL_ID")
         )
     except Exception as e:
         raise RuntimeError(f"Environment validation failed: {e}")

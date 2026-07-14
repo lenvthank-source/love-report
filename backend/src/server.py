@@ -9,7 +9,7 @@ import requests
 from pydantic import BaseModel
 
 from fastapi import FastAPI, HTTPException, Request, BackgroundTasks, Header
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 # Add project root to path
@@ -25,6 +25,9 @@ from src.services.supabase_service import SupabaseService
 from src.services.payment_service import PaymentService
 from src.services.email_service import EmailService
 from validate_pdf_report import validate_pdf
+from src.cache.file_cache import FileCache
+from opencage.geocoder import OpenCageGeocode
+
 
 from src.prompts.individual_report_prompts import (
     GLOBAL_SYSTEM_INSTRUCTION,
@@ -77,6 +80,15 @@ def get_rudraksha_remedy(gender: str, moon_sign: str, sun_sign: str) -> str:
 
 app = FastAPI(title="🔮 Cosmic Report Compiler & E-Commerce Server")
 
+# Global Caches for Geocoding Autocomplete
+geocode_file_cache = FileCache(cache_dir="cache_geocode")
+geocode_mem_cache = {}
+
+# Global Geocoder Client
+opencage_key_val = os.getenv("OPENCAGE_API_KEY", "3723e0d7ceb64eb3bd3623477d4c3142")
+geocoder_client = OpenCageGeocode(opencage_key_val)
+
+
 # Configure CORS for Vercel / Cloudflare local and production domains
 app.add_middleware(
     CORSMiddleware,
@@ -116,7 +128,22 @@ def get_testbed_page():
 
 @app.get("/success")
 def get_success_page():
-    return FileResponse(os.path.join(static_dir, "success.html"))
+    success_path = os.path.join(static_dir, "success.html")
+    if not os.path.exists(success_path):
+        return HTMLResponse("success.html not found", status_code=404)
+        
+    try:
+        with open(success_path, "r", encoding="utf-8") as f:
+            content = f.read()
+            
+        pixel_id = os.getenv("META_PIXEL_ID", "")
+        # Dynamically inject META_PIXEL_ID into success page
+        content = content.replace("<!-- META_PIXEL_ID -->", pixel_id)
+        
+        return HTMLResponse(content)
+    except Exception as e:
+        print(f"[SuccessPage] Error loading template: {e}")
+        return HTMLResponse("Error loading order confirmation page.", status_code=500)
 
 @app.get("/love-calculator")
 def get_love_calculator():
@@ -575,16 +602,30 @@ async def generate_report_background_task(order_id: str, provider: str, model: s
 
 @app.get("/api/geocode")
 def api_geocode(q: str):
-    """Search locations using OpenCage API directly for sub-second autocomplete latency."""
-    if not q or not q.strip() or len(q.strip()) < 2:
+    """Search locations using OpenCage API directly for sub-second autocomplete latency, with caching."""
+    if not q or not q.strip():
         return {"results": []}
         
-    opencage_key = os.getenv("OPENCAGE_API_KEY", "3723e0d7ceb64eb3bd3623477d4c3142")
-    try:
-        from opencage.geocoder import OpenCageGeocode
-        geocoder = OpenCageGeocode(opencage_key)
-        results = geocoder.geocode(q, no_annotations=0, limit=5)
+    query_key = q.strip().lower()
+    if len(query_key) < 2:
+        return {"results": []}
         
+    # 1. Check in-memory cache
+    if query_key in geocode_mem_cache:
+        return {"results": geocode_mem_cache[query_key]}
+        
+    # 2. Check file cache
+    cached_data = geocode_file_cache.get(query_key)
+    if cached_data is not None:
+        geocode_mem_cache[query_key] = cached_data
+        return {"results": cached_data}
+        
+    # 3. Query OpenCage API using pre-initialized client
+    try:
+        results = geocoder_client.geocode(q, no_annotations=0, limit=5)
+        if not results:
+            return {"results": []}
+            
         formatted_results = []
         for r in results:
             geometry = r.get("geometry", {})
@@ -599,6 +640,10 @@ def api_geocode(q: str):
                 "raw": r
             })
             
+        # Store in caches
+        geocode_file_cache.set(query_key, formatted_results)
+        geocode_mem_cache[query_key] = formatted_results
+        
         return {"results": formatted_results}
     except Exception as e:
         print(f"[GeocodeProxy] Error: {e}")

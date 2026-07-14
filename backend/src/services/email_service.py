@@ -12,8 +12,8 @@ class EmailService:
         # Support both SENDPULSE_SMTP_PASSWORD and SENDPULSE_SMTP_PASS naming conventions
         self.smtp_pass = os.getenv("SENDPULSE_SMTP_PASSWORD") or os.getenv("SENDPULSE_SMTP_PASS")
         # Support SENDER_EMAIL and SENDPULSE_SENDER naming conventions
-        self.sender_email = os.getenv("SENDER_EMAIL") or os.getenv("SENDPULSE_SENDER") or "hello@cosmicreport.com"
-        self.sender_name = os.getenv("SENDER_NAME", "Cosmic Oracle Support")
+        self.sender_email = os.getenv("SENDER_EMAIL") or os.getenv("SENDPULSE_SENDER") or "support@astrosavvysingh.com"
+        self.sender_name = os.getenv("SENDER_NAME", "Cosmic Oracle Report")
 
     def is_configured(self) -> bool:
         return bool(self.smtp_user and self.smtp_pass)
@@ -120,7 +120,7 @@ class EmailService:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Your Cosmic Blueprint</h1>
+                    <h1>Your Cosmic Oracle Report</h1>
                 </div>
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
@@ -131,14 +131,14 @@ class EmailService:
                         <h3>📋 Order Details</h3>
                         <p style="margin: 5px 0;"><strong>Order Reference:</strong> #{order_id}</p>
                         <p style="margin: 5px 0;"><strong>Estimated Delivery:</strong> Within 24 to 36 hours</p>
-                        <p style="margin: 5px 0;"><strong>Support Email:</strong> hello@cosmicreport.com</p>
+                        <p style="margin: 5px 0;"><strong>Support Email:</strong> support@astrosavvysingh.com</p>
                     </div>
 
                     <p>We are currently casting your charts and preparing your reading. As soon as your stars have aligned and the report is complete, you will receive an email containing your private access link.</p>
                     <p>May this journey bring you clarity, reassurance, and the wisdom to welcome love with a peaceful mind.</p>
                 </div>
                 <div class="footer">
-                    <p>With heartfelt blessings,<br>Acharya Savvy Singh &bull; Cosmic Oracle Support</p>
+                    <p>With heartfelt blessings,<br>Acharya Savvy Singh &bull; Cosmic Oracle Report</p>
                 </div>
             </div>
         </body>
@@ -218,7 +218,7 @@ class EmailService:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Your Stars Have Aligned</h1>
+                    <h1>Your Cosmic Oracle Report</h1>
                 </div>
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
@@ -229,11 +229,11 @@ class EmailService:
                         <a href="{report_url}" class="btn" target="_blank">📖 DOWNLOAD YOUR COSMIC REPORT</a>
                     </div>
 
-                    <p>If you have any questions or require guidance on your alignments, please do not hesitate to contact our support team at hello@cosmicreport.com.</p>
+                    <p>If you have any questions or require guidance on your alignments, please do not hesitate to contact our support team at support@astrosavvysingh.com.</p>
                     <p>May this report light your path forward and guide you toward the love you are truly destined to experience.</p>
                 </div>
                 <div class="footer">
-                    <p>With heartfelt blessings,<br>Acharya Savvy Singh &bull; Cosmic Oracle Support</p>
+                    <p>With heartfelt blessings,<br>Acharya Savvy Singh &bull; Cosmic Oracle Report</p>
                 </div>
             </div>
         </body>
