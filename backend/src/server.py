@@ -236,6 +236,13 @@ async def get_current_admin(authorization: Optional[str] = Header(None)):
     return user
 
 
+def send_order_confirmation_background(email_service: EmailService, supabase: SupabaseService, email: str, name: str, ref_id: str, order_id: str):
+    """Fires the transaction email asynchronously in the background and writes to the email logs."""
+    print(f"[BackgroundTask] Sending order confirmation email for Order {ref_id} to {email}...")
+    sent = email_service.send_order_confirmation(email, name, ref_id)
+    supabase.log_email(order_id, "order_confirmation", email, "sent" if sent else "failed")
+
+
 # --- Background Worker for PDF Generation ---
 async def generate_report_background_task(order_id: str, provider: str, model: str):
     """
@@ -762,9 +769,11 @@ async def api_verify_payment(req: VerifyPaymentRequest, background_tasks: Backgr
                 cust = order.get("customers") or {}
                 ref_id = order.get("reference_id") or req.order_id[-8:]
             
-            # 3. Fire immediate 24-36 hour confirmation email
-            sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], ref_id)
-            supabase.log_email(req.order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
+            # 3. Fire immediate 24-36 hour confirmation email in background
+            background_tasks.add_task(
+                send_order_confirmation_background,
+                email_service, supabase, cust["email"], cust["full_name"], ref_id, req.order_id
+            )
             
             # 4. Spawn background async report generation task
             background_tasks.add_task(
@@ -831,12 +840,14 @@ async def api_payments_webhook(request: Request, background_tasks: BackgroundTas
                         
                         supabase.confirm_payment(rz_order_id, rz_payment_id, payload)
                         
-                        # 2. Fire immediate 24-36 hour confirmation email
+                        # 2. Fire immediate 24-36 hour confirmation email in background
                         email_service = EmailService()
                         cust = order.get("customers") or {}
                         ref_id = order.get("reference_id") or order_id[-8:]
-                        sent = email_service.send_order_confirmation(cust["email"], cust["full_name"], ref_id)
-                        supabase.log_email(order_id, "order_confirmation", cust["email"], "sent" if sent else "failed")
+                        background_tasks.add_task(
+                            send_order_confirmation_background,
+                            email_service, supabase, cust["email"], cust["full_name"], ref_id, order_id
+                        )
                         
                         # 3. Spawn background async report generation task
                         background_tasks.add_task(

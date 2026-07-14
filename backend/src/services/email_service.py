@@ -120,7 +120,7 @@ class EmailService:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Your Cosmic Oracle Report</h1>
+                    <h1>Your Love Report</h1>
                 </div>
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
@@ -218,7 +218,7 @@ class EmailService:
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Your Cosmic Oracle Report</h1>
+                    <h1>Your Love Report</h1>
                 </div>
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
