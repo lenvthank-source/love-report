@@ -926,6 +926,7 @@ async def api_admin_order_detail(order_id: str, admin: Any = Header(None)):
         cust = order.get("customers") or {}
         truncated_order = {
             "id": order.get("id"),
+            "reference_id": order.get("reference_id"),
             "order_status": order.get("order_status"),
             "report_status": order.get("report_status"),
             "created_at": order.get("created_at"),
@@ -933,7 +934,8 @@ async def api_admin_order_detail(order_id: str, admin: Any = Header(None)):
                 "full_name": cust.get("full_name"),
                 "email": cust.get("email"),
                 "mobile": cust.get("mobile")
-            }
+            },
+            "payments": order.get("payments") or []
         }
         return {"order": truncated_order, "email_logs": [], "role": role}
         

@@ -264,7 +264,7 @@ class SupabaseService:
     def get_order_by_id(self, order_id: str) -> Optional[Dict[str, Any]]:
         if not self.is_configured():
             return None
-        res = self.client.table("orders").select("*, customers(*)").eq("id", order_id).execute()
+        res = self.client.table("orders").select("*, customers(*), payments(*)").eq("id", order_id).execute()
         return res.data[0] if res.data else None
 
     def get_order_by_rz_id(self, rz_order_id: str) -> Optional[Dict[str, Any]]:
@@ -286,7 +286,10 @@ class SupabaseService:
         query = self.client.table("orders").select("*, customers(*)")
         
         if status:
-            query = query.eq("order_status", status)
+            if status == "paid":
+                query = query.in_("order_status", ["paid", "processing", "delivered"])
+            else:
+                query = query.eq("order_status", status)
             
         res = query.order("created_at", desc=True).execute()
         orders = res.data or []

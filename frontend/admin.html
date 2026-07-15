@@ -722,11 +722,12 @@
                     // Bind admin properties safely using textContent
                     document.getElementById("detBirth").textContent = `${o.dob} at ${o.tob} (TZ: ${o.timezone})`;
                     document.getElementById("detPlace").textContent = o.place;
-                    document.getElementById("detPayStatus").textContent = "CAPTURED";
+                    const payment = (o.payments && o.payments.length > 0) ? o.payments[0] : null;
+                    document.getElementById("detPayStatus").textContent = payment ? (payment.payment_status || 'CAPTURED').toUpperCase() : o.order_status.toUpperCase();
                     
                     // Razorpay properties
-                    document.getElementById("detRzOrder").textContent = o.geocoded_place?.razorpay_order_id || 'N/A';
-                    document.getElementById("detRzPayment").textContent = o.geocoded_place?.razorpay_payment_id || 'N/A';
+                    document.getElementById("detRzOrder").textContent = payment ? (payment.razorpay_order_id || 'N/A') : 'N/A';
+                    document.getElementById("detRzPayment").textContent = payment ? (payment.razorpay_payment_id || 'N/A') : 'N/A';
                     
                     document.getElementById("detRepStatus").textContent = o.report_status.toUpperCase();
                     
