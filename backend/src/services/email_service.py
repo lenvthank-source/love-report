@@ -222,7 +222,7 @@ class EmailService:
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
                     <p>We are delighted to inform you that your **Cosmic Individual Love Report** is complete.</p>
-                    <p>Acharya Savvy Singh has finished mapping your personal charts. The insights, D1/D9/D30 maps, planetary seasons, and customized behavioural shifts are now consolidated into a premium 26-page report designed specifically for your soul's growth.</p>
+                    <p>Acharya Savvy Singh has finished mapping your personal charts. The insights, D1/D9/D30 maps, planetary seasons, and customized behavioural shifts are now consolidated into a premium report designed specifically for your soul's growth.</p>
                     
                     <div class="btn-container">
                         <a href="{report_url}" class="btn" target="_blank">📖 DOWNLOAD YOUR COSMIC REPORT</a>

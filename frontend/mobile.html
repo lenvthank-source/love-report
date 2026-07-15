@@ -578,7 +578,7 @@
     <!-- Inside Report -->
     <div class="mobile-section" style="background: rgba(201, 150, 123, 0.02);">
         <h2>What's <span>Inside?</span></h2>
-        <p class="sec-desc">A complete 26-page destiny roadmap</p>
+        <p class="sec-desc">A complete relationship destiny roadmap</p>
         
         <div class="info-card">
             <h3>Love Personality Analysis</h3>
@@ -597,7 +597,7 @@
     <!-- Packages -->
     <div class="mobile-section" style="background: rgba(212, 105, 138, 0.02);">
         <h2>The Signature <span>Love Report</span></h2>
-        <p class="sec-desc">A hand-assembled 26-page cosmic roadmap</p>
+        <p class="sec-desc">A hand-assembled cosmic roadmap</p>
 
         <div style="background: #FFFFFF; border: 1.5px solid rgba(212, 105, 138, 0.25); border-radius: 12px; padding: 25px 20px; box-shadow: var(--shadow-soft); text-align: left;">
             <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: var(--text-dark); margin-bottom: 5px;">Personalized Love Report</div>
@@ -1033,7 +1033,9 @@
                 var widget = document.getElementById('floatingLoveMeterM');
                 if (!widget) return;
                 window.addEventListener('scroll', function() {
-                    if (window.scrollY > 800) {
+                    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    var scrollPercent = (window.scrollY / (docHeight || 1)) * 100;
+                    if (scrollPercent > 60) {
                         widget.style.opacity = '0';
                         widget.style.pointerEvents = 'none';
                         widget.style.transform = 'translateY(100%)';
