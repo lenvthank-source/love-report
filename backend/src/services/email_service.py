@@ -125,7 +125,6 @@ class EmailService:
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
                     <p>Thank you for placing your trust in the stars. Your order for the <strong>Personalised Love Analysis Report</strong> has been successfully received, and payment has been captured.</p>
-                    <p>Unlike standard generic horoscopes, each report is compiled individually. Our astrologer <strong>Acharya Savvy Singh</strong> will personally align your natal placements (D1 Birth Chart) with your D9 Navamsa relationship gateway and karmic path (D30 Trimsamsha) to map your unique emotional profile.</p>
                     
                     <div class="boxed-info">
                         <h3>📋 Order Details</h3>
