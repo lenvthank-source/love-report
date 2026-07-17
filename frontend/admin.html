@@ -534,6 +534,7 @@
                     <div class="detail-section" id="secMetadata">
                         <div class="detail-title">Report Metadata</div>
                         <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val" id="detRepStatus">-</span></div>
+                        <div class="detail-row"><span class="detail-label">Scheduled Send Time (IST)</span><span class="detail-val" id="detSchedTime">-</span></div>
                         <div class="detail-row"><span class="detail-label">PDF Link</span><span class="detail-val" id="detRepUrl">-</span></div>
                     </div>
                 </div>
@@ -752,6 +753,11 @@
                     document.getElementById("detRzPayment").textContent = payment ? (payment.razorpay_payment_id || 'N/A') : 'N/A';
                     
                     document.getElementById("detRepStatus").textContent = o.report_status.toUpperCase();
+                    
+                    const schedDate = o.scheduled_delivery_at ? new Date(o.scheduled_delivery_at) : null;
+                    document.getElementById("detSchedTime").textContent = schedDate 
+                        ? schedDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })
+                        : 'N/A';
                     
                     const repUrl = document.getElementById("detRepUrl");
                     if (o.report_url) {
