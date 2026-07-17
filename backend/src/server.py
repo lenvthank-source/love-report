@@ -3,10 +3,39 @@ import sys
 import time
 import json
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, List, Optional
 import requests
 from pydantic import BaseModel
+
+# Business rules: Auto-deliver reports after +4 hours of "window time"
+# Window time is daily from 11:00 AM to 7:00 PM India Standard Time (IST)
+def calculate_delivery_time_ist(order_time_utc: datetime) -> datetime:
+    ist_tz = timezone(timedelta(hours=5, minutes=30))
+    current_ist = order_time_utc.astimezone(ist_tz)
+    
+    remaining_delay_minutes = 240 # 4 hours
+    
+    while remaining_delay_minutes > 0:
+        window_start = current_ist.replace(hour=11, minute=0, second=0, microsecond=0)
+        window_end = current_ist.replace(hour=19, minute=0, second=0, microsecond=0)
+        
+        if current_ist < window_start:
+            current_ist = window_start
+        elif current_ist >= window_end:
+            next_day = current_ist + timedelta(days=1)
+            current_ist = next_day.replace(hour=11, minute=0, second=0, microsecond=0)
+        else:
+            minutes_left_in_window = int((window_end - current_ist).total_seconds() / 60)
+            if remaining_delay_minutes <= minutes_left_in_window:
+                current_ist = current_ist + timedelta(minutes=remaining_delay_minutes)
+                remaining_delay_minutes = 0
+            else:
+                remaining_delay_minutes -= minutes_left_in_window
+                next_day = current_ist + timedelta(days=1)
+                current_ist = next_day.replace(hour=11, minute=0, second=0, microsecond=0)
+                
+    return current_ist.astimezone(timezone.utc)
 
 from fastapi import FastAPI, HTTPException, Request, BackgroundTasks, Header
 from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
@@ -760,6 +789,10 @@ async def api_verify_payment(req: VerifyPaymentRequest, background_tasks: Backgr
             except Exception as pe:
                 print(f"[VerifyPayment Error] Failed to save payments log (likely unique constraint): {pe}")
             
+            # Calculate and set scheduled delivery time
+            scheduled_at = calculate_delivery_time_ist(datetime.now(timezone.utc))
+            supabase.set_scheduled_delivery(req.order_id, scheduled_at)
+
             order = supabase.get_order_by_id(req.order_id)
             if not order:
                 print(f"[VerifyPayment] Order {req.order_id} not found in database. Using mock fallback details.")
@@ -846,6 +879,10 @@ async def api_payments_webhook(request: Request, background_tasks: BackgroundTas
                         except Exception as pe:
                             print(f"[Webhook Error] Failed to save payments log (likely unique constraint): {pe}")
                         
+                        # Calculate and set scheduled delivery time
+                        scheduled_at = calculate_delivery_time_ist(datetime.now(timezone.utc))
+                        supabase.set_scheduled_delivery(order_id, scheduled_at)
+
                         # 2. Fire immediate 24-36 hour confirmation email in background
                         email_service = EmailService()
                         cust = order.get("customers") or {}
@@ -1477,6 +1514,74 @@ async def api_generate(req: GenerateRequest, session_id: str):
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+
+async def run_scheduled_delivery_logic():
+    """Queries, auto-delivers, and transitions processing orders that are past their scheduled IST delivery time."""
+    supabase = SupabaseService()
+    if not supabase.is_configured():
+        return
+        
+    email_service = EmailService()
+    now_utc = datetime.now(timezone.utc)
+    
+    try:
+        # Fetch processing orders
+        res = supabase.client.table("orders").select("*, customers(*)").eq("order_status", "processing").execute()
+        orders = res.data or []
+        
+        for o in orders:
+            report_url = o.get("report_url")
+            scheduled_str = o.get("scheduled_delivery_at")
+            
+            if not report_url or not scheduled_str:
+                continue
+                
+            try:
+                # Parse ISO string
+                scheduled_at = datetime.fromisoformat(scheduled_str.replace("Z", "+00:00"))
+            except Exception:
+                continue
+                
+            if scheduled_at <= now_utc:
+                cust = o.get("customers") or {}
+                ref_id = o.get("reference_id") or o["id"][-8:]
+                email = cust.get("email")
+                name = cust.get("full_name", "Customer")
+                
+                if email:
+                    print(f"[CronWorker] Auto-delivering report for Order {o['id']} scheduled for {scheduled_str}")
+                    sent = email_service.send_report_delivered(email, name, ref_id, report_url)
+                    supabase.log_email(o["id"], "report_delivered", email, "sent" if sent else "failed")
+                    if sent:
+                        supabase.update_order_status(o["id"], "delivered")
+    except Exception as e:
+        print(f"[CronWorker] Error checking/delivering scheduled reports: {e}")
+
+
+@app.get("/api/cron/send-reports")
+async def api_cron_send_reports():
+    """Cron endpoint triggered by external schedulers (e.g. Vercel Cron Jobs) to process report deliveries."""
+    await run_scheduled_delivery_logic()
+    return {"status": "success", "detail": "Scheduled report delivery worker executed."}
+
+
+async def local_scheduled_worker_loop():
+    """Local worker loop that periodically checks database for due reports."""
+    print("[LocalWorker] Background scheduler started.")
+    while True:
+        try:
+            await run_scheduled_delivery_logic()
+        except Exception as e:
+            print(f"[LocalWorker] Error in local worker: {e}")
+        await asyncio.sleep(60) # check every minute
+
+
+@app.on_event("startup")
+async def startup_event():
+    # Only start local thread if we are not running under a serverless environment
+    if not os.getenv("VERCEL") and not os.environ.get("AMAZON_AWS_LAMBDA_STAGE"):
+        asyncio.create_task(local_scheduled_worker_loop())
 
 
 if __name__ == "__main__":

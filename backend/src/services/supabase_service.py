@@ -252,6 +252,20 @@ class SupabaseService:
         }).eq("id", order_id).execute()
         return len(res.data) > 0
 
+    def set_scheduled_delivery(self, order_id: str, scheduled_at) -> bool:
+        if not self.is_configured():
+            return True
+        try:
+            res = self.client.table("orders").update({
+                "scheduled_delivery_at": scheduled_at.isoformat(),
+                "updated_at": "now()"
+            }).eq("id", order_id).execute()
+            return len(res.data) > 0
+        except Exception as e:
+            print(f"[Supabase] Warning: Could not set scheduled_delivery_at (column may be missing): {e}")
+            return False
+
+
     def save_admin_notes(self, order_id: str, notes: str) -> bool:
         if not self.is_configured():
             return True

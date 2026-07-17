@@ -653,7 +653,21 @@
                     // Determine badges
                     const orderStatusBadge = `<span class="badge ${o.order_status}">${o.order_status}</span>`;
                     const reportStatusBadge = `<span class="badge ${o.report_status === 'completed' ? 'paid' : (o.report_status === 'generating' ? 'processing' : 'failed')}">${o.report_status}</span>`;
-                    const paymentBadge = `<span class="badge paid">PAID</span>`;
+                    
+                    let paymentBadge = '';
+                    if (o.order_status === 'pending') {
+                        paymentBadge = `<span class="badge pending">INITIATED</span>`;
+                    } else if (['paid', 'processing', 'completed', 'delivered'].includes(o.order_status)) {
+                        paymentBadge = `<span class="badge paid">PAID</span>`;
+                    } else if (o.order_status === 'failed') {
+                        paymentBadge = `<span class="badge failed">FAILED</span>`;
+                    } else if (o.order_status === 'cancelled') {
+                        paymentBadge = `<span class="badge failed">CANCELLED</span>`;
+                    } else if (o.order_status === 'refunded') {
+                        paymentBadge = `<span class="badge failed">REFUNDED</span>`;
+                    } else {
+                        paymentBadge = `<span class="badge pending">${o.order_status.toUpperCase()}</span>`;
+                    }
                     
                     tr.innerHTML = `
                         <td style="font-family: monospace; font-weight: bold;">#${shortId}</td>

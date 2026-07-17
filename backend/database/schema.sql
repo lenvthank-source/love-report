@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     report_status TEXT NOT NULL DEFAULT 'not_started', -- not_started, generating, completed, failed
     report_url TEXT,
     notes TEXT,
+    scheduled_delivery_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
@@ -73,4 +74,6 @@ ALTER TABLE public.admin_users DISABLE ROW LEVEL SECURITY;
 
 -- DDL migrations for existing databases
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS reference_id TEXT UNIQUE;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS scheduled_delivery_at TIMESTAMPTZ;
+
 
