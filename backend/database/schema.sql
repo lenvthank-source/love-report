@@ -76,4 +76,40 @@ ALTER TABLE public.admin_users DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS reference_id TEXT UNIQUE;
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS scheduled_delivery_at TIMESTAMPTZ;
 
+-- Timezone-aware scheduling helper function
+CREATE OR REPLACE FUNCTION public.calculate_delivery_time_ist(order_time_utc TIMESTAMPTZ)
+RETURNS TIMESTAMPTZ AS $$
+DECLARE
+    current_ist TIMESTAMP;
+    remaining_delay_minutes INT := 240; -- 4 hours
+    window_start TIMESTAMP;
+    window_end TIMESTAMP;
+    minutes_left_in_window INT;
+BEGIN
+    current_ist := order_time_utc AT TIME ZONE 'Asia/Kolkata';
+    
+    WHILE remaining_delay_minutes > 0 LOOP
+        window_start := date_trunc('day', current_ist) + INTERVAL '11 hours';
+        window_end := date_trunc('day', current_ist) + INTERVAL '19 hours';
+        
+        IF current_ist < window_start THEN
+            current_ist := window_start;
+        ELSIF current_ist >= window_end THEN
+            current_ist := date_trunc('day', current_ist) + INTERVAL '1 day 11 hours';
+        ELSE
+            minutes_left_in_window := EXTRACT(EPOCH FROM (window_end - current_ist)) / 60;
+            IF remaining_delay_minutes <= minutes_left_in_window THEN
+                current_ist := current_ist + (remaining_delay_minutes || ' minutes')::INTERVAL;
+                remaining_delay_minutes := 0;
+            ELSE
+                remaining_delay_minutes := remaining_delay_minutes - minutes_left_in_window;
+                current_ist := date_trunc('day', current_ist) + INTERVAL '1 day 11 hours';
+            END IF;
+        END IF;
+    END LOOP;
+    
+    RETURN current_ist AT TIME ZONE 'Asia/Kolkata';
+END;
+$$ LANGUAGE plpgsql;
+
 
