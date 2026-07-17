@@ -463,6 +463,7 @@
             <thead>
                 <tr>
                     <th>Order ID</th>
+                    <th>Created At</th>
                     <th>Customer Name</th>
                     <th>Email Address</th>
                     <th>Birth Details</th>
@@ -473,7 +474,7 @@
             </thead>
             <tbody id="ordersTableBody">
                 <tr>
-                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">Retrieving records from the stars...</td>
+                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 40px;">Retrieving records from the stars...</td>
                 </tr>
             </tbody>
         </table>
@@ -638,7 +639,7 @@
                 tbody.innerHTML = "";
 
                 if (data.orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">No records match the current filters.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 40px;">No records match the current filters.</td></tr>`;
                     return;
                 }
 
@@ -649,6 +650,12 @@
                     const cust = o.customers || {};
                     const shortId = o.reference_id || o.id.substring(0, 8);
                     const formattedBirth = `${o.dob} at ${o.tob} in ${o.place.split(',')[0]}`;
+                    
+                    // Format creation date/time in India Standard Time (IST)
+                    const createdDate = o.created_at ? new Date(o.created_at) : null;
+                    const formattedCreated = createdDate 
+                        ? createdDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'short', timeStyle: 'short' })
+                        : 'N/A';
                     
                     // Determine badges
                     const orderStatusBadge = `<span class="badge ${o.order_status}">${o.order_status}</span>`;
@@ -671,6 +678,7 @@
                     
                     tr.innerHTML = `
                         <td style="font-family: monospace; font-weight: bold;">#${shortId}</td>
+                        <td style="font-size: 0.85rem; color: var(--text-muted);">${formattedCreated}</td>
                         <td>${cust.full_name || 'N/A'}</td>
                         <td>${cust.email || 'N/A'}</td>
                         <td style="font-size: 0.85rem; color: var(--text-muted);">${formattedBirth}</td>
