@@ -1,16 +1,32 @@
 import os
 import random
+import time
 from typing import Dict, Any, List, Optional
 from supabase import create_client, Client
 from jose import jwt
 
 class SupabaseService:
+    _instance = None
+    _initialized = False
+
     # Class-level mock database for admin users to persist across instances in local testing
     _mock_admin_users = [
         {"email": "admin@test.com", "full_name": "Mock Admin", "role": "admin", "status": "approved"},
         {"email": "support@test.com", "full_name": "Mock Support", "role": "support", "status": "approved"}
     ]
+
+    # Class-level cache for validated tokens to avoid round-trips to Supabase auth API
+    # Maps token string -> (user_dict, expire_time)
+    _token_cache = {}
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(self):
+        if self._initialized:
+            return
         self.url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
         # Support service role key (preferred for backend bypass), standard key, and anon key fallbacks
         self.key = (
@@ -26,6 +42,7 @@ class SupabaseService:
             self.client = None
         else:
             self.client: Client = create_client(self.url, self.key)
+        self._initialized = True
 
     def is_configured(self) -> bool:
         return self.client is not None
@@ -122,25 +139,15 @@ class SupabaseService:
     def verify_admin_token(self, token: str) -> Optional[Dict[str, Any]]:
         """
         Decodes and verifies a Supabase Auth JWT token.
-        Tries using the Supabase get_user API first, with local JWT decode as a fallback.
+        First tries local JWT decoding, then cache lookup, and falls back to Supabase API.
         """
         if not self.is_configured() or token.startswith("mock-"):
             # Mock role logic based on token identifier
             if "support" in token:
                 return {"email": "support@test.com", "user_metadata": {"role": "support"}}
             return {"email": "admin@test.com", "user_metadata": {"role": "admin"}}
-        try:
-            res = self.client.auth.get_user(token)
-            if res and res.user:
-                return {
-                    "email": res.user.email,
-                    "id": res.user.id,
-                    "user_metadata": res.user.user_metadata or {}
-                }
-        except Exception as e:
-            print(f"[SupabaseAuth] API token verification failed: {e}")
 
-        # Fallback to local JWT decoding if client API verification fails
+        # 1. Try local JWT decoding first if secret is available
         if self.jwt_secret:
             try:
                 # Supabase tokens are HS256 and contain "authenticated" audience
@@ -150,9 +157,38 @@ class SupabaseService:
                     algorithms=["HS256"], 
                     options={"verify_aud": False}
                 )
-                return payload
+                return {
+                    "email": payload.get("email"),
+                    "id": payload.get("sub"),
+                    "user_metadata": payload.get("user_metadata") or {}
+                }
             except Exception as e:
-                print(f"[SupabaseAuth] Local JWT verification fallback failed: {e}")
+                print(f"[SupabaseAuth] Local JWT verification failed: {e}")
+
+        # 2. Try cache lookup to avoid network latency
+        now = time.time()
+        if token in self._token_cache:
+            user_data, expire_time = self._token_cache[token]
+            if now < expire_time:
+                return user_data
+            else:
+                # Remove expired token from cache
+                self._token_cache.pop(token, None)
+
+        # 3. Fallback to network call if local JWT failed/secret missing and not cached
+        try:
+            res = self.client.auth.get_user(token)
+            if res and res.user:
+                user_data = {
+                    "email": res.user.email,
+                    "id": res.user.id,
+                    "user_metadata": res.user.user_metadata or {}
+                }
+                # Cache for 5 minutes (300 seconds)
+                self._token_cache[token] = (user_data, now + 300)
+                return user_data
+        except Exception as e:
+            print(f"[SupabaseAuth] API token verification failed: {e}")
         return None
 
     # --- Customer CRUD ---
