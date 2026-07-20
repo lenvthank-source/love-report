@@ -163,7 +163,8 @@ class SupabaseService:
                     "user_metadata": payload.get("user_metadata") or {}
                 }
             except Exception as e:
-                print(f"[SupabaseAuth] Local JWT verification failed: {e}")
+                # Fallback to cache and API if local JWT decoding fails (e.g. if JWT secret is mismatched or algorithm is different)
+                pass
 
         # 2. Try cache lookup to avoid network latency
         now = time.time()
