@@ -283,6 +283,33 @@ async def main():
     for page, text in results:
         sections_text[page] = text
         
+    # Format Section 24 (Remedies) into 4 structured sections with headers and embedded links
+    astrology_remedies_para = sections_text.get(24, "")
+    for marker in ["§Your personalised spiritual remedies", "§Your personalised love energy bracelet", "§Your personalised energised rudraksh", "§Gem stone recommendations"]:
+        astrology_remedies_para = astrology_remedies_para.replace(marker, "")
+    astrology_remedies_para = astrology_remedies_para.strip()
+
+    words = astrology_remedies_para.split()
+    if len(words) > 35:
+        astrology_remedies_para = " ".join(words[:35]) + "..."
+
+    rud_name = "2 mukhi Rudraksha (Nepali)"
+    rud_url = "https://www.astrosavvysingh.com/product/2-mukhi-rudraksha-nepali"
+
+    header1 = "§Your personalised spiritual remedies"
+    para1 = f"❤ {astrology_remedies_para} For a more detailed analysis, click here to get a live consultation."
+
+    header2 = "§Your personalised love energy bracelet"
+    para2 = f"❤ To align the Venusian flow of love and soften emotional boundaries, we highly recommend wearing the sacred Divy Love Bracelet."
+
+    header3 = "§Your personalised energised rudraksh"
+    para3 = f"❤ Highly recommend you wearing the authentic {rud_name} energised and charged for you by our expert astrologer through sacred rituals."
+
+    header4 = "§Gem stone recommendations"
+    para4 = "Your personalised Love energy stone to boost your love life, heal heartbreaks and bring to you, your desired partner. For personalised compatibility analysis and gem stone recommendations, book your one on one premium personalised consultation with our expert today."
+
+    sections_text[24] = f"{header1}\n{para1}\n\n{header2}\n{para2}\n\n{header3}\n{para3}\n\n{header4}\n{para4}"
+
     # Write Markdown file
     output_dir = "output"
     os.makedirs(output_dir, exist_ok=True)
@@ -319,6 +346,8 @@ async def main():
         client_dob=dob,
         client_tob=tob,
         client_pob=place,
+        rudraksha_name=rud_name,
+        rudraksha_url=rud_url,
     )
     print(f"🎉 SUCCESS! Report compiled at {pdf_path}")
 

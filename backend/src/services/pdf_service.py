@@ -696,11 +696,18 @@ class PDFService:
                         page.insert_text(point, line, fontsize=pageFontSize, fontname="body", fontfile=reg_font_file, color=textColorDark)
                 currentY -= pageLineSpacing
 
-        # 4.5. Add hyperlinks on Page 26 (Practical Remedies, index 25 in 0-based shifted index)
+        # 4.5. Add hyperlinks on Page 25 ("YOUR PERSONAL REMEDY PLAN")
         # Search page for target words and insert links with underlines
-        target_remedies_page_idx = 25 if page_count > 25 else 24
-        if len(doc) > target_remedies_page_idx:
-            page25 = doc[target_remedies_page_idx]
+        page25 = None
+        for p in doc:
+            p_text = p.get_text()
+            if "REMEDY" in p_text or "REMDIES" in p_text:
+                page25 = p
+                break
+        if not page25 and len(doc) > 25:
+            page25 = doc[25]
+
+        if page25:
             
             # Anchor 1: Divy Love Bracelet
             bracelet_rects = page25.search_for("Divy Love Bracelet")
