@@ -205,6 +205,25 @@ def get_admin_page():
 def get_admin_login_page():
     return FileResponse(os.path.join(static_dir, "admin_login.html"))
 
+class AdminLoginRequest(BaseModel):
+    email: str
+    password: str
+
+@app.post("/api/admin/login")
+async def api_admin_login(req: AdminLoginRequest):
+    supabase = SupabaseService()
+    try:
+        session = supabase.sign_in_with_password(req.email, req.password)
+        if not session:
+            raise HTTPException(status_code=401, detail="Invalid admin email or password.")
+        return session
+    except ValueError as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Authentication failed: {str(e)}")
+
 @app.get("/api/config")
 def get_public_config():
     return {

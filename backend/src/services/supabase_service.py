@@ -115,6 +115,8 @@ class SupabaseService:
                     }
                 }
             }
+        except ValueError as e:
+            raise e
         except Exception as e:
             print(f"[SupabaseAuth] Authentication failed: {e}")
             return None

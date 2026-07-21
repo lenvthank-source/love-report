@@ -289,7 +289,7 @@
 
         document.getElementById("loginForm").addEventListener("submit", async function(e) {
             e.preventDefault();
-            const email = document.getElementById("email").value;
+            const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value;
             const errBanner = document.getElementById("errorMessage");
             const btn = document.getElementById("loginBtn");
@@ -298,18 +298,25 @@
             errBanner.style.display = "none";
 
             try {
-                const res = await fetch("/api/orders/create", {
+                const res = await fetch("/api/admin/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ auth_admin: true, email, password })
+                    body: JSON.stringify({ email, password })
                 });
 
-                if (!res.ok) {
-                    const data = await res.json();
-                    throw new Error(data.detail || "Authentication failed.");
+                const contentType = res.headers.get("content-type") || "";
+                let data = {};
+                if (contentType.includes("application/json")) {
+                    data = await res.json().catch(() => ({}));
+                } else {
+                    const textMsg = await res.text().catch(() => "");
+                    throw new Error(textMsg || "Server returned an invalid non-JSON response.");
                 }
 
-                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.detail || "Authentication failed. Please check your credentials.");
+                }
+
                 localStorage.setItem("admin_token", data.access_token);
                 window.location.href = "/admin";
             } catch(err) {
