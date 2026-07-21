@@ -1,8 +1,4 @@
-import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from typing import Dict, Any, Optional
+from email.mime.application import MIMEApplication
 
 class EmailService:
     def __init__(self):
@@ -18,24 +14,31 @@ class EmailService:
     def is_configured(self) -> bool:
         return bool(self.smtp_user and self.smtp_pass)
 
-    def _send_email(self, to_email: str, subject: str, html_content: str) -> bool:
-        """Helper to send SMTP email using SendPulse host."""
+    def _send_email(self, to_email: str, subject: str, html_content: str, attachment_bytes: Optional[bytes] = None, attachment_filename: Optional[str] = None) -> bool:
+        """Helper to send SMTP email using SendPulse host with optional PDF attachment."""
         if not self.is_configured():
             print(f"\n==================================================")
             print(f"[MOCK EMAIL] TO: {to_email}")
             print(f"[MOCK EMAIL] SUBJECT: {subject}")
+            if attachment_filename:
+                print(f"[MOCK EMAIL] ATTACHMENT: {attachment_filename} ({len(attachment_bytes or b'')} bytes)")
             print(f"[MOCK EMAIL] CONTENT:\n{html_content[:300]}...")
             print(f"==================================================\n")
             return True
 
         try:
-            msg = MIMEMultipart("alternative")
+            msg = MIMEMultipart("mixed")
             msg["Subject"] = subject
             msg["From"] = f"{self.sender_name} <{self.sender_email}>"
             msg["To"] = to_email
             
-            part = MIMEText(html_content, "html", "utf-8")
-            msg.attach(part)
+            html_part = MIMEText(html_content, "html", "utf-8")
+            msg.attach(html_part)
+            
+            if attachment_bytes and attachment_filename:
+                pdf_part = MIMEApplication(attachment_bytes, _subtype="pdf")
+                pdf_part.add_header("Content-Disposition", "attachment", filename=attachment_filename)
+                msg.attach(pdf_part)
             
             # port 465 requires SSL, port 587 requires STARTTLS
             if self.smtp_port == 465:
@@ -145,10 +148,18 @@ class EmailService:
         """
         return self._send_email(to_email, subject, html)
 
-    def send_report_delivered(self, to_email: str, customer_name: str, order_id: str, report_url: str) -> bool:
-        """Sends the final PDF delivery email containing the Storage download link."""
-        subject = f"🎉 Your Cosmic Individual Love Report is Ready!"
+    def send_report_delivered(self, to_email: str, customer_name: str, order_id: str, report_url: str, pdf_bytes: Optional[bytes] = None, pdf_filename: Optional[str] = None) -> bool:
+        """Sends the final PDF delivery email containing the direct Storage download link and PDF attachment."""
+        subject = f"🎉 Your Cosmic Individual Love Report is Ready! (Order #{order_id})"
         
+        filename = pdf_filename or f"Love_Report_{order_id}.pdf"
+        
+        # Ensure report_url forces direct download when clicked
+        if "?" in report_url:
+            download_url = f"{report_url}&download={filename}"
+        else:
+            download_url = f"{report_url}?download={filename}"
+
         html = f"""
         <!DOCTYPE html>
         <html>
@@ -190,7 +201,7 @@ class EmailService:
                 }}
                 .btn-container {{
                     text-align: center;
-                    margin: 35px 0;
+                    margin: 35px 0 15px;
                 }}
                 .btn {{
                     background-color: #C9967B;
@@ -221,12 +232,13 @@ class EmailService:
                 </div>
                 <div class="content">
                     <p>Dear {customer_name}, ✨</p>
-                    <p>We are delighted to inform you that your **Cosmic Individual Love Report** is complete.</p>
+                    <p>We are delighted to inform you that your <strong>Cosmic Individual Love Report</strong> is complete.</p>
                     <p>Acharya Savvy Singh has finished mapping your personal charts. The insights, D1/D9/D30 maps, planetary seasons, and customized behavioural shifts are now consolidated into a premium report designed specifically for your soul's growth.</p>
                     
                     <div class="btn-container">
-                        <a href="{report_url}" class="btn" target="_blank">📖 DOWNLOAD YOUR COSMIC REPORT</a>
+                        <a href="{download_url}" class="btn" target="_blank" download="{filename}">📥 DOWNLOAD YOUR COSMIC REPORT</a>
                     </div>
+                    <p style="font-size: 14px; color: #8E6E5E; text-align: center; margin-bottom: 30px;"><em>(A copy of your PDF report is also attached directly to this email for instant offline viewing)</em></p>
 
                     <p>If you have any questions or require guidance on your alignments, please do not hesitate to contact our support team at support@astrosavvysingh.com.</p>
                     <p>May this report light your path forward and guide you toward the love you are truly destined to experience.</p>
@@ -238,4 +250,4 @@ class EmailService:
         </body>
         </html>
         """
-        return self._send_email(to_email, subject, html)
+        return self._send_email(to_email, subject, html, attachment_bytes=pdf_bytes, attachment_filename=filename)
