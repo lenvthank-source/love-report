@@ -1108,32 +1108,7 @@ async def api_admin_send_report(order_id: str, admin: Any = Header(None)):
         
     cust = order.get("customers") or {}
     ref_id = order.get("reference_id") or order_id[-8:]
-    filename = f"Love_Report_{ref_id}.pdf"
-    
-    # Retrieve PDF bytes from local disk or Supabase URL to attach to email
-    pdf_bytes = None
-    possible_paths = [
-        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output", f"Love_Report_{order_id}.pdf"),
-        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "output", f"Love_Report_{ref_id}.pdf")
-    ]
-    for p in possible_paths:
-        if os.path.exists(p):
-            try:
-                with open(p, "rb") as f:
-                    pdf_bytes = f.read()
-                break
-            except Exception:
-                pass
-                
-    if not pdf_bytes and order.get("report_url"):
-        try:
-            res = requests.get(order["report_url"], timeout=15)
-            if res.status_code == 200:
-                pdf_bytes = res.content
-        except Exception as e:
-            print(f"[SendReport] Failed to fetch PDF bytes from URL: {e}")
-
-    sent = email_service.send_report_delivered(cust["email"], cust["full_name"], ref_id, order["report_url"], pdf_bytes=pdf_bytes, pdf_filename=filename)
+    sent = email_service.send_report_delivered(cust["email"], cust["full_name"], ref_id, order["report_url"])
     supabase.log_email(order_id, "report_delivered", cust["email"], "sent" if sent else "failed")
     
     if sent:

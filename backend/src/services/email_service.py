@@ -2,7 +2,6 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
 from typing import Dict, Any, Optional
 
 class EmailService:
@@ -19,37 +18,24 @@ class EmailService:
     def is_configured(self) -> bool:
         return bool(self.smtp_user and self.smtp_pass)
 
-    def _send_email(self, to_email: str, subject: str, html_content: str, attachment_bytes: Optional[bytes] = None, attachment_filename: Optional[str] = None) -> bool:
-        """Helper to send SMTP email using SendPulse host with optional PDF attachment and automatic size fallback."""
+    def _send_email(self, to_email: str, subject: str, html_content: str) -> bool:
+        """Helper to send SMTP email using SendPulse host."""
         if not self.is_configured():
             print(f"\n==================================================")
             print(f"[MOCK EMAIL] TO: {to_email}")
             print(f"[MOCK EMAIL] SUBJECT: {subject}")
-            if attachment_filename:
-                print(f"[MOCK EMAIL] ATTACHMENT: {attachment_filename} ({len(attachment_bytes or b'')} bytes)")
             print(f"[MOCK EMAIL] CONTENT:\n{html_content[:300]}...")
             print(f"==================================================\n")
             return True
 
-        # Check if attachment is too large for SendPulse SMTP (e.g. > 2.5MB)
-        if attachment_bytes and len(attachment_bytes) > 2.5 * 1024 * 1024:
-            print(f"[EmailService] Attachment size ({len(attachment_bytes)} bytes) exceeds SendPulse 2.5MB limit. Omitting attachment to prevent 552 size limit error.")
-            attachment_bytes = None
-            attachment_filename = None
-
         try:
-            msg = MIMEMultipart("mixed")
+            msg = MIMEMultipart("alternative")
             msg["Subject"] = subject
             msg["From"] = f"{self.sender_name} <{self.sender_email}>"
             msg["To"] = to_email
             
             html_part = MIMEText(html_content, "html", "utf-8")
             msg.attach(html_part)
-            
-            if attachment_bytes and attachment_filename:
-                pdf_part = MIMEApplication(attachment_bytes, _subtype="pdf")
-                pdf_part.add_header("Content-Disposition", "attachment", filename=attachment_filename)
-                msg.attach(pdf_part)
             
             # port 465 requires SSL, port 587 requires STARTTLS
             if self.smtp_port == 465:
@@ -65,10 +51,6 @@ class EmailService:
             return True
         except Exception as e:
             print(f"[EmailService] Error sending email: {e}")
-            # Fallback: if sending with attachment failed (e.g. 552 size error), retry without attachment
-            if attachment_bytes is not None:
-                print(f"[EmailService] Retrying email delivery to {to_email} without attachment...")
-                return self._send_email(to_email, subject, html_content, attachment_bytes=None, attachment_filename=None)
             return False
 
     def send_order_confirmation(self, to_email: str, customer_name: str, order_id: str) -> bool:
@@ -163,11 +145,11 @@ class EmailService:
         """
         return self._send_email(to_email, subject, html)
 
-    def send_report_delivered(self, to_email: str, customer_name: str, order_id: str, report_url: str, pdf_bytes: Optional[bytes] = None, pdf_filename: Optional[str] = None) -> bool:
-        """Sends the final PDF delivery email containing the direct Storage download link and PDF attachment."""
+    def send_report_delivered(self, to_email: str, customer_name: str, order_id: str, report_url: str) -> bool:
+        """Sends the final PDF delivery email containing the direct Storage download link."""
         subject = f"🎉 Your Cosmic Individual Love Report is Ready! (Order #{order_id})"
         
-        filename = pdf_filename or f"Love_Report_{order_id}.pdf"
+        filename = f"Love_Report_{order_id}.pdf"
         
         # Ensure report_url forces direct download when clicked
         if "?" in report_url:
@@ -216,7 +198,7 @@ class EmailService:
                 }}
                 .btn-container {{
                     text-align: center;
-                    margin: 35px 0 15px;
+                    margin: 35px 0;
                 }}
                 .btn {{
                     background-color: #C9967B;
@@ -253,7 +235,6 @@ class EmailService:
                     <div class="btn-container">
                         <a href="{download_url}" class="btn" target="_blank" download="{filename}">📥 DOWNLOAD YOUR COSMIC REPORT</a>
                     </div>
-                    <p style="font-size: 14px; color: #8E6E5E; text-align: center; margin-bottom: 30px;"><em>(A copy of your PDF report is also attached directly to this email for instant offline viewing)</em></p>
 
                     <p>If you have any questions or require guidance on your alignments, please do not hesitate to contact our support team at support@astrosavvysingh.com.</p>
                     <p>May this report light your path forward and guide you toward the love you are truly destined to experience.</p>
@@ -265,4 +246,4 @@ class EmailService:
         </body>
         </html>
         """
-        return self._send_email(to_email, subject, html, attachment_bytes=pdf_bytes, attachment_filename=filename)
+        return self._send_email(to_email, subject, html)
