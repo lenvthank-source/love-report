@@ -365,7 +365,7 @@ class SupabaseService:
         return orders
 
     # --- Payment Logging ---
-    def create_payment(self, order_id: str, razorpay_order_id: str, amount: float = 999.00) -> str:
+    def create_payment(self, order_id: str, razorpay_order_id: str, amount: float = 499.00) -> str:
         if not self.is_configured():
             return "dummy-payment-uuid"
         res = self.client.table("payments").insert({

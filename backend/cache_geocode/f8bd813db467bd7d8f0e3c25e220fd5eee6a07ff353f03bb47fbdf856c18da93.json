@@ -1,0 +1,490 @@
+[
+  {
+    "formatted": "New Delhi, India",
+    "latitude": 28.6138954,
+    "longitude": 77.2090057,
+    "timezone": "Asia/Kolkata",
+    "raw": {
+      "annotations": {
+        "DIGIPIN": "39J-438-TJC7",
+        "DMS": {
+          "lat": "28° 36' 50.02344'' N",
+          "lng": "77° 12' 32.42052'' E"
+        },
+        "MGRS": "43RGM1598067204",
+        "Maidenhead": "ML88oo57bi",
+        "Mercator": {
+          "x": 8594867.199,
+          "y": 3306136.162
+        },
+        "OSM": {
+          "edit_url": "https://www.openstreetmap.org/edit?relation=2763541#map=17/28.61390/77.20901",
+          "note_url": "https://www.openstreetmap.org/note/new#map=17/28.61390/77.20901&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=28.61390&mlon=77.20901#map=17/28.61390/77.20901"
+        },
+        "UN_M49": {
+          "regions": {
+            "ASIA": "142",
+            "IN": "356",
+            "SOUTHERN_ASIA": "034",
+            "WORLD": "001"
+          },
+          "statistical_groupings": [
+            "LEDC"
+          ]
+        },
+        "callingcode": 91,
+        "currency": {
+          "alternate_symbols": [
+            "Rs",
+            "৳",
+            "૱",
+            "௹",
+            "रु",
+            "₨"
+          ],
+          "decimal_mark": ".",
+          "html_entity": "&#x20b9;",
+          "iso_code": "INR",
+          "iso_numeric": "356",
+          "name": "Indian Rupee",
+          "smallest_denomination": 50,
+          "subunit": "Paisa",
+          "subunit_to_unit": 100,
+          "symbol": "₹",
+          "symbol_first": 1,
+          "thousands_separator": ","
+        },
+        "flag": "🇮🇳",
+        "geohash": "ttnfucjbh0xqev0d65f2",
+        "qibla": 266.6,
+        "roadinfo": {
+          "drive_on": "left",
+          "speed_in": "km/h"
+        },
+        "sun": {
+          "rise": {
+            "apparent": 1783987380,
+            "astronomical": 1784068260,
+            "civil": 1784072160,
+            "nautical": 1784070240
+          },
+          "set": {
+            "apparent": 1784037060,
+            "astronomical": 1784042580,
+            "civil": 1784038680,
+            "nautical": 1784040540
+          }
+        },
+        "timezone": {
+          "name": "Asia/Kolkata",
+          "now_in_dst": 0,
+          "offset_sec": 19800,
+          "offset_string": "+0530",
+          "short_name": "IST"
+        },
+        "what3words": {
+          "words": "pasta.successes.shredding"
+        },
+        "wikidata": "Q8560886"
+      },
+      "bounds": {
+        "northeast": {
+          "lat": 28.6456842,
+          "lng": 77.2551392
+        },
+        "southwest": {
+          "lat": 28.4812209,
+          "lng": 77.0503708
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "IN",
+        "ISO_3166-1_alpha-3": "IND",
+        "ISO_3166-2": [
+          "IN-DL"
+        ],
+        "_category": "place",
+        "_normalized_city": "New Delhi",
+        "_type": "city",
+        "city": "New Delhi",
+        "continent": "Asia",
+        "country": "India",
+        "country_code": "in"
+      },
+      "confidence": 5,
+      "formatted": "New Delhi, India",
+      "geometry": {
+        "lat": 28.6138954,
+        "lng": 77.2090057
+      }
+    }
+  },
+  {
+    "formatted": "Delhi, India",
+    "latitude": 28.6328027,
+    "longitude": 77.2197713,
+    "timezone": "Asia/Kolkata",
+    "raw": {
+      "annotations": {
+        "DIGIPIN": "39J-494-KKK4",
+        "DMS": {
+          "lat": "28° 37' 58.08972'' N",
+          "lng": "77° 13' 11.17668'' E"
+        },
+        "MGRS": "43RGM1699469319",
+        "Maidenhead": "ML88op61iu",
+        "Mercator": {
+          "x": 8596065.62,
+          "y": 3308521.565
+        },
+        "OSM": {
+          "edit_url": "https://www.openstreetmap.org/edit?relation=1942586#map=17/28.63280/77.21977",
+          "note_url": "https://www.openstreetmap.org/note/new#map=17/28.63280/77.21977&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=28.63280&mlon=77.21977#map=17/28.63280/77.21977"
+        },
+        "UN_M49": {
+          "regions": {
+            "ASIA": "142",
+            "IN": "356",
+            "SOUTHERN_ASIA": "034",
+            "WORLD": "001"
+          },
+          "statistical_groupings": [
+            "LEDC"
+          ]
+        },
+        "callingcode": 91,
+        "currency": {
+          "alternate_symbols": [
+            "Rs",
+            "৳",
+            "૱",
+            "௹",
+            "रु",
+            "₨"
+          ],
+          "decimal_mark": ".",
+          "html_entity": "&#x20b9;",
+          "iso_code": "INR",
+          "iso_numeric": "356",
+          "name": "Indian Rupee",
+          "smallest_denomination": 50,
+          "subunit": "Paisa",
+          "subunit_to_unit": 100,
+          "symbol": "₹",
+          "symbol_first": 1,
+          "thousands_separator": ","
+        },
+        "flag": "🇮🇳",
+        "geohash": "ttnfvhmwpj6c0gpdt4y5",
+        "qibla": 266.58,
+        "roadinfo": {
+          "drive_on": "left",
+          "speed_in": "km/h"
+        },
+        "sun": {
+          "rise": {
+            "apparent": 1783987380,
+            "astronomical": 1784068260,
+            "civil": 1784072160,
+            "nautical": 1784070240
+          },
+          "set": {
+            "apparent": 1784037060,
+            "astronomical": 1784042580,
+            "civil": 1784038680,
+            "nautical": 1784040540
+          }
+        },
+        "timezone": {
+          "name": "Asia/Kolkata",
+          "now_in_dst": 0,
+          "offset_sec": 19800,
+          "offset_string": "+0530",
+          "short_name": "IST"
+        },
+        "what3words": {
+          "words": "fetching.tonic.hampers"
+        },
+        "wikidata": "Q9357528"
+      },
+      "bounds": {
+        "northeast": {
+          "lat": 28.8834464,
+          "lng": 77.3452524
+        },
+        "southwest": {
+          "lat": 28.4046285,
+          "lng": 76.8388351
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "IN",
+        "ISO_3166-1_alpha-3": "IND",
+        "ISO_3166-2": [
+          "IN-DL"
+        ],
+        "_category": "place",
+        "_normalized_city": "Delhi",
+        "_type": "city",
+        "city": "Delhi",
+        "continent": "Asia",
+        "country": "India",
+        "country_code": "in"
+      },
+      "confidence": 1,
+      "formatted": "Delhi, India",
+      "geometry": {
+        "lat": 28.6328027,
+        "lng": 77.2197713
+      }
+    }
+  },
+  {
+    "formatted": "Delhi, Delaware County, Iowa, United States of America",
+    "latitude": 42.4297057,
+    "longitude": -91.3309112,
+    "timezone": "America/Chicago",
+    "raw": {
+      "annotations": {
+        "DMS": {
+          "lat": "42° 25' 46.94052'' N",
+          "lng": "91° 19' 51.28032'' W"
+        },
+        "FIPS": {
+          "county": "19055",
+          "state": "19"
+        },
+        "MGRS": "15TXG3729798837",
+        "Maidenhead": "EN42ik03gd",
+        "Mercator": {
+          "x": -10166910.528,
+          "y": 5196729.397
+        },
+        "OSM": {
+          "edit_url": "https://www.openstreetmap.org/edit?relation=128565#map=17/42.42971/-91.33091",
+          "note_url": "https://www.openstreetmap.org/note/new#map=17/42.42971/-91.33091&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=42.42971&mlon=-91.33091#map=17/42.42971/-91.33091"
+        },
+        "UN_M49": {
+          "regions": {
+            "AMERICAS": "019",
+            "NORTHERN_AMERICA": "021",
+            "US": "840",
+            "WORLD": "001"
+          },
+          "statistical_groupings": [
+            "MEDC"
+          ]
+        },
+        "callingcode": 1,
+        "currency": {
+          "alternate_symbols": [
+            "US$"
+          ],
+          "decimal_mark": ".",
+          "disambiguate_symbol": "US$",
+          "html_entity": "$",
+          "iso_code": "USD",
+          "iso_numeric": "840",
+          "name": "United States Dollar",
+          "smallest_denomination": 1,
+          "subunit": "Cent",
+          "subunit_to_unit": 100,
+          "symbol": "$",
+          "symbol_first": 1,
+          "thousands_separator": ","
+        },
+        "flag": "🇺🇸",
+        "geohash": "9zx13snfgw2tmbcm088h",
+        "qibla": 45.74,
+        "roadinfo": {
+          "drive_on": "right",
+          "speed_in": "mph"
+        },
+        "sun": {
+          "rise": {
+            "apparent": 1784025660,
+            "astronomical": 1784018040,
+            "civil": 1784023620,
+            "nautical": 1784021040
+          },
+          "set": {
+            "apparent": 1783993260,
+            "astronomical": 1784000880,
+            "civil": 1783995300,
+            "nautical": 1783997880
+          }
+        },
+        "timezone": {
+          "name": "America/Chicago",
+          "now_in_dst": 1,
+          "offset_sec": -18000,
+          "offset_string": "-0500",
+          "short_name": "CDT"
+        },
+        "what3words": {
+          "words": "juniors.surpassing.inactivity"
+        },
+        "wikidata": "Q1917804"
+      },
+      "bounds": {
+        "northeast": {
+          "lat": 42.4376091,
+          "lng": -91.3208259
+        },
+        "southwest": {
+          "lat": 42.4230572,
+          "lng": -91.3406123
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "US",
+        "ISO_3166-1_alpha-3": "USA",
+        "ISO_3166-2": [
+          "US-IA"
+        ],
+        "_category": "place",
+        "_normalized_city": "Delhi",
+        "_type": "village",
+        "continent": "North America",
+        "country": "United States of America",
+        "country_code": "us",
+        "county": "Delaware County",
+        "state": "Iowa",
+        "state_code": "IA",
+        "village": "Delhi"
+      },
+      "confidence": 8,
+      "formatted": "Delhi, Delaware County, Iowa, United States of America",
+      "geometry": {
+        "lat": 42.4297057,
+        "lng": -91.3309112
+      }
+    }
+  },
+  {
+    "formatted": "Village of Delhi, Delaware County, New York, United States of America",
+    "latitude": 42.2781401,
+    "longitude": -74.9159946,
+    "timezone": "America/New_York",
+    "raw": {
+      "annotations": {
+        "DMS": {
+          "lat": "42° 16' 41.30436'' N",
+          "lng": "74° 54' 57.58056'' W"
+        },
+        "FIPS": {
+          "county": "36025",
+          "state": "36"
+        },
+        "MGRS": "18TWM0692680661",
+        "Maidenhead": "FN22ng06bs",
+        "Mercator": {
+          "x": -8339610.371,
+          "y": 5173981.891
+        },
+        "OSM": {
+          "edit_url": "https://www.openstreetmap.org/edit?relation=176126#map=17/42.27814/-74.91599",
+          "note_url": "https://www.openstreetmap.org/note/new#map=17/42.27814/-74.91599&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=42.27814&mlon=-74.91599#map=17/42.27814/-74.91599"
+        },
+        "UN_M49": {
+          "regions": {
+            "AMERICAS": "019",
+            "NORTHERN_AMERICA": "021",
+            "US": "840",
+            "WORLD": "001"
+          },
+          "statistical_groupings": [
+            "MEDC"
+          ]
+        },
+        "callingcode": 1,
+        "currency": {
+          "alternate_symbols": [
+            "US$"
+          ],
+          "decimal_mark": ".",
+          "disambiguate_symbol": "US$",
+          "html_entity": "$",
+          "iso_code": "USD",
+          "iso_numeric": "840",
+          "name": "United States Dollar",
+          "smallest_denomination": 1,
+          "subunit": "Cent",
+          "subunit_to_unit": 100,
+          "symbol": "$",
+          "symbol_first": 1,
+          "thousands_separator": ","
+        },
+        "flag": "🇺🇸",
+        "geohash": "drd8x0xb4b99k20p7uvn",
+        "qibla": 57.8,
+        "roadinfo": {
+          "drive_on": "right",
+          "speed_in": "mph"
+        },
+        "sun": {
+          "rise": {
+            "apparent": 1784021760,
+            "astronomical": 1784014140,
+            "civil": 1784019720,
+            "nautical": 1784017140
+          },
+          "set": {
+            "apparent": 1783989300,
+            "astronomical": 1783996860,
+            "civil": 1783991340,
+            "nautical": 1783993860
+          }
+        },
+        "timezone": {
+          "name": "America/New_York",
+          "now_in_dst": 1,
+          "offset_sec": -14400,
+          "offset_string": "-0400",
+          "short_name": "EDT"
+        },
+        "what3words": {
+          "words": "lookout.redouble.dinosaurs"
+        },
+        "wikidata": "Q3021594"
+      },
+      "bounds": {
+        "northeast": {
+          "lat": 42.297427,
+          "lng": -74.894297
+        },
+        "southwest": {
+          "lat": 42.256461,
+          "lng": -74.938181
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "US",
+        "ISO_3166-1_alpha-3": "USA",
+        "ISO_3166-2": [
+          "US-NY"
+        ],
+        "_category": "place",
+        "_normalized_city": "Village of Delhi",
+        "_type": "village",
+        "continent": "North America",
+        "country": "United States of America",
+        "country_code": "us",
+        "county": "Delaware County",
+        "state": "New York",
+        "state_code": "NY",
+        "village": "Village of Delhi"
+      },
+      "confidence": 7,
+      "formatted": "Village of Delhi, Delaware County, New York, United States of America",
+      "geometry": {
+        "lat": 42.2781401,
+        "lng": -74.9159946
+      }
+    }
+  }
+]

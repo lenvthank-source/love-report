@@ -1,0 +1,127 @@
+[
+  {
+    "formatted": "Mumbai, Mumbai Suburban District, India",
+    "latitude": 19.054999,
+    "longitude": 72.8692035,
+    "timezone": "Asia/Kolkata",
+    "raw": {
+      "annotations": {
+        "DIGIPIN": "4FK-529-JKKC",
+        "DMS": {
+          "lat": "19° 3' 17.99640'' N",
+          "lng": "72° 52' 9.13260'' E"
+        },
+        "MGRS": "43QBB7576608274",
+        "Maidenhead": "MK69kb43he",
+        "Mercator": {
+          "x": 8111762.628,
+          "y": 2147469.161
+        },
+        "OSM": {
+          "edit_url": "https://www.openstreetmap.org/edit?node=16173235#map=17/19.05500/72.86920",
+          "note_url": "https://www.openstreetmap.org/note/new#map=17/19.05500/72.86920&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=19.05500&mlon=72.86920#map=17/19.05500/72.86920"
+        },
+        "UN_M49": {
+          "regions": {
+            "ASIA": "142",
+            "IN": "356",
+            "SOUTHERN_ASIA": "034",
+            "WORLD": "001"
+          },
+          "statistical_groupings": [
+            "LEDC"
+          ]
+        },
+        "callingcode": 91,
+        "currency": {
+          "alternate_symbols": [
+            "Rs",
+            "৳",
+            "૱",
+            "௹",
+            "रु",
+            "₨"
+          ],
+          "decimal_mark": ".",
+          "html_entity": "&#x20b9;",
+          "iso_code": "INR",
+          "iso_numeric": "356",
+          "name": "Indian Rupee",
+          "smallest_denomination": 50,
+          "subunit": "Paisa",
+          "subunit_to_unit": 100,
+          "symbol": "₹",
+          "symbol_first": 1,
+          "thousands_separator": ","
+        },
+        "flag": "🇮🇳",
+        "geohash": "te7u6hvert229f0x93y9",
+        "qibla": 280.11,
+        "roadinfo": {
+          "drive_on": "left",
+          "speed_in": "km/h"
+        },
+        "sun": {
+          "rise": {
+            "apparent": 1783989540,
+            "astronomical": 1784071020,
+            "civil": 1783988100,
+            "nautical": 1784072760
+          },
+          "set": {
+            "apparent": 1784037000,
+            "astronomical": 1784041860,
+            "civil": 1784038440,
+            "nautical": 1784040120
+          }
+        },
+        "timezone": {
+          "name": "Asia/Kolkata",
+          "now_in_dst": 0,
+          "offset_sec": 19800,
+          "offset_string": "+0530",
+          "short_name": "IST"
+        },
+        "what3words": {
+          "words": "oatmeal.gradually.absorb"
+        },
+        "wikidata": "Q1156"
+      },
+      "bounds": {
+        "northeast": {
+          "lat": 19.214999,
+          "lng": 73.0292035
+        },
+        "southwest": {
+          "lat": 18.894999,
+          "lng": 72.7092035
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "IN",
+        "ISO_3166-1_alpha-3": "IND",
+        "ISO_3166-2": [
+          "IN-MH"
+        ],
+        "_category": "place",
+        "_normalized_city": "Mumbai",
+        "_type": "city",
+        "city": "Mumbai",
+        "continent": "Asia",
+        "country": "India",
+        "country_code": "in",
+        "postcode": "400051",
+        "state": "Maharashtra",
+        "state_code": "MH",
+        "state_district": "Mumbai Suburban District"
+      },
+      "confidence": 3,
+      "formatted": "Mumbai, Mumbai Suburban District, India",
+      "geometry": {
+        "lat": 19.054999,
+        "lng": 72.8692035
+      }
+    }
+  }
+]
