@@ -30,11 +30,13 @@ CREATE TABLE IF NOT EXISTS public.orders (
     report_url TEXT,
     notes TEXT,
     scheduled_delivery_at TIMESTAMPTZ,
+    is_archived BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(order_status);
 CREATE INDEX IF NOT EXISTS idx_orders_created ON public.orders(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_orders_archived ON public.orders(is_archived);
 
 -- 3. Payments Table
 CREATE TABLE IF NOT EXISTS public.payments (

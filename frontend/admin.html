@@ -453,8 +453,14 @@
             <button class="tab" onclick="setFilter('failed')">FAILED</button>
         </div>
 
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search orders..." oninput="handleSearch()">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div class="filter-tabs">
+                <button class="tab active" id="viewActiveTab" onclick="setArchivedView(false)">📦 ACTIVE</button>
+                <button class="tab" id="viewArchivedTab" onclick="setArchivedView(true)">🗄️ ARCHIVED</button>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search orders..." oninput="handleSearch()">
+            </div>
         </div>
     </div>
 
@@ -562,6 +568,8 @@
                             <button class="action-btn" id="btnUpload" onclick="promptManualUpload()">Upload URL</button>
                             <button class="action-btn primary" id="btnSend" onclick="sendReportEmail()">✉ SEND REPORT EMAIL</button>
                             <button class="action-btn" id="btnResend" onclick="resendConfirmation()">Resend Confirm</button>
+                            <button class="action-btn" style="border-color: #E74C3C; color: #E74C3C;" id="btnDeletePdf" onclick="deleteReportPdf()">🗑️ DELETE PDF</button>
+                            <button class="action-btn" id="btnArchive" onclick="toggleArchiveOrder()">🗄️ ARCHIVE ORDER</button>
                             <button class="action-btn" style="border-color: var(--badge-failed); color: var(--badge-failed);" id="btnCancel" onclick="updateOrderStatus('cancelled')">Cancel Order</button>
                         </div>
                     </div>
@@ -635,9 +643,18 @@
 
         let userRole = "admin";
 
+        let isArchivedView = false;
+
+        function setArchivedView(archived) {
+            isArchivedView = archived;
+            document.getElementById("viewActiveTab").classList.toggle("active", !archived);
+            document.getElementById("viewArchivedTab").classList.toggle("active", archived);
+            loadOrders();
+        }
+
         async function loadOrders() {
             try {
-                let url = `/api/admin/orders?`;
+                let url = `/api/admin/orders?archived=${isArchivedView}&`;
                 if (currentFilter) url += `status=${currentFilter}&`;
                 if (searchQuery) url += `search=${encodeURIComponent(searchQuery)}&`;
                 
@@ -717,7 +734,7 @@
 
         function setFilter(status) {
             currentFilter = status;
-            const tabs = document.querySelectorAll(".tab");
+            const tabs = document.querySelectorAll("#filterTabs .tab");
             tabs.forEach(t => t.classList.remove("active"));
             
             // Map event target class toggles
@@ -733,6 +750,8 @@
             }, 300);
         }
 
+        let selectedOrderArchivedState = false;
+
         async function openOrder(orderId) {
             selectedOrderId = orderId;
             try {
@@ -740,6 +759,7 @@
                 if (!data) return;
 
                 const o = data.order;
+                selectedOrderArchivedState = !!o.is_archived;
                 const cust = o.customers || {};
                 
                 document.getElementById("modalHeader").innerText = `Order Detail #${o.reference_id || o.id.substring(0, 8)}`;
@@ -798,7 +818,6 @@
                         data.email_logs.forEach(l => {
                             const div = document.createElement("div");
                             div.className = "log-item";
-                            // Safely template structural content
                             div.innerHTML = `
                                 <div>
                                     <strong style="color: var(--accent);" class="template-name"></strong><br>
@@ -819,12 +838,46 @@
 
                     // Enable/disable buttons based on status
                     document.getElementById("btnSend").disabled = !o.report_url;
+                    document.getElementById("btnDeletePdf").disabled = !o.report_url;
                     document.getElementById("btnGenerate").disabled = o.report_status === 'generating';
+                    document.getElementById("btnArchive").innerText = o.is_archived ? "📦 UNARCHIVE ORDER" : "🗄️ ARCHIVE ORDER";
                 }
 
                 document.getElementById("orderModal").style.display = "flex";
             } catch (e) {
                 alert(`Error opening order: ${e.message}`);
+            }
+        }
+
+        async function deleteReportPdf() {
+            if (!selectedOrderId) return;
+            if (!confirm("Are you sure you want to delete this report PDF from Supabase Storage? This will clear the report URL and reset report status.")) {
+                return;
+            }
+            try {
+                const res = await apiCall(`/api/admin/orders/${selectedOrderId}/report`, 'DELETE');
+                if (res) {
+                    alert("Report PDF deleted from Supabase Storage successfully.");
+                    openOrder(selectedOrderId);
+                    loadOrders();
+                }
+            } catch (e) {
+                alert(`Failed to delete report PDF: ${e.message}`);
+            }
+        }
+
+        async function toggleArchiveOrder() {
+            if (!selectedOrderId) return;
+            const newArchived = !selectedOrderArchivedState;
+            try {
+                const res = await apiCall(`/api/admin/orders/${selectedOrderId}/archive`, 'POST', { archived: newArchived });
+                if (res) {
+                    alert(newArchived ? "Order archived successfully." : "Order unarchived successfully.");
+                    closeModal();
+                    loadOrders();
+                }
+            } catch (e) {
+                alert(`Failed to update archive status: ${e.message}`);
             }
         }
 

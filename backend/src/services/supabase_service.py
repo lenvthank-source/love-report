@@ -407,7 +407,7 @@ class SupabaseService:
         res = self.client.table("email_logs").select("*").eq("order_id", order_id).order("sent_at", desc=True).execute()
         return res.data or []
 
-    # --- Supabase Storage PDF Upload ---
+    # --- Supabase Storage PDF Upload & Cleanup ---
     def upload_pdf_report(self, order_id: str, local_pdf_path: str) -> Optional[str]:
         """Uploads a PDF file to Supabase 'reports' storage bucket. Returns public URL."""
         if not self.is_configured():
@@ -421,7 +421,6 @@ class SupabaseService:
                 file_data = f.read()
                 
             # Attempt uploading to Supabase Storage
-            # Note: client.storage.from_(bucket).upload(path, file)
             self.client.storage.from_(bucket_name).upload(
                 path=filename,
                 file=file_data,
@@ -430,10 +429,113 @@ class SupabaseService:
             
             # Retrieve public URL
             public_url_res = self.client.storage.from_(bucket_name).get_public_url(filename)
+            
+            # Auto-check storage capacity and purge oldest files if > 90% full
+            try:
+                self.check_and_purge_old_reports_if_full(threshold_pct=90.0)
+            except Exception as pe:
+                print(f"[SupabaseStorage] Capacity check warning: {pe}")
+                
             return public_url_res
         except Exception as e:
             print(f"[SupabaseStorage] Failed to upload PDF report: {e}")
             return None
+
+    def delete_pdf_report(self, order_id: str) -> bool:
+        """Deletes the PDF report file from Supabase Storage and clears report_url in DB."""
+        if not self.is_configured():
+            return True
+            
+        bucket_name = "reports"
+        order = self.get_order_by_id(order_id)
+        if not order:
+            return False
+            
+        filename = f"{order_id}_report.pdf"
+        ref_id = order.get("reference_id")
+        
+        try:
+            files_to_remove = [filename]
+            if ref_id:
+                files_to_remove.append(f"{ref_id}_report.pdf")
+            self.client.storage.from_(bucket_name).remove(files_to_remove)
+        except Exception as e:
+            print(f"[SupabaseStorage] Warning deleting storage file: {e}")
+            
+        try:
+            res = self.client.table("orders").update({
+                "report_url": None,
+                "report_status": "not_started",
+                "updated_at": "now()"
+            }).eq("id", order_id).execute()
+            return True
+        except Exception as e:
+            print(f"[Supabase] Failed to update order record on PDF delete: {e}")
+            return False
+
+    def check_and_purge_old_reports_if_full(self, threshold_pct: float = 90.0, target_pct: float = 80.0) -> Dict[str, Any]:
+        """Checks total byte usage of 'reports' storage bucket. If > threshold_pct, purges oldest reports."""
+        if not self.is_configured():
+            return {"status": "skipped", "reason": "not_configured"}
+
+        bucket_name = "reports"
+        max_bytes = int(os.getenv("SUPABASE_STORAGE_MAX_BYTES", str(1024 * 1024 * 1024))) # Default 1GB
+
+        try:
+            items = self.client.storage.from_(bucket_name).list() or []
+            total_bytes = 0
+            file_list = []
+
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                size = item.get("metadata", {}).get("size") or item.get("size", 0)
+                name = item.get("name")
+                created_at = item.get("created_at") or item.get("updated_at") or ""
+                if name and size:
+                    total_bytes += size
+                    file_list.append({"name": name, "size": size, "created_at": created_at})
+
+            used_pct = (total_bytes / max_bytes) * 100.0 if max_bytes > 0 else 0
+            print(f"[StorageMonitor] Bucket '{bucket_name}' total size: {total_bytes} / {max_bytes} bytes ({used_pct:.2f}%)")
+
+            if used_pct < threshold_pct:
+                return {
+                    "status": "ok",
+                    "used_bytes": total_bytes,
+                    "max_bytes": max_bytes,
+                    "used_pct": round(used_pct, 2),
+                    "purged_count": 0
+                }
+
+            # Usage exceeds threshold_pct (90%), sort files by created_at ascending (oldest first)
+            file_list.sort(key=lambda x: str(x.get("created_at", "")))
+            
+            purged_count = 0
+            purged_bytes = 0
+
+            for f in file_list:
+                if (total_bytes - purged_bytes) / max_bytes * 100.0 < target_pct:
+                    break
+                try:
+                    self.client.storage.from_(bucket_name).remove([f["name"]])
+                    purged_count += 1
+                    purged_bytes += f["size"]
+                    print(f"[StorageMonitor] Purged old report: {f['name']} ({f['size']} bytes)")
+                except Exception as pe:
+                    print(f"[StorageMonitor] Error purging file {f['name']}: {pe}")
+
+            new_used_pct = ((total_bytes - purged_bytes) / max_bytes) * 100.0
+            return {
+                "status": "purged",
+                "initial_used_pct": round(used_pct, 2),
+                "new_used_pct": round(new_used_pct, 2),
+                "purged_count": purged_count,
+                "purged_bytes": purged_bytes
+            }
+        except Exception as e:
+            print(f"[StorageMonitor] Failed storage capacity check: {e}")
+            return {"status": "error", "detail": str(e)}
 
     # --- Admin Users Management (RBAC) ---
     def create_admin_user(self, email: str, full_name: str, role: str = "support", status: str = "pending") -> bool:

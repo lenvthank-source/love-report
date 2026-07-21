@@ -939,12 +939,12 @@ def get_admin_role(user: Dict[str, Any]) -> str:
 
 
 @app.get("/api/admin/orders")
-async def api_admin_orders(status: Optional[str] = None, search: Optional[str] = None, admin: Any = Header(None)):
+async def api_admin_orders(status: Optional[str] = None, search: Optional[str] = None, archived: bool = False, admin: Any = Header(None)):
     user = await get_current_admin(admin)
     role = get_admin_role(user)
     
     supabase = SupabaseService()
-    orders = supabase.get_orders(status, search)
+    orders = supabase.get_orders(status, search, is_archived=archived)
     
     # Secure role-based filtering: Customer Support gets a clean truncated view
     if role == "support":
@@ -965,6 +965,62 @@ async def api_admin_orders(status: Optional[str] = None, search: Optional[str] =
         return {"orders": truncated_orders, "role": role}
         
     return {"orders": orders, "role": role}
+
+
+class ArchiveOrderRequest(BaseModel):
+    archived: bool = True
+
+@app.post("/api/admin/orders/{order_id}/archive")
+async def api_admin_archive_order(order_id: str, req: ArchiveOrderRequest, admin: Any = Header(None)):
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
+    supabase = SupabaseService()
+    success = supabase.archive_order(order_id, is_archived=req.archived)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to update order archiving status.")
+    return {"status": "success", "archived": req.archived}
+
+
+@app.delete("/api/admin/orders/{order_id}/report")
+async def api_admin_delete_report(order_id: str, admin: Any = Header(None)):
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
+    supabase = SupabaseService()
+    success = supabase.delete_pdf_report(order_id)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to delete report PDF from storage.")
+    return {"status": "success", "detail": "Report PDF deleted successfully."}
+
+
+@app.post("/api/admin/storage/cleanup")
+async def api_admin_storage_cleanup(admin: Any = Header(None)):
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
+    supabase = SupabaseService()
+    result = supabase.check_and_purge_old_reports_if_full(threshold_pct=90.0)
+    return {"status": "success", "result": result}
+
+
+class ManualUploadRequest(BaseModel):
+    report_url: str
+
+@app.post("/api/admin/orders/{order_id}/upload")
+async def api_admin_manual_upload(order_id: str, req: ManualUploadRequest, admin: Any = Header(None)):
+    user = await get_current_admin(admin)
+    if get_admin_role(user) == "support":
+        raise HTTPException(status_code=403, detail="Forbidden: Customer Support role cannot perform write actions.")
+        
+    supabase = SupabaseService()
+    success = supabase.update_order_report(order_id, req.report_url)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to upload manual report url")
+    return {"status": "success"}
 
 
 @app.get("/api/admin/orders/{order_id}")
