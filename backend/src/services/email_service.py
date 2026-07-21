@@ -20,7 +20,7 @@ class EmailService:
         return bool(self.smtp_user and self.smtp_pass)
 
     def _send_email(self, to_email: str, subject: str, html_content: str, attachment_bytes: Optional[bytes] = None, attachment_filename: Optional[str] = None) -> bool:
-        """Helper to send SMTP email using SendPulse host with optional PDF attachment."""
+        """Helper to send SMTP email using SendPulse host with optional PDF attachment and automatic size fallback."""
         if not self.is_configured():
             print(f"\n==================================================")
             print(f"[MOCK EMAIL] TO: {to_email}")
@@ -30,6 +30,12 @@ class EmailService:
             print(f"[MOCK EMAIL] CONTENT:\n{html_content[:300]}...")
             print(f"==================================================\n")
             return True
+
+        # Check if attachment is too large for SendPulse SMTP (e.g. > 2.5MB)
+        if attachment_bytes and len(attachment_bytes) > 2.5 * 1024 * 1024:
+            print(f"[EmailService] Attachment size ({len(attachment_bytes)} bytes) exceeds SendPulse 2.5MB limit. Omitting attachment to prevent 552 size limit error.")
+            attachment_bytes = None
+            attachment_filename = None
 
         try:
             msg = MIMEMultipart("mixed")
@@ -59,6 +65,10 @@ class EmailService:
             return True
         except Exception as e:
             print(f"[EmailService] Error sending email: {e}")
+            # Fallback: if sending with attachment failed (e.g. 552 size error), retry without attachment
+            if attachment_bytes is not None:
+                print(f"[EmailService] Retrying email delivery to {to_email} without attachment...")
+                return self._send_email(to_email, subject, html_content, attachment_bytes=None, attachment_filename=None)
             return False
 
     def send_order_confirmation(self, to_email: str, customer_name: str, order_id: str) -> bool:
