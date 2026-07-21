@@ -189,7 +189,11 @@ class SupabaseService:
                 self._token_cache[token] = (user_data, now + 300)
                 return user_data
         except Exception as e:
-            print(f"[SupabaseAuth] API token verification failed: {e}")
+            err_msg = str(e)
+            if "expired" in err_msg.lower():
+                print("[SupabaseAuth] Admin session token has expired.")
+            else:
+                print(f"[SupabaseAuth] API token verification failed: {e}")
         return None
 
     # --- Customer CRUD ---
