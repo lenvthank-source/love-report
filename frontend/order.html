@@ -1383,6 +1383,17 @@
         const loadingOverlay = document.getElementById("loadingOverlay");
         const errorBanner = document.getElementById("errorBanner");
         const priceLabel = document.getElementById("priceLabel");
+        const nameInput = document.getElementById("name");
+        const mobileInput = document.getElementById("mobile");
+
+        // Restrict inputs in real time
+        nameInput.addEventListener("input", function() {
+            this.value = this.value.replace(/[^A-Za-z\s'\-\.]/g, "");
+        });
+
+        mobileInput.addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, "");
+        });
 
         function selectPackage(tier, price) {
             selectedTierPrice = price;
@@ -1464,34 +1475,40 @@
         orderForm.addEventListener("submit", async function(e) {
             e.preventDefault();
             showError("");
-            showLoading(true);
 
+            const nameVal = nameInput.value.trim();
             const countryCode = document.getElementById("countryCode").value;
-            const mobileRaw = document.getElementById("mobile").value.trim();
+            const mobileRaw = mobileInput.value.trim();
             const emailVal = document.getElementById("email").value.trim();
 
-            // 1. Email format check
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailVal)) {
-                showError("Please enter a valid email address.");
-                showLoading(false);
+            // 1. Name format check (letters & spaces only)
+            const nameRegex = /^[A-Za-z\s'\-\.]{2,50}$/;
+            if (!nameRegex.test(nameVal)) {
+                showError("Name must contain only alphabetic characters and spaces.");
                 return;
             }
 
-            // 2. Indian Mobile 10-digit check
+            // 2. Email format check
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(emailVal)) {
+                showError("Please enter a valid email address (e.g. name@domain.com).");
+                return;
+            }
+
+            // 3. Indian Mobile 10-digit check
             if (countryCode === "+91") {
                 if (!/^\d{10}$/.test(mobileRaw)) {
-                    showError("Indian mobile number must be exactly 10 digits.");
-                    showLoading(false);
+                    showError("Indian mobile number must contain exactly 10 numeric digits.");
                     return;
                 }
             } else {
                 if (!/^\d{4,15}$/.test(mobileRaw)) {
-                    showError("Please enter a valid mobile number.");
-                    showLoading(false);
+                    showError("Please enter a valid numeric mobile number.");
                     return;
                 }
             }
+
+            showLoading(true);
 
             const mobileVal = countryCode + mobileRaw;
 
